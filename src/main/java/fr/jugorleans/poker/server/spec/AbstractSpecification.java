@@ -4,12 +4,12 @@ package fr.jugorleans.poker.server.spec;
  * Abstract base implementation of composite {@link Specification} with default implementations for {@code and},
  * {@code or} and {@code not}
  */
-public abstract class AbstractSpecification implements Specification {
+public abstract class AbstractSpecification<T> implements Specification<T> {
 
     /**
      * {@inheritDoc}
      */
-    public abstract boolean isSatisfiedBy(Object o);
+    public abstract boolean isSatisfiedBy(T t);
 
     /**
      * {@inheritDoc}

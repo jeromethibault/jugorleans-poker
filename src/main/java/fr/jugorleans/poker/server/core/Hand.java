@@ -26,6 +26,14 @@ public class Hand implements HasValue{
         this.secondCard = builder.secondCard;
     }
 
+    public Card getFirstCard() {
+        return firstCard;
+    }
+
+    public Card getSecondCard() {
+        return secondCard;
+    }
+
     /**
      * Construire une nouvelle main
      */

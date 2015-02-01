@@ -6,7 +6,7 @@ package fr.jugorleans.poker.server.spec;
  * Use {@link AbstractSpecification} as base for creating specifications, and
  * only the method {@link #isSatisfiedBy(Object)} must be implemented.
  */
-public interface Specification {
+public interface Specification<T> {
 
     /**
      * Check if {@code t} is satisfied by the specification.
@@ -15,7 +15,7 @@ public interface Specification {
      * @return {@code true} if {@code t} satisfies the specification.
      * @throws ClassCastException Thrown if o can not be cast to expected type.
      */
-    boolean isSatisfiedBy(Object o);
+    boolean isSatisfiedBy(T o);
 
     /**
      * Create a new specification that is the AND operation of {@code this} specification and another specification.

@@ -26,12 +26,12 @@ public class Card implements HasValue{
         this.cardSuit = builder.suit;
     }
 
-    public String getCardValue() {
-        return cardValue.getValue();
+    public CardValue getCardValue() {
+        return cardValue;
     }
 
-    public String getCardSuit() {
-        return cardSuit.getValue();
+    public CardSuit getCardSuit() {
+        return cardSuit;
     }
 
     /**

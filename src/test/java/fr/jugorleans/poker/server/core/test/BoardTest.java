@@ -1,9 +1,7 @@
 package fr.jugorleans.poker.server.core.test;
 
 import com.google.common.collect.Sets;
-import fr.jugorleans.poker.server.core.Board;
-import fr.jugorleans.poker.server.core.Card;
-import fr.jugorleans.poker.server.core.Deck;
+import fr.jugorleans.poker.server.core.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -43,6 +41,21 @@ public class BoardTest {
         Assert.assertEquals(builder.toString(),board.toString());
         board.clear();
         Assert.assertEquals(0,board.nbCard());
+    }
+
+    @Test
+    public void nbTest(){
+        board.clear();
+        Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
+        board.addCard(card);
+        Card card1 = Card.newBuilder().value(CardValue.FIVE).suit(CardSuit.CLUBS).build();
+        board.addCard(card1);
+        Card card2 = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.HEARTS).build();
+        board.addCard(card2);
+
+        Assert.assertEquals(3,board.nbCard());
+        Assert.assertEquals(2,board.nb(CardValue.EIGHT));
+        Assert.assertEquals(1,board.nb(CardValue.FIVE));
     }
 
 

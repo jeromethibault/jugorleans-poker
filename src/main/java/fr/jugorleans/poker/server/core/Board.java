@@ -63,4 +63,20 @@ public class Board implements HasValue {
     public void clear(){
         this.board.clear();
     }
+
+    /**
+     * Calculer le nombre de présence d'une valeur dans le board
+     *
+     * @param cardValue la valeur en question
+     * @return le nombre d'apparition de la valeur
+     */
+    public int nb(CardValue cardValue){
+        int nb = 0;
+        for(Card card : this.board){
+           if(card.getCardValue().equals(cardValue)){
+               nb++;
+           }
+       }
+        return nb;
+   }
 }
