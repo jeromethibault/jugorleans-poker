@@ -5,7 +5,7 @@ import fr.jugorleans.poker.server.util.HasForce;
 /**
  * Enumération des différente combinaison et de leur force
  */
-public enum Combination implements HasForce{
+public enum Combination implements HasForce {
 
     HIGH {
         @Override
@@ -13,49 +13,49 @@ public enum Combination implements HasForce{
             return 1;
         }
     },
-    PAIR{
+    PAIR {
         @Override
         public int getForce() {
             return 2;
         }
     },
-    TWO_PAIR{
+    TWO_PAIR {
         @Override
         public int getForce() {
             return 3;
         }
     },
-    THREE_OF_KIND{
+    THREE_OF_KIND {
         @Override
         public int getForce() {
             return 4;
         }
     },
-    STRAIGHT{
+    STRAIGHT {
         @Override
         public int getForce() {
             return 5;
         }
     },
-    FLUSH{
+    FLUSH {
         @Override
         public int getForce() {
             return 6;
         }
     },
-    FULL_HOUSE{
+    FULL_HOUSE {
         @Override
         public int getForce() {
             return 7;
         }
     },
-    FOUR_OF_KIND{
+    FOUR_OF_KIND {
         @Override
         public int getForce() {
             return 8;
         }
     },
-    STRAIGHT_FLUSH{
+    STRAIGHT_FLUSH {
         @Override
         public int getForce() {
             return 9;

@@ -7,25 +7,25 @@ import fr.jugorleans.poker.server.util.HasValue;
  */
 public enum CardSuit implements HasValue {
 
-    DIAMONDS{
+    DIAMONDS {
         @Override
         public String getValue() {
             return "D";
         }
     },
-    HEARTS{
+    HEARTS {
         @Override
         public String getValue() {
             return "H";
         }
     },
-    SPADES{
+    SPADES {
         @Override
         public String getValue() {
             return "S";
         }
     },
-    CLUBS{
+    CLUBS {
         @Override
         public String getValue() {
             return "C";

@@ -14,24 +14,24 @@ import java.util.stream.Collectors;
  */
 public class FlushSpecification implements Specification<Hand> {
 
-	/** Le board */
-	private final Board board;
+    /**
+     * Le board
+     */
+    private final Board board;
 
-	/**
-	 * Construire un {@link FlushSpecification} sur un board donné
-	 *
-	 * @param board le board
-	 */
-	public FlushSpecification(final Board board) {
-		this.board = board;
-	}
-
-<<<<<<< HEAD
-    private int nbSuited(CardSuit cardSuit,List<Card> list){
-        return list.stream().map(card -> card.getCardSuit().equals(cardSuit)?1:0).collect(Collectors.toList())
-                .stream().collect(Collectors.summingInt(i -> i));
+    /**
+     * Construire un {@link FlushSpecification} sur un board donné
+     *
+     * @param board le board
+     */
+    public FlushSpecification(final Board board) {
+        this.board = board;
     }
 
+    private int nbSuited(CardSuit cardSuit, List<Card> list) {
+        return list.stream().map(card -> card.getCardSuit().equals(cardSuit) ? 1 : 0).collect(Collectors.toList())
+                .stream().collect(Collectors.summingInt(i -> i));
+    }
 
     /**
      * {@inheritDoc}
@@ -42,17 +42,9 @@ public class FlushSpecification implements Specification<Hand> {
         listCard.addAll(hand.getCards());
 
         int nbSuitedMax = listCard.stream().map(card -> card.getCardSuit()).collect(Collectors.toSet())
-                .stream().map(suit -> nbSuited(suit,listCard)).collect(Collectors.toList())
+                .stream().map(suit -> nbSuited(suit, listCard)).collect(Collectors.toList())
                 .stream().mapToInt(i -> i).max().getAsInt();
 
         return nbSuitedMax >= 5;
     }
-=======
-	/** {@inheritDoc} */
-	@Override
-	public boolean isSatisfiedBy(final Hand hand) {
-		// TODO
-		return false;
-	}
->>>>>>> 6d74f885104eaa3598e467360195cd0b70511817
 }

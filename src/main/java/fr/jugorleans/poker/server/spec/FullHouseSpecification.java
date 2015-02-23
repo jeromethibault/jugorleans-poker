@@ -8,27 +8,29 @@ import fr.jugorleans.poker.server.core.Hand;
  */
 public class FullHouseSpecification implements Specification<Hand> {
 
-	/** Le board */
-	private final Board board;
+    /**
+     * Le board
+     */
+    private final Board board;
 
-	/**
-	 * Construire un {@link FullHouseSpecification} sur un board donné
-	 *
-	 * @param board le board
-	 */
-	public FullHouseSpecification(final Board board) {
-		this.board = board;
-	}
+    /**
+     * Construire un {@link FullHouseSpecification} sur un board donné
+     *
+     * @param board le board
+     */
+    public FullHouseSpecification(final Board board) {
+        this.board = board;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * Un full house est la combinaison d'un brelan et d'une paire
-	 */
-	@Override
-	public boolean isSatisfiedBy(final Hand hand) {
-		final PairSpecification pairSpecification = new PairSpecification(this.board);
-		final ThreeOfKindSpecification threeOfKindSpecification = new ThreeOfKindSpecification(this.board);
-		return pairSpecification.isSatisfiedBy(hand) && threeOfKindSpecification.isSatisfiedBy(hand);
-	}
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * Un full house est la combinaison d'un brelan et d'une paire
+     */
+    @Override
+    public boolean isSatisfiedBy(final Hand hand) {
+        final PairSpecification pairSpecification = new PairSpecification(this.board);
+        final ThreeOfKindSpecification threeOfKindSpecification = new ThreeOfKindSpecification(this.board);
+        return pairSpecification.isSatisfiedBy(hand) && threeOfKindSpecification.isSatisfiedBy(hand);
+    }
 }

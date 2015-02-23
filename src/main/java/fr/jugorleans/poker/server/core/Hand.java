@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Représente une main. Une main est composé de deux cartes
  */
-public class Hand implements HasValue{
+public class Hand implements HasValue {
 
     /**
      * La première carte
@@ -24,7 +24,7 @@ public class Hand implements HasValue{
     /**
      * Construire une main avec l'aide du builder
      */
-    private Hand(Builder builder){
+    private Hand(Builder builder) {
         this.firstCard = builder.firstCard;
         this.secondCard = builder.secondCard;
     }
@@ -40,14 +40,14 @@ public class Hand implements HasValue{
     /**
      * @return les cartes de la main dans une liste
      */
-    public List<Card> getCards(){
-        return Lists.newArrayList(this.getFirstCard(),this.getSecondCard());
+    public List<Card> getCards() {
+        return Lists.newArrayList(this.getFirstCard(), this.getSecondCard());
     }
 
     /**
      * Construire une nouvelle main
      */
-    public static class Builder{
+    public static class Builder {
 
         private Card firstCard;
 
@@ -59,7 +59,7 @@ public class Hand implements HasValue{
          * @param card la carte
          * @return l'instance du builder
          */
-        public Builder firstCard(Card card){
+        public Builder firstCard(Card card) {
             Preconditions.checkArgument(card != null);
             this.firstCard = card;
             return this;
@@ -70,10 +70,10 @@ public class Hand implements HasValue{
          * Assigner la première carte
          *
          * @param value la valeur de la carte
-         * @param suit la famille de la carte
+         * @param suit  la famille de la carte
          * @return l'instance du builder
          */
-        public Builder firstCard(CardValue value, CardSuit suit){
+        public Builder firstCard(CardValue value, CardSuit suit) {
             this.firstCard = Card.newBuilder().value(value).suit(suit).build();
             return this;
         }
@@ -84,7 +84,7 @@ public class Hand implements HasValue{
          * @param card la carte
          * @return l'instance du builder
          */
-        public Builder secondCard(Card card){
+        public Builder secondCard(Card card) {
             Preconditions.checkArgument(card != null);
             this.secondCard = card;
             return this;
@@ -94,10 +94,10 @@ public class Hand implements HasValue{
          * Assigner la seconde carte
          *
          * @param value la valeur de la carte
-         * @param suit la famille de la carte
+         * @param suit  la famille de la carte
          * @return l'instance du builder
          */
-        public Builder secondCard(CardValue value, CardSuit suit){
+        public Builder secondCard(CardValue value, CardSuit suit) {
             this.secondCard = Card.newBuilder().value(value).suit(suit).build();
             return this;
         }
@@ -105,7 +105,7 @@ public class Hand implements HasValue{
         /**
          * @return la main
          */
-        public Hand build(){
+        public Hand build() {
             Preconditions.checkState(!firstCard.equals(secondCard));
             return new Hand(this);
         }
@@ -114,7 +114,7 @@ public class Hand implements HasValue{
     /**
      * @return une instance du builder
      */
-    public static Builder newBuilder(){
+    public static Builder newBuilder() {
         return new Builder();
     }
 
@@ -126,13 +126,13 @@ public class Hand implements HasValue{
      */
     @Override
     public String getValue() {
-        return firstCard.getValue()+secondCard.getValue();
+        return firstCard.getValue() + secondCard.getValue();
     }
 
     /**
      * @return vrai si les deux cartes sont de la même famille. Faux sinon.
      */
-    public boolean isSuited(){
+    public boolean isSuited() {
         return this.firstCard.getCardSuit().equals(this.secondCard.getCardSuit());
 
     }
@@ -140,7 +140,7 @@ public class Hand implements HasValue{
     /**
      * @return vrai si la main est une paire servie. Faux sinon
      */
-    public boolean isPocket(){
+    public boolean isPocket() {
         return this.firstCard.getCardValue().equals(this.secondCard.getCardValue());
     }
 }

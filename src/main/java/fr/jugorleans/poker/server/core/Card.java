@@ -6,7 +6,7 @@ import fr.jugorleans.poker.server.util.HasValue;
 /**
  * Représente une carte. Une carte possède une valeur et une famille
  */
-public class Card implements HasValue{
+public class Card implements HasValue {
 
     /**
      * La valeur de la carte
@@ -21,7 +21,7 @@ public class Card implements HasValue{
     /**
      * Construire une nouvelle carte
      */
-    private Card(Builder builder){
+    private Card(Builder builder) {
         this.cardValue = builder.value;
         this.cardSuit = builder.suit;
     }
@@ -42,20 +42,20 @@ public class Card implements HasValue{
      */
     @Override
     public String getValue() {
-        return cardValue.getValue()+cardSuit.getValue();
+        return cardValue.getValue() + cardSuit.getValue();
     }
 
     /**
      * @return une instance du builder de carte
      */
-    public static Builder newBuilder(){
+    public static Builder newBuilder() {
         return new Builder();
     }
 
     /**
      * Le builder de carte
      */
-    public static class Builder{
+    public static class Builder {
 
         private CardValue value;
 
@@ -67,7 +67,7 @@ public class Card implements HasValue{
          * @param value la valeur de la carte
          * @return le builder
          */
-        public Builder value(CardValue value){
+        public Builder value(CardValue value) {
             this.value = value;
             return this;
         }
@@ -78,7 +78,7 @@ public class Card implements HasValue{
          * @param suit la famille de la carte
          * @return le builder
          */
-        public Builder suit(CardSuit suit){
+        public Builder suit(CardSuit suit) {
             this.suit = suit;
             return this;
         }
@@ -86,7 +86,7 @@ public class Card implements HasValue{
         /**
          * @return la carte
          */
-        public Card build(){
+        public Card build() {
             return new Card(this);
         }
     }
@@ -103,9 +103,9 @@ public class Card implements HasValue{
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Card){
-            Card card = (Card)obj;
-            return Objects.equal(this.getValue(),card.getValue());
+        if (obj instanceof Card) {
+            Card card = (Card) obj;
+            return Objects.equal(this.getValue(), card.getValue());
         }
         return false;
     }
