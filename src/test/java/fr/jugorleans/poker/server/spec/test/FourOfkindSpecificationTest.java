@@ -1,18 +1,18 @@
 package fr.jugorleans.poker.server.spec.test;
 
 import fr.jugorleans.poker.server.core.*;
-import fr.jugorleans.poker.server.spec.PairSpecification;
-import fr.jugorleans.poker.server.spec.TwoPairSpecification;
+import fr.jugorleans.poker.server.spec.FourOfKindSpecification;
+import fr.jugorleans.poker.server.spec.ThreeOfKindSpecification;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Classe de test de {@link fr.jugorleans.poker.server.spec.TwoPairSpecification}
+ * Classe de test de {@link fr.jugorleans.poker.server.spec.FourOfKindSpecification}
  */
-public class TwoPairSpecificationTest {
+public class FourOfkindSpecificationTest {
 
     @Test
-    public void testNoTwoPair(){
+    public void testNoFourOfKind(){
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -26,18 +26,18 @@ public class TwoPairSpecificationTest {
         board.addCard(card4);
 
         Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.SPADES).build();
-        TwoPairSpecification specification = new TwoPairSpecification(board);
+        FourOfKindSpecification specification = new FourOfKindSpecification(board);
         Assert.assertFalse(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testTwoPair(){
+    public void testFourOfKindWithOnCardHand(){
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
-        Card card1 = Card.newBuilder().value(CardValue.FIVE).suit(CardSuit.CLUBS).build();
+        Card card1 = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.DIAMONDS).build();
         board.addCard(card1);
-        Card card2 = Card.newBuilder().value(CardValue.SIX).suit(CardSuit.HEARTS).build();
+        Card card2 = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.HEARTS).build();
         board.addCard(card2);
         Card card3 = Card.newBuilder().value(CardValue.NINE).suit(CardSuit.HEARTS).build();
         board.addCard(card3);
@@ -45,26 +45,45 @@ public class TwoPairSpecificationTest {
         board.addCard(card4);
 
         Hand hand = Hand.newBuilder().firstCard(CardValue.FIVE,CardSuit.SPADES).secondCard(CardValue.EIGHT,CardSuit.SPADES).build();
-        TwoPairSpecification specification = new TwoPairSpecification(board);
+        FourOfKindSpecification specification = new FourOfKindSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testTwoPairOnBoard(){
+    public void testFourOfKindWithPocket(){
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
-        Card card1 = Card.newBuilder().value(CardValue.FIVE).suit(CardSuit.CLUBS).build();
+        Card card1 = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.CLUBS).build();
         board.addCard(card1);
-        Card card2 = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.HEARTS).build();
+        Card card2 = Card.newBuilder().value(CardValue.NINE).suit(CardSuit.HEARTS).build();
         board.addCard(card2);
         Card card3 = Card.newBuilder().value(CardValue.FIVE).suit(CardSuit.HEARTS).build();
+        board.addCard(card3);
+        Card card4 = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.HEARTS).build();
+        board.addCard(card4);
+
+        Hand hand = Hand.newBuilder().firstCard(CardValue.TEN,CardSuit.SPADES).secondCard(CardValue.TEN,CardSuit.DIAMONDS).build();
+        FourOfKindSpecification specification = new FourOfKindSpecification(board);
+        Assert.assertTrue(specification.isSatisfiedBy(hand));
+    }
+
+    @Test
+    public void testTheeOfKindOnBoard(){
+        Board board = new Board();
+        Card card = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.DIAMONDS).build();
+        board.addCard(card);
+        Card card1 = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.CLUBS).build();
+        board.addCard(card1);
+        Card card2 = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.HEARTS).build();
+        board.addCard(card2);
+        Card card3 = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.SPADES).build();
         board.addCard(card3);
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.SPADES).build();
-        TwoPairSpecification specification = new TwoPairSpecification(board);
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.DIAMONDS).build();
+        FourOfKindSpecification specification = new FourOfKindSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 }

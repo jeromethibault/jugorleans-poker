@@ -29,8 +29,9 @@ public class TwoPairSpecification extends AbstractSpecification<Hand>{
      */
     @Override
     public boolean isSatisfiedBy(Hand hand) {
+        int nbUniqueCardOnBoard = board.nbUniqueValueCard();
         int nbFirstCard = board.nb(hand.getFirstCard().getCardValue());
         int nbSecondCard = board.nb(hand.getSecondCard().getCardValue());
-        return (nbFirstCard == 1 && nbSecondCard == 1) || (nbFirstCard == 1 && nbSecondCard == 1);
+        return (nbFirstCard == 1 && nbSecondCard == 1) || (nbUniqueCardOnBoard == 3);
     }
 }

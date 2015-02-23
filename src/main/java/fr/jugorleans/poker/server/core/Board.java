@@ -4,7 +4,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.util.HasValue;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Représente le tableau c'est à dire les cartes visibles par tous les joueurs.
@@ -62,6 +65,15 @@ public class Board implements HasValue {
      */
     public void clear(){
         this.board.clear();
+    }
+
+    /**
+     * @return le nombre de carte unique sur le board
+     */
+    public int nbUniqueValueCard(){
+        Set<CardValue> cardValue = new HashSet<>();
+        this.board.stream().forEach(card -> cardValue.add(card.getCardValue()));
+        return cardValue.size();
     }
 
     /**

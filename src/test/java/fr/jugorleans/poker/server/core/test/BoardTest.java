@@ -58,5 +58,37 @@ public class BoardTest {
         Assert.assertEquals(1,board.nb(CardValue.FIVE));
     }
 
+    @Test
+    public void nbUniqueValueCardTest(){
+        board.clear();
+        Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
+        board.addCard(card);
+        Card card1 = Card.newBuilder().value(CardValue.FIVE).suit(CardSuit.CLUBS).build();
+        board.addCard(card1);
+        Card card2 = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.HEARTS).build();
+        board.addCard(card2);
+        Card card3 = Card.newBuilder().value(CardValue.SEVEN).suit(CardSuit.HEARTS).build();
+        board.addCard(card3);
+        Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
+        board.addCard(card4);
+        Assert.assertEquals(4,board.nbUniqueValueCard());
+    }
+
+    @Test
+    public void nbUniqueCardTest2(){
+        board.clear();
+        Card card = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.CLUBS).build();
+        board.addCard(card);
+        Card card1 = Card.newBuilder().value(CardValue.FIVE).suit(CardSuit.CLUBS).build();
+        board.addCard(card1);
+        Card card2 = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.HEARTS).build();
+        board.addCard(card2);
+        Card card3 = Card.newBuilder().value(CardValue.SEVEN).suit(CardSuit.HEARTS).build();
+        board.addCard(card3);
+        Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
+        board.addCard(card4);
+        Assert.assertEquals(5,board.nbUniqueValueCard());
+    }
+
 
 }

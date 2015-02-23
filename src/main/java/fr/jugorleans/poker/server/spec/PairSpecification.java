@@ -1,6 +1,7 @@
 package fr.jugorleans.poker.server.spec;
 
 import fr.jugorleans.poker.server.core.Board;
+import fr.jugorleans.poker.server.core.Card;
 import fr.jugorleans.poker.server.core.Hand;
 
 /**
@@ -29,8 +30,10 @@ public class PairSpecification extends AbstractSpecification<Hand>{
      */
     @Override
     public boolean isSatisfiedBy(Hand hand) {
+        int nbUniqueCardOnBoard = board.nbUniqueValueCard();
         int nbFirstCard = board.nb(hand.getFirstCard().getCardValue());
         int nbSecondCard = board.nb(hand.getSecondCard().getCardValue());
-        return (nbFirstCard == 1 && nbSecondCard == 0) || (nbFirstCard == 0 && nbSecondCard == 1);
+        return (nbFirstCard == 1 && nbSecondCard == 0) || (nbFirstCard == 0 && nbSecondCard == 1)
+                || (nbUniqueCardOnBoard == 4) || (nbUniqueCardOnBoard == 2);
     }
 }
