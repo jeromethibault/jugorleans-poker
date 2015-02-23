@@ -1,7 +1,10 @@
 package fr.jugorleans.poker.server.core;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.util.HasValue;
+
+import java.util.List;
 
 /**
  * Représente une main. Une main est composé de deux cartes
@@ -32,6 +35,13 @@ public class Hand implements HasValue{
 
     public Card getSecondCard() {
         return secondCard;
+    }
+
+    /**
+     * @return les cartes de la main dans une liste
+     */
+    public List<Card> getCards(){
+        return Lists.newArrayList(this.getFirstCard(),this.getSecondCard());
     }
 
     /**

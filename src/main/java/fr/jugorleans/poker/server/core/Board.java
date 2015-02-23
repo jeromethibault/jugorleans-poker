@@ -77,6 +77,13 @@ public class Board implements HasValue {
     }
 
     /**
+     * @return la liste des cartes du board
+     */
+    public List<Card> getCards(){
+        return this.board;
+    }
+
+    /**
      * Calculer le nombre de présence d'une valeur dans le board
      *
      * @param cardValue la valeur en question
