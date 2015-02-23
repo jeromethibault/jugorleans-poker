@@ -1,7 +1,6 @@
 package fr.jugorleans.poker.server.spec.test;
 
 import fr.jugorleans.poker.server.core.*;
-import fr.jugorleans.poker.server.spec.FourOfKindSpecification;
 import fr.jugorleans.poker.server.spec.FullHouseSpecification;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +11,7 @@ import org.junit.Test;
 public class FullHouseSpecificationTest {
 
     @Test
-    public void testNoFullHoue(){
+    public void testNoFullHoue() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -25,13 +24,13 @@ public class FullHouseSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.JACK, CardSuit.SPADES).build();
         FullHouseSpecification specification = new FullHouseSpecification(board);
         Assert.assertFalse(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testFullHouse(){
+    public void testFullHouse() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -44,13 +43,13 @@ public class FullHouseSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.EIGHT,CardSuit.SPADES).secondCard(CardValue.NINE,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.EIGHT, CardSuit.SPADES).secondCard(CardValue.NINE, CardSuit.SPADES).build();
         FullHouseSpecification specification = new FullHouseSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testFullHouse2(){
+    public void testFullHouse2() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -63,13 +62,13 @@ public class FullHouseSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.TEN,CardSuit.SPADES).secondCard(CardValue.TEN,CardSuit.DIAMONDS).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.TEN, CardSuit.SPADES).secondCard(CardValue.TEN, CardSuit.DIAMONDS).build();
         FullHouseSpecification specification = new FullHouseSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testFullHouse3(){
+    public void testFullHouse3() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.DIAMONDS).build();
         board.addCard(card);
@@ -82,7 +81,7 @@ public class FullHouseSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.DIAMONDS).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.JACK, CardSuit.DIAMONDS).build();
         FullHouseSpecification specification = new FullHouseSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }

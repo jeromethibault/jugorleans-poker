@@ -33,16 +33,16 @@ public class DeckTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void dealToManyCardTest(){
+    public void dealToManyCardTest() {
         for (int i = 0; i < 53; i++) {
             deck.deal();
         }
     }
 
     @Test
-    public void dealFlopTest(){
+    public void dealFlopTest() {
         deck.shuffleUp();
         List<Card> flop = deck.deal(3);
-        Assert.assertEquals(3,flop.size());
+        Assert.assertEquals(3, flop.size());
     }
 }

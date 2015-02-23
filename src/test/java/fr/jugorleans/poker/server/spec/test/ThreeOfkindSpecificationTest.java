@@ -2,7 +2,6 @@ package fr.jugorleans.poker.server.spec.test;
 
 import fr.jugorleans.poker.server.core.*;
 import fr.jugorleans.poker.server.spec.ThreeOfKindSpecification;
-import fr.jugorleans.poker.server.spec.TwoPairSpecification;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,7 +11,7 @@ import org.junit.Test;
 public class ThreeOfkindSpecificationTest {
 
     @Test
-    public void testNoThreeOfKind(){
+    public void testNoThreeOfKind() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -25,13 +24,13 @@ public class ThreeOfkindSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.JACK, CardSuit.SPADES).build();
         ThreeOfKindSpecification specification = new ThreeOfKindSpecification(board);
         Assert.assertFalse(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testThreeOfKindWithOnCardHand(){
+    public void testThreeOfKindWithOnCardHand() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -44,13 +43,13 @@ public class ThreeOfkindSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.FIVE,CardSuit.SPADES).secondCard(CardValue.EIGHT,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.FIVE, CardSuit.SPADES).secondCard(CardValue.EIGHT, CardSuit.SPADES).build();
         ThreeOfKindSpecification specification = new ThreeOfKindSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testThreeOfKindWithPocket(){
+    public void testThreeOfKindWithPocket() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -63,13 +62,13 @@ public class ThreeOfkindSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.TEN,CardSuit.SPADES).secondCard(CardValue.TEN,CardSuit.DIAMONDS).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.TEN, CardSuit.SPADES).secondCard(CardValue.TEN, CardSuit.DIAMONDS).build();
         ThreeOfKindSpecification specification = new ThreeOfKindSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testTheeOfKindOnBoard(){
+    public void testTheeOfKindOnBoard() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.DIAMONDS).build();
         board.addCard(card);
@@ -82,7 +81,7 @@ public class ThreeOfkindSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.DIAMONDS).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.JACK, CardSuit.DIAMONDS).build();
         ThreeOfKindSpecification specification = new ThreeOfKindSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }

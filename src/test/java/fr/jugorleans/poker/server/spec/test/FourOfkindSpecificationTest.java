@@ -2,7 +2,6 @@ package fr.jugorleans.poker.server.spec.test;
 
 import fr.jugorleans.poker.server.core.*;
 import fr.jugorleans.poker.server.spec.FourOfKindSpecification;
-import fr.jugorleans.poker.server.spec.ThreeOfKindSpecification;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,7 +11,7 @@ import org.junit.Test;
 public class FourOfkindSpecificationTest {
 
     @Test
-    public void testNoFourOfKind(){
+    public void testNoFourOfKind() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -25,13 +24,13 @@ public class FourOfkindSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.JACK, CardSuit.SPADES).build();
         FourOfKindSpecification specification = new FourOfKindSpecification(board);
         Assert.assertFalse(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testFourOfKindWithOnCardHand(){
+    public void testFourOfKindWithOnCardHand() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -44,13 +43,13 @@ public class FourOfkindSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.FIVE,CardSuit.SPADES).secondCard(CardValue.EIGHT,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.FIVE, CardSuit.SPADES).secondCard(CardValue.EIGHT, CardSuit.SPADES).build();
         FourOfKindSpecification specification = new FourOfKindSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testFourOfKindWithPocket(){
+    public void testFourOfKindWithPocket() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -63,13 +62,13 @@ public class FourOfkindSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.TEN,CardSuit.SPADES).secondCard(CardValue.TEN,CardSuit.DIAMONDS).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.TEN, CardSuit.SPADES).secondCard(CardValue.TEN, CardSuit.DIAMONDS).build();
         FourOfKindSpecification specification = new FourOfKindSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testTheeOfKindOnBoard(){
+    public void testTheeOfKindOnBoard() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.DIAMONDS).build();
         board.addCard(card);
@@ -82,7 +81,7 @@ public class FourOfkindSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.DIAMONDS).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.JACK, CardSuit.DIAMONDS).build();
         FourOfKindSpecification specification = new FourOfKindSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }

@@ -1,7 +1,6 @@
 package fr.jugorleans.poker.server.spec.test;
 
 import fr.jugorleans.poker.server.core.*;
-import fr.jugorleans.poker.server.spec.PairSpecification;
 import fr.jugorleans.poker.server.spec.TwoPairSpecification;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +11,7 @@ import org.junit.Test;
 public class TwoPairSpecificationTest {
 
     @Test
-    public void testNoTwoPair(){
+    public void testNoTwoPair() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -25,13 +24,13 @@ public class TwoPairSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.JACK, CardSuit.SPADES).build();
         TwoPairSpecification specification = new TwoPairSpecification(board);
         Assert.assertFalse(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testTwoPair(){
+    public void testTwoPair() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -44,13 +43,13 @@ public class TwoPairSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.FIVE,CardSuit.SPADES).secondCard(CardValue.EIGHT,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.FIVE, CardSuit.SPADES).secondCard(CardValue.EIGHT, CardSuit.SPADES).build();
         TwoPairSpecification specification = new TwoPairSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testTwoPairOnBoard(){
+    public void testTwoPairOnBoard() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -63,7 +62,7 @@ public class TwoPairSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.JACK, CardSuit.SPADES).build();
         TwoPairSpecification specification = new TwoPairSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }

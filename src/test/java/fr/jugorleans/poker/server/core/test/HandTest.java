@@ -13,7 +13,7 @@ import org.junit.Test;
 public class HandTest {
 
     @Test
-    public void handValueTest(){
+    public void handValueTest() {
         Card fistCard = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.DIAMONDS).build();
         Card secondCard = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.SPADES).build();
         Hand hand = Hand.newBuilder().firstCard(fistCard).secondCard(secondCard).build();
@@ -21,7 +21,7 @@ public class HandTest {
     }
 
     @Test
-    public void handSuitedTest(){
+    public void handSuitedTest() {
         Card fistCard = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.DIAMONDS).build();
         Card secondCard = Card.newBuilder().value(CardValue.KING).suit(CardSuit.DIAMONDS).build();
         Hand hand = Hand.newBuilder().firstCard(fistCard).secondCard(secondCard).build();
@@ -30,27 +30,27 @@ public class HandTest {
     }
 
     @Test
-    public void pocketHandTest(){
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.DIAMONDS)
-                .secondCard(CardValue.ACE,CardSuit.CLUBS).build();
+    public void pocketHandTest() {
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.DIAMONDS)
+                .secondCard(CardValue.ACE, CardSuit.CLUBS).build();
         Assert.assertTrue(hand.isPocket());
         Assert.assertFalse(hand.isSuited());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void firstCardNullTest(){
+    public void firstCardNullTest() {
         Hand.newBuilder().firstCard(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void secondCardNullTest(){
+    public void secondCardNullTest() {
         Hand.newBuilder().firstCard(null);
     }
 
     @Test(expected = IllegalStateException.class)
-    public void handWithSameCardTest(){
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.DIAMONDS)
-                .secondCard(CardValue.ACE,CardSuit.DIAMONDS).build();
+    public void handWithSameCardTest() {
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.DIAMONDS)
+                .secondCard(CardValue.ACE, CardSuit.DIAMONDS).build();
     }
 
 

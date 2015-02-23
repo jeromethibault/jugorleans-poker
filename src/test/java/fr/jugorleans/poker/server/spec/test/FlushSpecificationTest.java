@@ -2,7 +2,6 @@ package fr.jugorleans.poker.server.spec.test;
 
 import fr.jugorleans.poker.server.core.*;
 import fr.jugorleans.poker.server.spec.FlushSpecification;
-import fr.jugorleans.poker.server.spec.FourOfKindSpecification;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,7 +11,7 @@ import org.junit.Test;
 public class FlushSpecificationTest {
 
     @Test
-    public void testNoFlush(){
+    public void testNoFlush() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -25,13 +24,13 @@ public class FlushSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.JACK, CardSuit.SPADES).build();
         FlushSpecification specification = new FlushSpecification(board);
         Assert.assertFalse(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testFlush1(){
+    public void testFlush1() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -44,13 +43,13 @@ public class FlushSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.FIVE,CardSuit.HEARTS).secondCard(CardValue.TEN,CardSuit.HEARTS).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.FIVE, CardSuit.HEARTS).secondCard(CardValue.TEN, CardSuit.HEARTS).build();
         FlushSpecification specification = new FlushSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testFlush2(){
+    public void testFlush2() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.HEARTS).build();
         board.addCard(card);
@@ -63,13 +62,13 @@ public class FlushSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.TEN,CardSuit.SPADES).secondCard(CardValue.ACE,CardSuit.HEARTS).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.TEN, CardSuit.SPADES).secondCard(CardValue.ACE, CardSuit.HEARTS).build();
         FlushSpecification specification = new FlushSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testFlush3(){
+    public void testFlush3() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.HEARTS).build();
         board.addCard(card);
@@ -82,7 +81,7 @@ public class FlushSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES).secondCard(CardValue.JACK,CardSuit.DIAMONDS).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.JACK, CardSuit.DIAMONDS).build();
         FlushSpecification specification = new FlushSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }

@@ -1,11 +1,8 @@
 package fr.jugorleans.poker.server.core.test;
 
-import com.google.common.collect.Sets;
 import fr.jugorleans.poker.server.core.*;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Set;
 
 /**
  * Classe de test de {@link fr.jugorleans.poker.server.core.Board}
@@ -15,36 +12,36 @@ public class BoardTest {
     private Board board = new Board();
 
     @Test(expected = IllegalArgumentException.class)
-    public void addNullCardTest(){
+    public void addNullCardTest() {
         board.addCard(null);
     }
 
     @Test(expected = IllegalStateException.class)
-    public void addSixCardTest(){
+    public void addSixCardTest() {
         Deck deck = new Deck();
-        for(int i = 0; i < 6; i++){
+        for (int i = 0; i < 6; i++) {
             board.addCard(deck.deal());
         }
     }
 
     @Test
-    public void boardTest(){
+    public void boardTest() {
         board.clear();
         Deck deck = new Deck();
         StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             Card card = deck.deal();
             builder.append(card.getValue());
             board.addCard(card);
         }
-        Assert.assertEquals(5,board.nbCard());
-        Assert.assertEquals(builder.toString(),board.toString());
+        Assert.assertEquals(5, board.nbCard());
+        Assert.assertEquals(builder.toString(), board.toString());
         board.clear();
-        Assert.assertEquals(0,board.nbCard());
+        Assert.assertEquals(0, board.nbCard());
     }
 
     @Test
-    public void nbTest(){
+    public void nbTest() {
         board.clear();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -53,13 +50,13 @@ public class BoardTest {
         Card card2 = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.HEARTS).build();
         board.addCard(card2);
 
-        Assert.assertEquals(3,board.nbCard());
-        Assert.assertEquals(2,board.nb(CardValue.EIGHT));
-        Assert.assertEquals(1,board.nb(CardValue.FIVE));
+        Assert.assertEquals(3, board.nbCard());
+        Assert.assertEquals(2, board.nb(CardValue.EIGHT));
+        Assert.assertEquals(1, board.nb(CardValue.FIVE));
     }
 
     @Test
-    public void nbUniqueValueCardTest(){
+    public void nbUniqueValueCardTest() {
         board.clear();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -71,11 +68,11 @@ public class BoardTest {
         board.addCard(card3);
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
-        Assert.assertEquals(4,board.nbUniqueValueCard());
+        Assert.assertEquals(4, board.nbUniqueValueCard());
     }
 
     @Test
-    public void nbUniqueCardTest2(){
+    public void nbUniqueCardTest2() {
         board.clear();
         Card card = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -87,7 +84,7 @@ public class BoardTest {
         board.addCard(card3);
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
-        Assert.assertEquals(5,board.nbUniqueValueCard());
+        Assert.assertEquals(5, board.nbUniqueValueCard());
     }
 
 

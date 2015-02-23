@@ -11,7 +11,7 @@ import org.junit.Test;
 public class PairSpecificationTest {
 
     @Test
-    public void testNoPair(){
+    public void testNoPair() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -24,14 +24,14 @@ public class PairSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE,CardSuit.SPADES)
-                .secondCard(CardValue.JACK,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES)
+                .secondCard(CardValue.JACK, CardSuit.SPADES).build();
         PairSpecification specification = new PairSpecification(board);
         Assert.assertFalse(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testPair(){
+    public void testPair() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -44,14 +44,14 @@ public class PairSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.FIVE,CardSuit.SPADES)
-                .secondCard(CardValue.JACK,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.FIVE, CardSuit.SPADES)
+                .secondCard(CardValue.JACK, CardSuit.SPADES).build();
         PairSpecification specification = new PairSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testPairOnBoard(){
+    public void testPairOnBoard() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -64,14 +64,14 @@ public class PairSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.THREE,CardSuit.SPADES)
-                .secondCard(CardValue.JACK,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.THREE, CardSuit.SPADES)
+                .secondCard(CardValue.JACK, CardSuit.SPADES).build();
         PairSpecification specification = new PairSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
     @Test
-    public void testThreeOfKindOnBoard(){
+    public void testThreeOfKindOnBoard() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
         board.addCard(card);
@@ -84,8 +84,8 @@ public class PairSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.THREE,CardSuit.SPADES)
-                .secondCard(CardValue.JACK,CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.THREE, CardSuit.SPADES)
+                .secondCard(CardValue.JACK, CardSuit.SPADES).build();
         PairSpecification specification = new PairSpecification(board);
         Assert.assertFalse(specification.isSatisfiedBy(hand));
     }
