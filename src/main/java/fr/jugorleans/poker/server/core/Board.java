@@ -72,6 +72,16 @@ public class Board implements HasValue {
         this.board.stream().forEach(card -> cardValue.add(card.getCardValue()));
         return cardValue.size();
     }
+    
+    /**
+     * 
+     * @return les cartes uniques sur le board
+     */
+    public Set<CardValue> uniqueValueCardSet() {
+        final Set<CardValue> cardValue = new HashSet<>();
+        this.board.stream().forEach(card -> cardValue.add(card.getCardValue()));
+        return cardValue;
+    }
 
     /**
      * @return la liste des cartes du board
