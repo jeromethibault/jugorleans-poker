@@ -1,43 +1,26 @@
 package fr.jugorleans.poker.server.spec;
 
+import java.util.function.Predicate;
+
 /**
- * Specificaiton interface.
- * <p/>
- * Use {@link AbstractSpecification} as base for creating specifications, and
- * only the method {@link #isSatisfiedBy(Object)} must be implemented.
+ * Specification interface.
+ * <p>
+ * Delegate {@link Predicate#test(Object)} to {@link #isSatisfiedBy(Object)}.
+ * </p>
  */
-public interface Specification<T> {
+public interface Specification<T> extends Predicate<T> {
 
-    /**
-     * Check if {@code t} is satisfied by the specification.
-     *
-     * @param o Object to test.
-     * @return {@code true} if {@code t} satisfies the specification.
-     * @throws ClassCastException Thrown if o can not be cast to expected type.
-     */
-    boolean isSatisfiedBy(T o);
+	/**
+	 * Check if {@code t} is satisfied by the {@link Specification}.
+	 *
+	 * @param t Object to test.
+	 * @return {@code true} if {@code t} satisfies the specification.
+	 */
+	boolean isSatisfiedBy(T t);
 
-    /**
-     * Create a new specification that is the AND operation of {@code this} specification and another specification.
-     *
-     * @param specification Specification to AND.
-     * @return A new specification.
-     */
-    Specification and(Specification specification);
-
-    /**
-     * Create a new specification that is the OR operation of {@code this} specification and another specification.
-     *
-     * @param specification Specification to OR.
-     * @return A new specification.
-     */
-    Specification or(Specification specification);
-
-    /**
-     * Create a new specification that is the NOT operation of {@code this} specification.
-     *
-     * @param specification Specification to NOT.
-     * @return A new specification.
-     */
-    Specification not(Specification specification);
+	/** {@inheritDoc} */
+	@Override
+	default boolean test(final T t) {
+		return this.isSatisfiedBy(t);
+	}
 }
