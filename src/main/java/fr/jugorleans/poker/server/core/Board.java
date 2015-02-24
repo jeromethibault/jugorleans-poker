@@ -7,6 +7,7 @@ import fr.jugorleans.poker.server.util.HasValue;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Représente le tableau c'est à dire les cartes visibles par tous les joueurs. Le tableau est constitué du flop (3
@@ -68,19 +69,16 @@ public class Board implements HasValue {
      * @return le nombre de carte unique sur le board
      */
     public int nbUniqueValueCard() {
-        final Set<CardValue> cardValue = new HashSet<>();
-        this.board.stream().forEach(card -> cardValue.add(card.getCardValue()));
+        final Set<CardValue> cardValue = this.board.stream().map(card -> card.getCardValue()).collect(Collectors.toSet());
         return cardValue.size();
     }
-    
+
     /**
-     * 
+     *
      * @return les cartes uniques sur le board
      */
     public Set<CardValue> uniqueValueCardSet() {
-        final Set<CardValue> cardValue = new HashSet<>();
-        this.board.stream().forEach(card -> cardValue.add(card.getCardValue()));
-        return cardValue;
+        return this.board.stream().map(card -> card.getCardValue()).collect(Collectors.toSet());
     }
 
     /**
