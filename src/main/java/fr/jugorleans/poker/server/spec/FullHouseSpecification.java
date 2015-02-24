@@ -32,6 +32,6 @@ public class FullHouseSpecification implements Specification<Hand> {
         final PairSpecification pairSpecification = new PairSpecification(this.board);
         final ThreeOfKindSpecification threeOfKindSpecification = new ThreeOfKindSpecification(this.board);
         final FourOfKindSpecification fourOfKindSpecification = new FourOfKindSpecification(this.board);
-        return !fourOfKindSpecification.isSatisfiedBy(hand) && pairSpecification.isSatisfiedBy(hand) && threeOfKindSpecification.isSatisfiedBy(hand);
+        return pairSpecification.and(threeOfKindSpecification).and(fourOfKindSpecification.negate()).isSatisfiedBy(hand);
     }
 }
