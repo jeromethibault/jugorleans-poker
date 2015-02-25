@@ -6,7 +6,9 @@ import fr.jugorleans.poker.server.core.Card;
 import fr.jugorleans.poker.server.core.CardValue;
 import fr.jugorleans.poker.server.core.Hand;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -37,13 +39,19 @@ public class StraightSpecification implements Specification<Hand> {
         listCard.addAll(hand.getCards());
 
         /*Trier les cartes via leur force par ordre croissant*/
-        List<CardValue> listValue = listCard.stream().map(card -> card.getCardValue()).sorted((c1,c2) -> Integer.compare(c1.getForce(),c2.getForce()))
-                .collect(Collectors.toList());
+        List<CardValue> setValue = listCard.stream().map(card -> card.getCardValue()).collect(Collectors.toSet())
+                .stream().sorted((c1,c2) -> Integer.compare(c1.getForce(),c2.getForce())).collect(Collectors.toList());
 
-        int firstStraight = listValue.get(4).getForce() - listValue.get(0).getForce();
-        int secondStraight = listValue.get(5).getForce() - listValue.get(1).getForce();
-        int thirdStraight = listValue.get(6).getForce() - listValue.get(2).getForce();
+        if(setValue.size() >= 5){
+            int modulo = setValue.size()%5;
+            for(int i=0;i<modulo+1;i++){
+                int straight = setValue.get(4+i).getForce() - setValue.get(i).getForce();
+                if(straight == 4){
+                    return true;
+                }
+            }
+        }
 
-        return (firstStraight == 4) || (secondStraight == 4) || (thirdStraight == 4);
+        return false;
     }
 }

@@ -49,7 +49,7 @@ public class StraightSpecificationTest {
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
-    @Test
+   @Test
     public void testStraight() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
@@ -61,7 +61,7 @@ public class StraightSpecificationTest {
         Card card3 = Card.newBuilder().value(CardValue.JACK).suit(CardSuit.HEARTS).build();
         board.addCard(card3);
         Card card4 = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.HEARTS).build();
-        board.addCard(card4);
+        board.addCard(card4);//
 
         Hand hand = Hand.newBuilder().firstCard(CardValue.QUEEN, CardSuit.SPADES).secondCard(CardValue.TEN, CardSuit.DIAMONDS).build();
         StraightSpecification specification = new StraightSpecification(board);
@@ -83,6 +83,25 @@ public class StraightSpecificationTest {
         board.addCard(card4);
 
         Hand hand = Hand.newBuilder().firstCard(CardValue.JACK, CardSuit.SPADES).secondCard(CardValue.QUEEN, CardSuit.DIAMONDS).build();
+        StraightSpecification specification = new StraightSpecification(board);
+        Assert.assertTrue(specification.isSatisfiedBy(hand));
+    }
+
+    @Test
+    public void testStraight3() {
+        Board board = new Board();
+        Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();
+        board.addCard(card);
+        Card card1 = Card.newBuilder().value(CardValue.NINE).suit(CardSuit.DIAMONDS).build();
+        board.addCard(card1);
+        Card card2 = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.HEARTS).build();
+        board.addCard(card2);
+        Card card3 = Card.newBuilder().value(CardValue.JACK).suit(CardSuit.HEARTS).build();
+        board.addCard(card3);
+        Card card4 = Card.newBuilder().value(CardValue.TEN).suit(CardSuit.SPADES).build();
+        board.addCard(card4);
+
+        Hand hand = Hand.newBuilder().firstCard(CardValue.QUEEN, CardSuit.SPADES).secondCard(CardValue.TEN, CardSuit.DIAMONDS).build();
         StraightSpecification specification = new StraightSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
