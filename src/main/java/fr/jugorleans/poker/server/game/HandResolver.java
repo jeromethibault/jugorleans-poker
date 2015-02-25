@@ -5,8 +5,7 @@ import fr.jugorleans.poker.server.core.Combination;
 import fr.jugorleans.poker.server.core.Hand;
 
 /**
- * Interface définissant ce que doit être une classe permettant de déterminer
- * la combinasion en fonction d'un board et d'une main
+ * HandResolver interface
  */
 public interface HandResolver {
 
