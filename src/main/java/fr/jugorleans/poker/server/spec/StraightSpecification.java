@@ -40,13 +40,13 @@ public class StraightSpecification implements Specification<Hand> {
 
         /*Trier les cartes via leur force par ordre croissant*/
         List<CardValue> setValue = listCard.stream().map(card -> card.getCardValue()).collect(Collectors.toSet())
-                .stream().sorted((c1,c2) -> Integer.compare(c1.getForce(),c2.getForce())).collect(Collectors.toList());
+                .stream().sorted((c1, c2) -> Integer.compare(c1.getForce(), c2.getForce())).collect(Collectors.toList());
 
-        if(setValue.size() >= 5){
-            int modulo = setValue.size()%5;
-            for(int i=0;i<modulo+1;i++){
-                int straight = setValue.get(4+i).getForce() - setValue.get(i).getForce();
-                if(straight == 4){
+        if (setValue.size() >= 5) {
+            int modulo = setValue.size() % 5;
+            for (int i = 0; i <= modulo; i++) {
+                int straight = setValue.get(4 + i).getForce() - setValue.get(i).getForce();
+                if (straight == 4) {
                     return true;
                 }
             }
