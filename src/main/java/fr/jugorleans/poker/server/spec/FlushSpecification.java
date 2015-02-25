@@ -39,7 +39,9 @@ public class FlushSpecification implements Specification<Hand> {
     @Override
     public boolean isSatisfiedBy(Hand hand) {
         List<Card> listCard = Lists.newArrayList(this.board.getCards());
-        listCard.addAll(hand.getCards());
+        if(hand != null){
+            listCard.addAll(hand.getCards());
+        }
 
         int nbSuitedMax = listCard.stream().map(card -> card.getCardSuit()).collect(Collectors.toSet())
                 .stream().map(suit -> nbSuited(suit, listCard)).collect(Collectors.toList())

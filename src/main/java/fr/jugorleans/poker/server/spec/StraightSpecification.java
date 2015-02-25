@@ -22,6 +22,11 @@ public class StraightSpecification implements Specification<Hand> {
     private final Board board;
 
     /**
+     * Nombre de carte nécessaire pour constituer une quinte
+     */
+    public static final int NB_STRAIGHT_CARD = 5;
+
+    /**
      * Construire un {@link fr.jugorleans.poker.server.spec.StraightSpecification} sur un board donné
      *
      * @param board le board
@@ -42,8 +47,8 @@ public class StraightSpecification implements Specification<Hand> {
         List<CardValue> setValue = listCard.stream().map(card -> card.getCardValue()).collect(Collectors.toSet())
                 .stream().sorted((c1, c2) -> Integer.compare(c1.getForce(), c2.getForce())).collect(Collectors.toList());
 
-        if (setValue.size() >= 5) {
-            int modulo = setValue.size() % 5;
+        if (setValue.size() >= NB_STRAIGHT_CARD) {
+            int modulo = setValue.size() % NB_STRAIGHT_CARD;
             for (int i = 0; i <= modulo; i++) {
                 int straight = setValue.get(4 + i).getForce() - setValue.get(i).getForce();
                 if (straight == 4) {
