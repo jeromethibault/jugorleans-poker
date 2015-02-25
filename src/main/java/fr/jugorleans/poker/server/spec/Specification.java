@@ -1,5 +1,6 @@
 package fr.jugorleans.poker.server.spec;
 
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -49,5 +50,18 @@ public interface Specification<T> extends Predicate<T> {
 	default Specification<T> or(final Specification<? super T> other) {
 		final Predicate<T> or = Predicate.super.or(other);
 		return t -> or.test(t);
+	}
+
+	/**
+	 * Returns a composed predicate that represents a short-circuiting logical XOR of this predicate and another.
+	 *
+	 * @param other a predicate that will be logically-XORed with this predicate
+	 * @return a composed predicate that represents the short-circuiting logical XOR of this predicate and the
+	 *         {@code other} predicate
+	 * @throws NullPointerException if other is null
+	 */
+	default Specification<T> xor(final Specification<? super T> other) {
+		Objects.requireNonNull(other);
+		return (t) -> this.test(t) ^ other.test(t);
 	}
 }

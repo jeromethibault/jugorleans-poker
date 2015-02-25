@@ -41,4 +41,12 @@ public class SpecificationTest {
 		Assert.assertTrue(this.falseSpecification.or(this.trueSpecification).isSatisfiedBy(null));
 		Assert.assertFalse(this.falseSpecification.or(this.falseSpecification).isSatisfiedBy(null));
 	}
+
+	@Test
+	public void testXor() {
+		Assert.assertFalse(this.trueSpecification.xor(this.trueSpecification).isSatisfiedBy(null));
+		Assert.assertTrue(this.trueSpecification.xor(this.falseSpecification).isSatisfiedBy(null));
+		Assert.assertTrue(this.falseSpecification.xor(this.trueSpecification).isSatisfiedBy(null));
+		Assert.assertFalse(this.falseSpecification.xor(this.falseSpecification).isSatisfiedBy(null));
+	}
 }
