@@ -1,7 +1,6 @@
 package fr.jugorleans.poker.server.spec.test;
 
 import fr.jugorleans.poker.server.core.*;
-import fr.jugorleans.poker.server.spec.FourOfKindSpecification;
 import fr.jugorleans.poker.server.spec.StraightSpecification;
 import org.junit.Assert;
 import org.junit.Test;
@@ -49,7 +48,7 @@ public class StraightSpecificationTest {
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 
-   @Test
+    @Test
     public void testStraight() {
         Board board = new Board();
         Card card = Card.newBuilder().value(CardValue.EIGHT).suit(CardSuit.CLUBS).build();

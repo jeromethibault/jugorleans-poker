@@ -1,7 +1,14 @@
 package fr.jugorleans.poker.server.spec;
 
+import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.core.Board;
+import fr.jugorleans.poker.server.core.Card;
+import fr.jugorleans.poker.server.core.CardValue;
 import fr.jugorleans.poker.server.core.Hand;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Specification permettant d'évaluer si la main et le board constituent un full house
@@ -29,9 +36,11 @@ public class FullHouseSpecification implements Specification<Hand> {
      */
     @Override
     public boolean isSatisfiedBy(final Hand hand) {
-        final PairSpecification pairSpecification = new PairSpecification(this.board);
-        final ThreeOfKindSpecification threeOfKindSpecification = new ThreeOfKindSpecification(this.board);
+        List<Card> listCard = Lists.newArrayList(this.board.getCards());
+        listCard.addAll(hand.getCards());
+        Map<CardValue, Long> counters = listCard.stream().collect(Collectors.groupingBy(Card::getCardValue, Collectors.counting()));
+        List<Long> list = counters.values().stream().filter(l -> (l == 3 || l == 2)).collect(Collectors.toList());
         final FourOfKindSpecification fourOfKindSpecification = new FourOfKindSpecification(this.board);
-        return pairSpecification.and(threeOfKindSpecification).and(fourOfKindSpecification.negate()).isSatisfiedBy(hand);
+        return fourOfKindSpecification.negate().isSatisfiedBy(hand) && list.contains(3L) && list.contains(2L);
     }
 }

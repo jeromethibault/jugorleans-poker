@@ -14,7 +14,7 @@ public interface HandResolver {
      * board et d'une main
      *
      * @param board le tableau
-     * @param hand la main
+     * @param hand  la main
      * @return la combinaison
      */
     Combination resolve(Board board, Hand hand);

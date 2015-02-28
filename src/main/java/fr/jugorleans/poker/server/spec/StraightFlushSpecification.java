@@ -26,7 +26,6 @@ public class StraightFlushSpecification implements Specification<Hand> {
         this.board = board;
     }
 
-
     /**
      * @param startIndex index de début de suite
      * @param endIndex   index de fin de suite
@@ -46,19 +45,19 @@ public class StraightFlushSpecification implements Specification<Hand> {
      * la carte qui possède la plus grande famille dans le board
      *
      * @param cardValue la valeur en doublon
-     * @param list la liste des cartes
+     * @param list      la liste des cartes
      * @return la carte à retirer
      */
-    private Card getCardToRemove(CardValue cardValue, List<Card> list){
+    private Card getCardToRemove(CardValue cardValue, List<Card> list) {
         Map<CardSuit, Long> counters = list.stream().collect(Collectors.groupingBy(Card::getCardSuit, Collectors.counting()));
         List<Card> cards = list.stream().filter(card -> card.getCardValue().equals(cardValue)).collect(Collectors.toList());
 
         Card cardToEliminate = null;
-        for(Card card : cards){
-            if(cardToEliminate == null){
+        for (Card card : cards) {
+            if (cardToEliminate == null) {
                 cardToEliminate = card;
-            }else{
-                if(counters.get(cardToEliminate.getCardSuit()) > counters.get(card.getCardSuit())){
+            } else {
+                if (counters.get(cardToEliminate.getCardSuit()) > counters.get(card.getCardSuit())) {
                     cardToEliminate = card;
                 }
             }
@@ -82,8 +81,8 @@ public class StraightFlushSpecification implements Specification<Hand> {
         Map<CardValue, Long> counters = setValue.stream().collect(Collectors.groupingBy(Card::getCardValue, Collectors.counting()));
 
         counters.keySet().stream().forEach(cardValue -> {
-            if(counters.get(cardValue) > 1){
-                setValue.remove(getCardToRemove(cardValue,setValue));
+            if (counters.get(cardValue) > 1) {
+                setValue.remove(getCardToRemove(cardValue, setValue));
             }
         });
         if (setValue.size() >= StraightSpecification.NB_STRAIGHT_CARD) {

@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.util.HasValue;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -74,7 +73,6 @@ public class Board implements HasValue {
     }
 
     /**
-     *
      * @return les cartes uniques sur le board
      */
     public Set<CardValue> uniqueValueCardSet() {

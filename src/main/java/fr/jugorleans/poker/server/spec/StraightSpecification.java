@@ -6,15 +6,50 @@ import fr.jugorleans.poker.server.core.Card;
 import fr.jugorleans.poker.server.core.CardValue;
 import fr.jugorleans.poker.server.core.Hand;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * Specification permettant d'évaluer si la main et le board constituent une suite
  */
 public class StraightSpecification implements Specification<Hand> {
+
+    /**
+     * Spécification interne permettant de combiner la specification sur une suite
+     * avec les autres
+     */
+    private class InternalSpecification implements Specification<Hand> {
+
+        private final Board board;
+
+        public InternalSpecification(final Board board) {
+            this.board = board;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean isSatisfiedBy(final Hand hand) {
+            List<Card> listCard = Lists.newArrayList(this.board.getCards());
+            listCard.addAll(hand.getCards());
+
+             /*Trier les cartes via leur force par ordre croissant*/
+            List<CardValue> setValue = listCard.stream().map(card -> card.getCardValue()).collect(Collectors.toSet())
+                    .stream().sorted((c1, c2) -> Integer.compare(c1.getForce(), c2.getForce())).collect(Collectors.toList());
+
+            if (setValue.size() >= NB_STRAIGHT_CARD) {
+                int modulo = setValue.size() % NB_STRAIGHT_CARD;
+                for (int i = 0; i <= modulo; i++) {
+                    int straight = setValue.get(4 + i).getForce() - setValue.get(i).getForce();
+                    if (straight == 4) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
 
     /**
      * Le board
@@ -40,23 +75,8 @@ public class StraightSpecification implements Specification<Hand> {
      */
     @Override
     public boolean isSatisfiedBy(final Hand hand) {
-        List<Card> listCard = Lists.newArrayList(this.board.getCards());
-        listCard.addAll(hand.getCards());
-
-        /*Trier les cartes via leur force par ordre croissant*/
-        List<CardValue> setValue = listCard.stream().map(card -> card.getCardValue()).collect(Collectors.toSet())
-                .stream().sorted((c1, c2) -> Integer.compare(c1.getForce(), c2.getForce())).collect(Collectors.toList());
-
-        if (setValue.size() >= NB_STRAIGHT_CARD) {
-            int modulo = setValue.size() % NB_STRAIGHT_CARD;
-            for (int i = 0; i <= modulo; i++) {
-                int straight = setValue.get(4 + i).getForce() - setValue.get(i).getForce();
-                if (straight == 4) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        InternalSpecification internalSpecification = new InternalSpecification(board);
+        FlushSpecification flushSpecification = new FlushSpecification(board);
+        return internalSpecification.and(flushSpecification.negate()).isSatisfiedBy(hand);
     }
 }

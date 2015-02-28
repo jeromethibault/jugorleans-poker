@@ -66,4 +66,23 @@ public class TwoPairSpecificationTest {
         TwoPairSpecification specification = new TwoPairSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
+
+    @Test
+    public void testFourOfKind() {
+        Board board = new Board();
+        Card card = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.CLUBS).build();
+        board.addCard(card);
+        Card card1 = Card.newBuilder().value(CardValue.KING).suit(CardSuit.CLUBS).build();
+        board.addCard(card1);
+        Card card2 = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.HEARTS).build();
+        board.addCard(card2);
+        Card card3 = Card.newBuilder().value(CardValue.NINE).suit(CardSuit.HEARTS).build();
+        board.addCard(card3);
+        Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
+        board.addCard(card4);
+
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.ACE, CardSuit.DIAMONDS).build();
+        TwoPairSpecification specification = new TwoPairSpecification(board);
+        Assert.assertFalse(specification.isSatisfiedBy(hand));
+    }
 }

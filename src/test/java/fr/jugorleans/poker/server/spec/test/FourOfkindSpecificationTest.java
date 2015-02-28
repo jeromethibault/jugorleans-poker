@@ -85,7 +85,7 @@ public class FourOfkindSpecificationTest {
         FourOfKindSpecification specification = new FourOfKindSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
-    
+
     @Test
     public void testFourOfKindOnBoardFail() {
         Board board = new Board();

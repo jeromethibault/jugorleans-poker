@@ -2,7 +2,6 @@ package fr.jugorleans.poker.server.spec.test;
 
 import fr.jugorleans.poker.server.core.*;
 import fr.jugorleans.poker.server.spec.StraightFlushSpecification;
-import fr.jugorleans.poker.server.spec.StraightSpecification;
 import org.junit.Assert;
 import org.junit.Test;
 

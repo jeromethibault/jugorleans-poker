@@ -6,7 +6,7 @@ import fr.jugorleans.poker.server.util.HasValue;
 /**
  * Enumération des différentes valeurs que peut prendre une carte
  */
-public enum CardValue implements HasValue,HasForce {
+public enum CardValue implements HasValue, HasForce {
 
     TWO {
         @Override

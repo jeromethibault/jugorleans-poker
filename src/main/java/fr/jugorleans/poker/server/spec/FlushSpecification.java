@@ -39,7 +39,7 @@ public class FlushSpecification implements Specification<Hand> {
     @Override
     public boolean isSatisfiedBy(Hand hand) {
         List<Card> listCard = Lists.newArrayList(this.board.getCards());
-        if(hand != null){
+        if (hand != null) {
             listCard.addAll(hand.getCards());
         }
 

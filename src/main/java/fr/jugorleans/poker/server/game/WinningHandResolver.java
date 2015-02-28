@@ -13,7 +13,7 @@ public interface WinningHandResolver {
     /**
      * Déterminer les mains gagnantes sur un board donné
      *
-     * @param board le board
+     * @param board    le board
      * @param listHand la liste des mains
      * @return la liste des mains gagnantes
      */

@@ -28,13 +28,13 @@ public class FourOfKindSpecification implements Specification<Hand> {
     @Override
     public boolean isSatisfiedBy(final Hand hand) {
         final int nbUniqueCardOnBoard = this.board.nbUniqueValueCard();
-        
+
         final int nbFirstCard = this.board.nb(hand.getFirstCard().getCardValue());
         final int nbSecondCard = this.board.nb(hand.getSecondCard().getCardValue());
         final boolean fourWithOneCardHand = (!hand.isPocket() && (nbUniqueCardOnBoard == 3) && ((nbFirstCard == 3) || (nbSecondCard == 3)));
         final boolean fourWithPocket = (hand.isPocket() && (nbFirstCard == 2));
-        final boolean fourOnBoard = ((nbUniqueCardOnBoard == 2) && (nbFirstCard == 0) && (nbSecondCard == 0) && 
-                this.board.uniqueValueCardSet().stream().mapToInt(c -> this.board.nb(c)).anyMatch(i -> (i>=4)));
+        final boolean fourOnBoard = ((nbUniqueCardOnBoard == 2) && (nbFirstCard == 0) && (nbSecondCard == 0) &&
+                this.board.uniqueValueCardSet().stream().mapToInt(c -> this.board.nb(c)).anyMatch(i -> (i >= 4)));
         return fourOnBoard || fourWithPocket || fourWithOneCardHand;
     }
 }

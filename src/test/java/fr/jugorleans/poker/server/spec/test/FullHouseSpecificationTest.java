@@ -85,7 +85,7 @@ public class FullHouseSpecificationTest {
         FullHouseSpecification specification = new FullHouseSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
-    
+
     @Test
     public void testFullHouse4() {
         Board board = new Board();
@@ -103,5 +103,24 @@ public class FullHouseSpecificationTest {
         Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.JACK, CardSuit.DIAMONDS).build();
         FullHouseSpecification specification = new FullHouseSpecification(board);
         Assert.assertFalse(specification.isSatisfiedBy(hand));
+    }
+
+    @Test
+    public void testFullHouse5() {
+        Board board = new Board();
+        Card card = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.CLUBS).build();
+        board.addCard(card);
+        Card card1 = Card.newBuilder().value(CardValue.KING).suit(CardSuit.CLUBS).build();
+        board.addCard(card1);
+        Card card2 = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.HEARTS).build();
+        board.addCard(card2);
+        Card card3 = Card.newBuilder().value(CardValue.NINE).suit(CardSuit.HEARTS).build();
+        board.addCard(card3);
+        Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
+        board.addCard(card4);
+
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.KING, CardSuit.HEARTS).build();
+        FullHouseSpecification specification = new FullHouseSpecification(board);
+        Assert.assertTrue(specification.isSatisfiedBy(hand));
     }
 }
