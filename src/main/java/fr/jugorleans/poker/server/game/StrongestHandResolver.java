@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * WinnigHandResolver interface.
  */
-public interface WinningHandResolver {
+public interface StrongestHandResolver {
 
     /**
      * Déterminer les mains gagnantes sur un board donné
