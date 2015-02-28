@@ -1,19 +1,19 @@
 package fr.jugorleans.poker.server.game.test;
 
 import fr.jugorleans.poker.server.core.*;
-import fr.jugorleans.poker.server.game.HoldemHandResolver;
+import fr.jugorleans.poker.server.game.DefaultCombinationResolver;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Classe de test de {@link fr.jugorleans.poker.server.game.HoldemHandResolver}
+ * Classe de test de {@link fr.jugorleans.poker.server.game.DefaultCombinationResolver}
  */
 public class HoldemHandResolverTest {
 
     /**
      * La classe à tester
      */
-    private HoldemHandResolver handResolver = new HoldemHandResolver();
+    private DefaultCombinationResolver handResolver = new DefaultCombinationResolver();
 
     @Test
     public void testHigh() {

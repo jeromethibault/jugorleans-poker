@@ -15,7 +15,7 @@ import java.util.HashMap;
  * HandResolver pour le Holdem
  */
 @Component
-public class HoldemHandResolver implements HandResolver {
+public class DefaultCombinationResolver implements CombinationResolver {
 
     /**
      * La liste des spécifications

@@ -7,7 +7,7 @@ import fr.jugorleans.poker.server.core.Hand;
 /**
  * HandResolver interface
  */
-public interface HandResolver {
+public interface CombinationResolver {
 
     /**
      * Déterminer la combinaison la plus haute en fonction d'un
