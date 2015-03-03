@@ -4,9 +4,9 @@ import fr.jugorleans.poker.server.core.Board;
 import fr.jugorleans.poker.server.core.Hand;
 
 /**
- * StrongestHandResolver interface
+ * HandStrenghtResolver interface
  */
-public interface StrenghtHandResolver {
+public interface HandStrenghtResolver {
 
     /**
      * Déterminer la force d'une main
@@ -15,5 +15,5 @@ public interface StrenghtHandResolver {
      * @param board le tableau
      * @return la force de la main soud forme d'entier
      */
-    int getStrenghtHand(Hand hand, Board board);
+    int getHandStrenght(Hand hand, Board board);
 }

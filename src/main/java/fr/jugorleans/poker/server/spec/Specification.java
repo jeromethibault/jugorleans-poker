@@ -1,5 +1,7 @@
 package fr.jugorleans.poker.server.spec;
 
+import fr.jugorleans.poker.server.core.Combination;
+
 import java.util.Objects;
 import java.util.function.Predicate;
 

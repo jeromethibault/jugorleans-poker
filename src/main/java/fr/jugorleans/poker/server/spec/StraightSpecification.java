@@ -1,13 +1,12 @@
 package fr.jugorleans.poker.server.spec;
 
-import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.core.Board;
 import fr.jugorleans.poker.server.core.Card;
 import fr.jugorleans.poker.server.core.CardValue;
 import fr.jugorleans.poker.server.core.Hand;
+import fr.jugorleans.poker.server.util.ListCard;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Specification permettant d'évaluer si la main et le board constituent une suite
@@ -31,12 +30,8 @@ public class StraightSpecification implements Specification<Hand> {
          */
         @Override
         public boolean isSatisfiedBy(final Hand hand) {
-            List<Card> listCard = Lists.newArrayList(this.board.getCards());
-            listCard.addAll(hand.getCards());
-
-             /*Trier les cartes via leur force par ordre croissant*/
-            List<CardValue> setValue = listCard.stream().map(card -> card.getCardValue()).collect(Collectors.toSet())
-                    .stream().sorted((c1, c2) -> Integer.compare(c1.getForce(), c2.getForce())).collect(Collectors.toList());
+            List<Card> listCard = ListCard.newArrayList(this.board, hand);
+            List<CardValue> setValue = ListCard.orderAscByForce(listCard);
 
             if (setValue.size() >= NB_STRAIGHT_CARD) {
                 int modulo = setValue.size() % NB_STRAIGHT_CARD;

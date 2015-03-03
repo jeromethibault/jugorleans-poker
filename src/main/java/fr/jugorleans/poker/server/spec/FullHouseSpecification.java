@@ -1,10 +1,10 @@
 package fr.jugorleans.poker.server.spec;
 
-import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.core.Board;
 import fr.jugorleans.poker.server.core.Card;
 import fr.jugorleans.poker.server.core.CardValue;
 import fr.jugorleans.poker.server.core.Hand;
+import fr.jugorleans.poker.server.util.ListCard;
 
 import java.util.List;
 import java.util.Map;
@@ -36,8 +36,7 @@ public class FullHouseSpecification implements Specification<Hand> {
      */
     @Override
     public boolean isSatisfiedBy(final Hand hand) {
-        List<Card> listCard = Lists.newArrayList(this.board.getCards());
-        listCard.addAll(hand.getCards());
+        List<Card> listCard = ListCard.newArrayList(this.board, hand);
         Map<CardValue, Long> counters = listCard.stream().collect(Collectors.groupingBy(Card::getCardValue, Collectors.counting()));
         List<Long> list = counters.values().stream().filter(l -> (l == 3 || l == 2)).collect(Collectors.toList());
         final FourOfKindSpecification fourOfKindSpecification = new FourOfKindSpecification(this.board);
