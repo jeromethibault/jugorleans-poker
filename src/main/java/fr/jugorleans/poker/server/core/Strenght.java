@@ -6,7 +6,7 @@ import java.util.Optional;
  * Après l'abbatage, une main est constitué d'une combinasion portant sur une carte principale
  * et d'éventuellement d'un kicker
  */
-public class HandStrenght {
+public class Strenght {
 
     /**
      * Le coefficient pour la combinaison
@@ -21,7 +21,7 @@ public class HandStrenght {
     /**
      * Constructeur privée
      */
-    private HandStrenght(){
+    private Strenght(){
 
     }
 
@@ -33,7 +33,7 @@ public class HandStrenght {
      * @param kicker le kicker
      * @return la force de la main sous forme d'entier unique
      */
-    public static int getStrenght(Combination combination, CardValue mainCard, Optional<CardValue> kicker){
+    public static int calculate(Combination combination, CardValue mainCard, Optional<CardValue> kicker){
         int kickerForce = kicker.isPresent()?kicker.get().getForce():0;
         return COEFF_COMBINATION * combination.getForce() + mainCard.getForce() * COEFF_MAIN_CARD + kickerForce;
     }
