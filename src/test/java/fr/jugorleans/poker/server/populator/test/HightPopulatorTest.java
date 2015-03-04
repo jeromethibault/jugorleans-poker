@@ -42,8 +42,8 @@ public class HightPopulatorTest {
 
         Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES)
                 .secondCard(CardValue.JACK, CardSuit.SPADES).build();
-        int combination = hightPopulator.populate(ListCard.newArrayList(board, hand)).getStrenght();
-        int combination2 = CombinationStrenght.name(Combination.HIGH).of(CardValue.ACE).with(CardValue.JACK).getStrenght();
+        int combination = hightPopulator.populate(ListCard.newArrayList(board, hand)).getStrength();
+        int combination2 = CombinationStrength.name(Combination.HIGH).of(CardValue.ACE).with(CardValue.JACK).getStrength();
         Assert.assertEquals(combination2,combination);
     }
 }

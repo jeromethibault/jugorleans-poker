@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * Implémentation par défaut de <code>HandStrenghtResolver</code>
  */
 @Component
-public class DefaultHandStrenghtResolver implements HandStrenghtResolver{
+public class DefaultHandStrengthResolver implements HandStrengthResolver {
 
     /**
      * Résolution des combinaisons
@@ -47,7 +47,7 @@ public class DefaultHandStrenghtResolver implements HandStrenghtResolver{
     @Override
     public int getHandStrenght(Hand hand, Board board) {
         Combination combination = combinationResolver.resolve(board, hand);
-        return populators.stream().filter(pop -> pop.handleCombination(combination)).map(pop -> pop.populate(ListCard.newArrayList(board, hand)).getStrenght())
+        return populators.stream().filter(pop -> pop.handleCombination(combination)).map(pop -> pop.populate(ListCard.newArrayList(board, hand)).getStrength())
                 .collect(Collectors.toList()).stream().mapToInt(i -> i).max().getAsInt();
     }
 }

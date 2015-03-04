@@ -6,7 +6,7 @@ import fr.jugorleans.poker.server.core.Hand;
 /**
  * HandStrenghtResolver interface
  */
-public interface HandStrenghtResolver {
+public interface HandStrengthResolver {
 
     /**
      * Déterminer la force d'une main

@@ -1,7 +1,6 @@
 package fr.jugorleans.poker.server.populator.test;
 
 import fr.jugorleans.poker.server.core.*;
-import fr.jugorleans.poker.server.populator.HightPopulator;
 import fr.jugorleans.poker.server.populator.PairPopulator;
 import fr.jugorleans.poker.server.util.ListCard;
 import org.junit.Assert;
@@ -43,8 +42,8 @@ public class PairPopulatorTest {
 
         Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES)
                 .secondCard(CardValue.EIGHT, CardSuit.SPADES).build();
-        int combination = pairPopulator.populate(ListCard.newArrayList(board, hand)).getStrenght();
-        int combination2 = CombinationStrenght.name(Combination.PAIR).of(CardValue.EIGHT).with(CardValue.ACE).getStrenght();
+        int combination = pairPopulator.populate(ListCard.newArrayList(board, hand)).getStrength();
+        int combination2 = CombinationStrength.name(Combination.PAIR).of(CardValue.EIGHT).with(CardValue.ACE).getStrength();
         Assert.assertEquals(combination2,combination);
     }
 }

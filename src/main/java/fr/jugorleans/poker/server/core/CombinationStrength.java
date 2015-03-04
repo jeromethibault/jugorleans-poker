@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * Created by Jelie on 03/03/15.
  */
-public class CombinationStrenght{
+public class CombinationStrength {
 
     /**
      * La combination
@@ -28,7 +28,7 @@ public class CombinationStrenght{
      *
      * @param combination la combination
      */
-    private CombinationStrenght(Combination combination){
+    private CombinationStrength(Combination combination){
         this.name = combination;
     }
 
@@ -38,8 +38,8 @@ public class CombinationStrenght{
      * @param combination la combination
      * @return <code>CombinationStrenght</code>
      */
-    public static CombinationStrenght name(Combination combination){
-        return new CombinationStrenght(combination);
+    public static CombinationStrength name(Combination combination){
+        return new CombinationStrength(combination);
     }
 
     /**
@@ -48,7 +48,7 @@ public class CombinationStrenght{
      * @param cardValue la carte
      * @return <code>CombinationStrenght</code>
      */
-    public CombinationStrenght of(CardValue cardValue){
+    public CombinationStrength of(CardValue cardValue){
         this.mainCard = cardValue;
         return this;
     }
@@ -59,7 +59,7 @@ public class CombinationStrenght{
      * @param cardValue la carte
      * @return <code>CombinationStrenght</code>
      */
-    public CombinationStrenght with(CardValue cardValue){
+    public CombinationStrength with(CardValue cardValue){
         kicker = Optional.of(cardValue);
         return this;
     }
@@ -67,7 +67,7 @@ public class CombinationStrenght{
     /**
      * @return la force de la combinason sous forme d'entier unique
      */
-    public int getStrenght(){
-        return Strenght.calculate(name, mainCard, kicker);
+    public int getStrength(){
+        return Strength.calculate(name, mainCard, kicker);
     }
 }

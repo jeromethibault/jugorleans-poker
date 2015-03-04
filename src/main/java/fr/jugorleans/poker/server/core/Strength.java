@@ -6,7 +6,7 @@ import java.util.Optional;
  * Après l'abbatage, une main est constitué d'une combinasion portant sur une carte principale
  * et d'éventuellement d'un kicker
  */
-public class Strenght {
+public class Strength {
 
     /**
      * Le coefficient pour la combinaison
@@ -21,7 +21,7 @@ public class Strenght {
     /**
      * Constructeur privée
      */
-    private Strenght(){
+    private Strength(){
 
     }
 

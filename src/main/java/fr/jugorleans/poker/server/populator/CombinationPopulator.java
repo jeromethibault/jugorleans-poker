@@ -2,7 +2,7 @@ package fr.jugorleans.poker.server.populator;
 
 import fr.jugorleans.poker.server.core.Card;
 import fr.jugorleans.poker.server.core.Combination;
-import fr.jugorleans.poker.server.core.CombinationStrenght;
+import fr.jugorleans.poker.server.core.CombinationStrength;
 
 import java.util.List;
 
@@ -23,6 +23,6 @@ public interface CombinationPopulator {
      * @param list Le board + la main
      * @return la combinaison complétée
      */
-    CombinationStrenght populate(List<Card> list);
+    CombinationStrength populate(List<Card> list);
 
 }
