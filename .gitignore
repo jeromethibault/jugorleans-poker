@@ -6,3 +6,7 @@
 # Maven
 /log/
 /target/
+
+#IntellijIDEA
+.idea
+poker-server.iml

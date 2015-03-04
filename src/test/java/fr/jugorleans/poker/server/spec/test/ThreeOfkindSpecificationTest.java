@@ -43,7 +43,7 @@ public class ThreeOfkindSpecificationTest {
         Card card4 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
         board.addCard(card4);
 
-        Hand hand = Hand.newBuilder().firstCard(CardValue.FIVE, CardSuit.SPADES).secondCard(CardValue.EIGHT, CardSuit.SPADES).build();
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.EIGHT, CardSuit.SPADES).build();
         ThreeOfKindSpecification specification = new ThreeOfKindSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }

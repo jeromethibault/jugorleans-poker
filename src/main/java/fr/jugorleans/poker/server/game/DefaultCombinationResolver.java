@@ -3,13 +3,18 @@ package fr.jugorleans.poker.server.game;
 import com.google.common.collect.Maps;
 import fr.jugorleans.poker.server.core.Board;
 import fr.jugorleans.poker.server.core.Combination;
+import fr.jugorleans.poker.server.core.CombinationComparator;
 import fr.jugorleans.poker.server.core.Hand;
 import fr.jugorleans.poker.server.spec.*;
+import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * HandResolver pour le Holdem
@@ -41,7 +46,8 @@ public class DefaultCombinationResolver implements CombinationResolver {
      */
     @Override
     public Combination resolve(Board board, Hand hand) {
-        for (Combination combination : SPECIFICATIONS.keySet()) {
+
+        for (Combination combination : SPECIFICATIONS.keySet().stream().sorted(new CombinationComparator()).collect(Collectors.toList())) {
             Class specificationClass = SPECIFICATIONS.get(combination);
             try {
                 Constructor constructor = specificationClass.getConstructor(Board.class);
@@ -54,6 +60,7 @@ public class DefaultCombinationResolver implements CombinationResolver {
                 e.printStackTrace();
             }
         }
+
         return Combination.HIGH;
     }
 }
