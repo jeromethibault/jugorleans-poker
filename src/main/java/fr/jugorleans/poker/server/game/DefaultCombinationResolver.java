@@ -7,6 +7,7 @@ import fr.jugorleans.poker.server.core.CombinationComparator;
 import fr.jugorleans.poker.server.core.Hand;
 import fr.jugorleans.poker.server.spec.*;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Constructor;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
  * HandResolver pour le Holdem
  */
 @Component
+@Slf4j
 public class DefaultCombinationResolver implements CombinationResolver {
 
     /**
@@ -56,8 +58,7 @@ public class DefaultCombinationResolver implements CombinationResolver {
                     return combination;
                 }
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                //TODO : Mettre en place log4J
-                e.printStackTrace();
+                log.error("Erreur lors de la résolution de la main", e);
             }
         }
 
