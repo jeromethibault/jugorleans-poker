@@ -10,3 +10,5 @@
 #IntellijIDEA
 .idea
 poker-server.iml
+
+*.log

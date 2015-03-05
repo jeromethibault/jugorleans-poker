@@ -1,4 +1,4 @@
-package fr.jugorleans.poker.server.core;
+package fr.jugorleans.poker.server.core.hand;
 
 import java.util.Optional;
 
@@ -28,7 +28,7 @@ public class CombinationStrength {
      *
      * @param combination la combination
      */
-    private CombinationStrength(Combination combination){
+    private CombinationStrength(Combination combination) {
         this.name = combination;
     }
 
@@ -38,7 +38,7 @@ public class CombinationStrength {
      * @param combination la combination
      * @return <code>CombinationStrenght</code>
      */
-    public static CombinationStrength name(Combination combination){
+    public static CombinationStrength name(Combination combination) {
         return new CombinationStrength(combination);
     }
 
@@ -48,7 +48,7 @@ public class CombinationStrength {
      * @param cardValue la carte
      * @return <code>CombinationStrenght</code>
      */
-    public CombinationStrength of(CardValue cardValue){
+    public CombinationStrength of(CardValue cardValue) {
         this.mainCard = cardValue;
         return this;
     }
@@ -59,7 +59,7 @@ public class CombinationStrength {
      * @param cardValue la carte
      * @return <code>CombinationStrenght</code>
      */
-    public CombinationStrength with(CardValue cardValue){
+    public CombinationStrength with(CardValue cardValue) {
         kicker = Optional.of(cardValue);
         return this;
     }
@@ -67,7 +67,7 @@ public class CombinationStrength {
     /**
      * @return la force de la combinason sous forme d'entier unique
      */
-    public int getStrength(){
+    public int getStrength() {
         return Strength.calculate(name, mainCard, kicker);
     }
 }

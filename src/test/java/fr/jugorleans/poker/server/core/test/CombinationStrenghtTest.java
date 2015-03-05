@@ -1,13 +1,13 @@
 package fr.jugorleans.poker.server.core.test;
 
-import fr.jugorleans.poker.server.core.CardValue;
-import fr.jugorleans.poker.server.core.Combination;
-import fr.jugorleans.poker.server.core.CombinationStrength;
+import fr.jugorleans.poker.server.core.hand.CardValue;
+import fr.jugorleans.poker.server.core.hand.Combination;
+import fr.jugorleans.poker.server.core.hand.CombinationStrength;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Classe de test de {@link fr.jugorleans.poker.server.core.CombinationStrength}
+ * Classe de test de {@link fr.jugorleans.poker.server.core.hand.CombinationStrength}
  */
 public class CombinationStrenghtTest {
 

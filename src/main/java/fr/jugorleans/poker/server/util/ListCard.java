@@ -1,9 +1,9 @@
 package fr.jugorleans.poker.server.util;
 
-import fr.jugorleans.poker.server.core.Board;
-import fr.jugorleans.poker.server.core.Card;
-import fr.jugorleans.poker.server.core.CardValue;
-import fr.jugorleans.poker.server.core.Hand;
+import fr.jugorleans.poker.server.core.play.Board;
+import fr.jugorleans.poker.server.core.hand.Card;
+import fr.jugorleans.poker.server.core.hand.CardValue;
+import fr.jugorleans.poker.server.core.hand.Hand;
 
 import java.util.List;
 import java.util.Map;

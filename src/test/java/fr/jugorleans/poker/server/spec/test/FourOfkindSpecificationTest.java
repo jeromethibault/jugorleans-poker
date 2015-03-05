@@ -1,6 +1,10 @@
 package fr.jugorleans.poker.server.spec.test;
 
-import fr.jugorleans.poker.server.core.*;
+import fr.jugorleans.poker.server.core.hand.Card;
+import fr.jugorleans.poker.server.core.hand.CardSuit;
+import fr.jugorleans.poker.server.core.hand.CardValue;
+import fr.jugorleans.poker.server.core.hand.Hand;
+import fr.jugorleans.poker.server.core.play.Board;
 import fr.jugorleans.poker.server.spec.FourOfKindSpecification;
 import org.junit.Assert;
 import org.junit.Test;

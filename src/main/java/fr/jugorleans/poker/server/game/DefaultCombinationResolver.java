@@ -1,20 +1,17 @@
 package fr.jugorleans.poker.server.game;
 
 import com.google.common.collect.Maps;
-import fr.jugorleans.poker.server.core.Board;
-import fr.jugorleans.poker.server.core.Combination;
-import fr.jugorleans.poker.server.core.CombinationComparator;
-import fr.jugorleans.poker.server.core.Hand;
+import fr.jugorleans.poker.server.core.play.Board;
+import fr.jugorleans.poker.server.core.hand.Combination;
+import fr.jugorleans.poker.server.core.hand.CombinationComparator;
+import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.spec.*;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**

@@ -1,4 +1,4 @@
-package fr.jugorleans.poker.server.core;
+package fr.jugorleans.poker.server.core.hand;
 
 import fr.jugorleans.poker.server.util.HasValue;
 

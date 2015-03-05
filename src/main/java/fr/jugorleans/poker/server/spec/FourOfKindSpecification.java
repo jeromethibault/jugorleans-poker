@@ -1,7 +1,7 @@
 package fr.jugorleans.poker.server.spec;
 
-import fr.jugorleans.poker.server.core.Board;
-import fr.jugorleans.poker.server.core.Hand;
+import fr.jugorleans.poker.server.core.play.Board;
+import fr.jugorleans.poker.server.core.hand.Hand;
 
 /**
  * Specification permettant d'évaluer si la main et le board constituent un carré

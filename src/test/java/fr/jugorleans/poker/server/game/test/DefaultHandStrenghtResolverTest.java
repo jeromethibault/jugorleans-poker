@@ -1,7 +1,8 @@
 package fr.jugorleans.poker.server.game.test;
 
 import fr.jugorleans.poker.server.conf.test.ConfigurationTest;
-import fr.jugorleans.poker.server.core.*;
+import fr.jugorleans.poker.server.core.hand.*;
+import fr.jugorleans.poker.server.core.play.Board;
 import fr.jugorleans.poker.server.game.DefaultHandStrengthResolver;
 import org.junit.Assert;
 import org.junit.Test;

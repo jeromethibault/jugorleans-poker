@@ -1,7 +1,11 @@
 package fr.jugorleans.poker.server.spec;
 
 import com.google.common.collect.Lists;
-import fr.jugorleans.poker.server.core.*;
+import fr.jugorleans.poker.server.core.hand.Card;
+import fr.jugorleans.poker.server.core.hand.CardSuit;
+import fr.jugorleans.poker.server.core.hand.CardValue;
+import fr.jugorleans.poker.server.core.hand.Hand;
+import fr.jugorleans.poker.server.core.play.Board;
 
 import java.util.List;
 import java.util.Map;

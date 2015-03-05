@@ -1,7 +1,10 @@
-package fr.jugorleans.poker.server.core;
+package fr.jugorleans.poker.server.core.play;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import fr.jugorleans.poker.server.core.hand.Card;
+import fr.jugorleans.poker.server.core.hand.CardSuit;
+import fr.jugorleans.poker.server.core.hand.CardValue;
 
 import java.util.Collections;
 import java.util.List;

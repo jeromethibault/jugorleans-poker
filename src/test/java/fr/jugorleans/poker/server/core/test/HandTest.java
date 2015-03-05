@@ -1,14 +1,14 @@
 package fr.jugorleans.poker.server.core.test;
 
-import fr.jugorleans.poker.server.core.Card;
-import fr.jugorleans.poker.server.core.CardSuit;
-import fr.jugorleans.poker.server.core.CardValue;
-import fr.jugorleans.poker.server.core.Hand;
+import fr.jugorleans.poker.server.core.hand.Card;
+import fr.jugorleans.poker.server.core.hand.CardSuit;
+import fr.jugorleans.poker.server.core.hand.CardValue;
+import fr.jugorleans.poker.server.core.hand.Hand;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Classe de test de {@link fr.jugorleans.poker.server.core.Hand}
+ * Classe de test de {@link fr.jugorleans.poker.server.core.hand.Hand}
  */
 public class HandTest {
 

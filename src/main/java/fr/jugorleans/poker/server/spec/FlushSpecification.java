@@ -1,10 +1,10 @@
 package fr.jugorleans.poker.server.spec;
 
 import com.google.common.collect.Lists;
-import fr.jugorleans.poker.server.core.Board;
-import fr.jugorleans.poker.server.core.Card;
-import fr.jugorleans.poker.server.core.CardSuit;
-import fr.jugorleans.poker.server.core.Hand;
+import fr.jugorleans.poker.server.core.play.Board;
+import fr.jugorleans.poker.server.core.hand.Card;
+import fr.jugorleans.poker.server.core.hand.CardSuit;
+import fr.jugorleans.poker.server.core.hand.Hand;
 
 import java.util.List;
 import java.util.stream.Collectors;

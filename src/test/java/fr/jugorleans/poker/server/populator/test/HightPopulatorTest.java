@@ -1,6 +1,7 @@
 package fr.jugorleans.poker.server.populator.test;
 
-import fr.jugorleans.poker.server.core.*;
+import fr.jugorleans.poker.server.core.hand.*;
+import fr.jugorleans.poker.server.core.play.Board;
 import fr.jugorleans.poker.server.populator.HightPopulator;
 import fr.jugorleans.poker.server.util.ListCard;
 import org.junit.Assert;

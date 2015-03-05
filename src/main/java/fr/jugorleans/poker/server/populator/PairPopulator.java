@@ -1,9 +1,9 @@
 package fr.jugorleans.poker.server.populator;
 
-import fr.jugorleans.poker.server.core.Card;
-import fr.jugorleans.poker.server.core.CardValue;
-import fr.jugorleans.poker.server.core.Combination;
-import fr.jugorleans.poker.server.core.CombinationStrength;
+import fr.jugorleans.poker.server.core.hand.Card;
+import fr.jugorleans.poker.server.core.hand.CardValue;
+import fr.jugorleans.poker.server.core.hand.Combination;
+import fr.jugorleans.poker.server.core.hand.CombinationStrength;
 import fr.jugorleans.poker.server.util.ListCard;
 
 import java.util.List;

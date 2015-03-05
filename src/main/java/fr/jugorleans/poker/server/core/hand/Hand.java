@@ -1,4 +1,4 @@
-package fr.jugorleans.poker.server.core;
+package fr.jugorleans.poker.server.core.hand;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

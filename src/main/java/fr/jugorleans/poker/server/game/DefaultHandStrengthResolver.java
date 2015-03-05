@@ -1,9 +1,9 @@
 package fr.jugorleans.poker.server.game;
 
 import com.google.common.collect.Lists;
-import fr.jugorleans.poker.server.core.Board;
-import fr.jugorleans.poker.server.core.Combination;
-import fr.jugorleans.poker.server.core.Hand;
+import fr.jugorleans.poker.server.core.play.Board;
+import fr.jugorleans.poker.server.core.hand.Combination;
+import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.populator.CombinationPopulator;
 import fr.jugorleans.poker.server.populator.HightPopulator;
 import fr.jugorleans.poker.server.populator.PairPopulator;

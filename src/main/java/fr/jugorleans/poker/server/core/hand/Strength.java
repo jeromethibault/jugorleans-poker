@@ -1,4 +1,4 @@
-package fr.jugorleans.poker.server.core;
+package fr.jugorleans.poker.server.core.hand;
 
 import java.util.Optional;
 
@@ -21,7 +21,7 @@ public class Strength {
     /**
      * Constructeur privée
      */
-    private Strength(){
+    private Strength() {
 
     }
 
@@ -29,12 +29,12 @@ public class Strength {
      * Calculer la force d'une main
      *
      * @param combination la combinaison
-     * @param mainCard la carte "maitresse"
-     * @param kicker le kicker
+     * @param mainCard    la carte "maitresse"
+     * @param kicker      le kicker
      * @return la force de la main sous forme d'entier unique
      */
-    public static int calculate(Combination combination, CardValue mainCard, Optional<CardValue> kicker){
-        int kickerForce = kicker.isPresent()?kicker.get().getForce():0;
+    public static int calculate(Combination combination, CardValue mainCard, Optional<CardValue> kicker) {
+        int kickerForce = kicker.isPresent() ? kicker.get().getForce() : 0;
         return COEFF_COMBINATION * combination.getForce() + mainCard.getForce() * COEFF_MAIN_CARD + kickerForce;
     }
 }

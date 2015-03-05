@@ -1,8 +1,8 @@
 package fr.jugorleans.poker.server.core.test;
 
 import com.google.common.collect.Sets;
-import fr.jugorleans.poker.server.core.Card;
-import fr.jugorleans.poker.server.core.Deck;
+import fr.jugorleans.poker.server.core.hand.Card;
+import fr.jugorleans.poker.server.core.play.Deck;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Classe de test de {@link fr.jugorleans.poker.server.core.Deck}
+ * Classe de test de {@link fr.jugorleans.poker.server.core.play.Deck}
  */
 public class DeckTest {
 
