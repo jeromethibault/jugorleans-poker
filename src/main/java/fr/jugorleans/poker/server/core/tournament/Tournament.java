@@ -4,6 +4,7 @@ import fr.jugorleans.poker.server.core.play.Play;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.util.Assert;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +56,12 @@ public class Tournament {
 
 
     /**
+     * Dealer de la main courante (identifié par son numéro de siège)
+     */
+    private Integer seatPlayDealer;
+
+
+    /**
      * Ajout de joueurs
      *
      * @param playersToAdd joueurs à ajouter
@@ -67,20 +74,17 @@ public class Tournament {
      * Démarrage du tournoi
      */
     public void start() {
+        AtomicInteger seatNumber = new AtomicInteger(0);
 
-        if (!started) {
-            AtomicInteger seatNumber = new AtomicInteger(0);
+        players.stream().forEach(p -> {
+            // Attribution des places
+            p.setSeat(Seat.builder().number(seatNumber.incrementAndGet()).build());
 
-            players.stream().forEach(p -> {
-                // Attribution des places
-                p.setSeat(Seat.builder().number(seatNumber.incrementAndGet()).build());
+            // Initialisation des stacks
+            p.setStack(initialStack);
+        });
 
-                // Initialisation des stacks
-                p.setStack(initialStack);
-            });
-
-            started = true;
-        }
+        started = true;
     }
 
     /**
@@ -89,11 +93,27 @@ public class Tournament {
      * @return la main créée
      */
     public Play newPlay() {
-        if (started) {
-            currentPlay = Play.builder().build();
-            lastPlays.add(currentPlay);
-        }
+        Assert.isTrue(started, "Tournament non démarré");
+        currentPlay = Play.builder().build();
+        lastPlays.add(currentPlay);
+
+
+        // Déplacement du dealer
+        moveDealerButton();
+
+        // Démarrage de la main
+        currentPlay.start(seatPlayDealer);
+
         return currentPlay;
+    }
+
+    private void moveDealerButton() {
+        if (seatPlayDealer == null){
+            // Choix aléatoire
+            seatPlayDealer = ((Double) (Math.random() * players.size())).intValue();
+        } else {
+            // TODO gérer déplacement en fonction des présents
+        }
     }
 
     /**

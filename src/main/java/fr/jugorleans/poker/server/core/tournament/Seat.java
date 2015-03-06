@@ -12,5 +12,6 @@ import lombok.ToString;
 @Builder
 public class Seat {
 
+    /** Numero du siege */
     private int number;
 }

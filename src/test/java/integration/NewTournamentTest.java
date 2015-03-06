@@ -4,12 +4,14 @@ import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.core.play.Play;
 import fr.jugorleans.poker.server.core.tournament.Player;
 import fr.jugorleans.poker.server.core.tournament.Tournament;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * Test d'intégration
  */
+@Slf4j
 public class NewTournamentTest {
 
     @Test
@@ -30,13 +32,14 @@ public class NewTournamentTest {
         wsop.start();
 
         Assert.assertEquals("Nombre de joueurs inscrits KO", 3, wsop.nbPlayersIn());
-
         Assert.assertNull("Aucune main jouée", wsop.getCurrentPlay());
         Play play = wsop.newPlay();
-
-
         Assert.assertNotNull("Main en cours", wsop.getCurrentPlay());
 
+        wsop.getPlayers().stream().forEach(p -> {
+            Assert.assertTrue(p.getStack() > 0);
+            Assert.assertTrue(p.getSeat().getNumber() > 0);
+        });
 
 
     }
