@@ -7,6 +7,7 @@ import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.populator.CombinationPopulator;
 import fr.jugorleans.poker.server.populator.HightPopulator;
 import fr.jugorleans.poker.server.populator.PairPopulator;
+import fr.jugorleans.poker.server.populator.TwoPairPopulator;
 import fr.jugorleans.poker.server.util.ListCard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,6 +40,7 @@ public class DefaultHandStrengthResolver implements HandStrengthResolver {
     public void init(){
         populators.add(new HightPopulator());
         populators.add(new PairPopulator());
+        populators.add(new TwoPairPopulator());
     }
 
     /**
