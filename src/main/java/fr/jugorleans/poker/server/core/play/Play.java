@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Partie (au sens une main) jouée entre plusieurs joueurs
@@ -38,7 +39,7 @@ public class Play {
     /**
      * Joueurs et montants associées investis pour le joueur durant cette main
      */
-    private Map<Player, Integer> players = Maps.newHashMap();
+    private Map<Player, Integer> players;
 
     /**
      * Joueur qui est en train de jouer (identifié par son numéro siège)
@@ -62,12 +63,13 @@ public class Play {
 
 
     public void start(Tournament tournament) {
+        // Positionnement du dealer (à conserver car important pour chaque début de round)
         seatCurrentDealer = tournament.getSeatPlayDealer();
 
+        // Initialisation du pot, jeu de cartes, et du round PREFLOP
         pot = new Pot();
         deck = new Deck();
         deck.shuffleUp();
-
         round = Round.PREFLOP;
 
         // Distribution des cartes
@@ -80,6 +82,7 @@ public class Play {
 
         // TODO gerer les blinds (attention HU)
 
+        // Positionnement du joueur courant au niveau du dealer, puis passage au joueur UTGs
         seatCurrentPlayer = seatCurrentDealer;
         nextPlayer(); // small blind (ou BB en HU)
         nextPlayer(); // big blind (ou SB en HU)
@@ -105,37 +108,64 @@ public class Play {
     public Play bet(Player player, int betValue) {
         checkGoodPlayer(player);
 
+        // Bet = MAJ du pot, diminution du stack du joueur et MAJ montant engagé sur le round
         pot.addToPot(betValue);
         player.bet(betValue);
+        players.merge(player, betValue, (v1, v2) -> v1 + v2);
+
+        // Check si fin d'un round
         checkNewRound();
+
+        // Passage au joueur suivant
         nextPlayer();
 
         return this;
     }
 
 
+    /**
+     * Fold d'un joueur
+     *
+     * @param player joueur qui fold
+     * @return la main courante
+     */
     public Play fold(Player player) {
         checkGoodPlayer(player);
+
+        // Fold du joueur
         player.fold();
-        players.remove(player);
+
+        // Check si fin d'un round
         checkNewRound();
+
+        // Passage au joueur suivant
         nextPlayer();
 
         return this;
     }
 
+    /**
+     * Vérification d'un éventuel changement de round
+     *
+     * @return vrai si la dernière action a engendré un changement de round
+     */
     private boolean checkNewRound() {
+        // Tous les joueurs ont-ils joué ?
         boolean everybodyPlays = players.keySet().stream()
-                .noneMatch(p -> p.getLastAction() != Action.NONE);
+                .noneMatch(p -> Action.NONE.equals(p.getLastAction()));
 
+        // Calcul moyenne du montant investi par les joueurs non foldés
         Double averageBetActivePlayers = players.entrySet().stream()
-                .filter(p -> p.getKey().getLastAction() != Action.FOLD)
-                .mapToInt(p -> p.getValue()).average().orElse(0.0);
+                .filter(p -> !Action.FOLD.equals(p.getKey().getLastAction()))
+                .collect(Collectors.averagingInt(p -> p.getValue())).doubleValue();
 
+        // Tous les joueurs non foldés ont-ils investi la moyenne précédemment calculée ?
+        // == ont-ils tous fait la même mise ?
         boolean allActivePlayersHaveSameBet = players.entrySet().stream()
                 .filter(p -> p.getKey().getLastAction() != Action.FOLD)
                 .allMatch(p -> p.getValue() == averageBetActivePlayers.intValue());
 
+        // Nouveau round si les deux conditions sont remplies
         boolean newRound = everybodyPlays && allActivePlayersHaveSameBet;
         if (newRound) {
             round = round.next();
@@ -163,7 +193,8 @@ public class Play {
     private Optional<Player> findNextPlayer() {
         int nextSeatPlayer = 1 + seatCurrentPlayer % players.size();
         return players.keySet().stream()
-                .filter(p -> (p.getSeat().getNumber() == nextSeatPlayer && !p.isOut()))
+                .filter(p -> (p.getSeat().getNumber() == nextSeatPlayer
+                        && !Action.FOLD.equals(p.getLastAction())))
                 .findFirst();
     }
 
