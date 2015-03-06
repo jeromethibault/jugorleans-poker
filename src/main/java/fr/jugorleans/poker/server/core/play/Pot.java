@@ -25,5 +25,13 @@ public class Pot {
      */
     private Optional<List<Integer>> sidePot = Optional.empty();
 
+    /**
+     * Ajout d'une mise dans le pot principal
+     * @param betValue montant de la mise
+     */
+    public void addToPot(int betValue){
+        amount = amount + betValue;
+    }
+
 
 }

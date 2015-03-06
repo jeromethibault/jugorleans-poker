@@ -1,5 +1,6 @@
 package fr.jugorleans.poker.server.core.tournament;
 
+import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.core.play.Action;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,9 +37,30 @@ public class Player {
     private Action lastAction;
 
     /**
+     * Main (2 cartes) en cours
+     */
+    private Hand currentHand;
+
+    /**
      * Siège attribué
      */
     private Seat seat;
 
 
+    /**
+     * Mise du joueur
+     *
+     * @param betValue valeur de la mise à retirer du stack
+     */
+    public void bet(int betValue) {
+        stack = stack - betValue;
+        lastAction = Action.BET;
+    }
+
+    /**
+     * Fold
+     */
+    public void fold() {
+        lastAction = Action.FOLD;
+    }
 }
