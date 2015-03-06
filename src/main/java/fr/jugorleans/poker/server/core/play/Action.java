@@ -7,5 +7,7 @@ public enum Action {
 
     FOLD,
     CHECK,
-    RAISE
+    BET,
+    RAISE,
+    NONE
 }

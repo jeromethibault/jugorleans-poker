@@ -2,12 +2,14 @@ package fr.jugorleans.poker.server.core.tournament;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
  * Siège
  */
 @Getter
+@Setter
 @ToString
 @Builder
 public class Seat {

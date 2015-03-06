@@ -3,6 +3,7 @@ package fr.jugorleans.poker.server.core.tournament;
 import fr.jugorleans.poker.server.core.play.Play;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.util.Assert;
 
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  * Tournoi
  */
 @Getter
+@Setter
 @Builder
 @ToString
 public class Tournament {
