@@ -41,6 +41,5 @@ public class NewTournamentTest {
             Assert.assertTrue(p.getSeat().getNumber() > 0);
         });
 
-
     }
 }

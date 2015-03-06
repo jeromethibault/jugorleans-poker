@@ -3,6 +3,7 @@ package fr.jugorleans.poker.server.core.play;
 import com.google.common.collect.Maps;
 import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.core.tournament.Player;
+import fr.jugorleans.poker.server.core.tournament.Tournament;
 import lombok.Builder;
 import lombok.ToString;
 
@@ -21,17 +22,17 @@ public class Play {
     /**
      * Pots (principal et éventuels secondaires)
      */
-    private Pot pot = new Pot();
+    private Pot pot;
 
     /**
      * Paquet de cartes
      */
-    private Deck deck = new Deck();
+    private Deck deck;
 
     /**
      * Board
      */
-    private Board board = new Board();
+    private Board board;
 
     /**
      * Joueurs et cartes associées
@@ -59,10 +60,20 @@ public class Play {
     private boolean started = false;
 
 
-    public void start(int seatNewDealer) {
-        seatCurrentDealer = seatNewDealer;
+    public void start(Tournament tournament) {
+        seatCurrentDealer = tournament.getSeatPlayDealer();
 
         // TODO gerer distribution des cartes
+        pot = new Pot();
+        deck = new Deck();
+
+        deck.shuffleUp();
+
+        // Distribution des cartes
+        players = Maps.newHashMap();
+        tournament.getPlayers().stream().filter(p -> !p.isOut()).forEach(p -> {
+            players.put(p, Hand.newBuilder().firstCard(deck.deal()).secondCard(deck.deal()).build());
+        });
 
         // TODO gerer les blinds
 

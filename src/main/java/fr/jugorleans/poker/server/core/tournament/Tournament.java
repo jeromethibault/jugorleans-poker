@@ -102,14 +102,14 @@ public class Tournament {
         moveDealerButton();
 
         // Démarrage de la main
-        currentPlay.start(seatPlayDealer);
+        currentPlay.start(this);
 
         return currentPlay;
     }
 
     private void moveDealerButton() {
         if (seatPlayDealer == null){
-            // Choix aléatoire
+            // Choix aléatoire du tout premier dealer
             seatPlayDealer = ((Double) (Math.random() * players.size())).intValue();
         } else {
             // TODO gérer déplacement en fonction des présents
