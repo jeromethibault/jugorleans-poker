@@ -15,7 +15,12 @@ public class CombinationStrength {
     /**
      * La carte principale de la combination
      */
-    private CardValue mainCard;
+    private CardValue firstValue;
+
+    /**
+     * La carte secondaire de la combination optionelle
+     */
+    private Optional<CardValue> secondValue = Optional.empty();
 
     /**
      * Le kicker
@@ -43,18 +48,18 @@ public class CombinationStrength {
     }
 
     /**
-     * Assignation de la carte principale
+     * Assigner la carte principale
      *
      * @param cardValue la carte
      * @return <code>CombinationStrenght</code>
      */
     public CombinationStrength of(CardValue cardValue) {
-        this.mainCard = cardValue;
+        this.firstValue = cardValue;
         return this;
     }
 
     /**
-     * Assignation du kicker
+     * Assigner le kicker
      *
      * @param cardValue la carte
      * @return <code>CombinationStrenght</code>
@@ -65,9 +70,20 @@ public class CombinationStrength {
     }
 
     /**
+     * Assigner la carte secondaire
+     *
+     * @param cardValue la valeur de la carte
+     * @return <code>CombinationStrenght</code>
+     */
+    public CombinationStrength and(CardValue cardValue){
+        secondValue = Optional.of(cardValue);
+        return this;
+    }
+
+    /**
      * @return la force de la combinason sous forme d'entier unique
      */
     public int getStrength() {
-        return Strength.calculate(name, mainCard, kicker);
+        return Strength.calculate(name, firstValue, secondValue, kicker);
     }
 }

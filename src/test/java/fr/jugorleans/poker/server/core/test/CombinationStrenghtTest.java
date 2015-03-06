@@ -24,4 +24,11 @@ public class CombinationStrenghtTest {
         int hand2 = CombinationStrength.name(Combination.FLUSH).of(CardValue.KING).getStrength();
         Assert.assertTrue(hand1 > hand2);
     }
+
+    @Test
+    public void test3(){
+        int hand1 = CombinationStrength.name(Combination.TWO_PAIR).of(CardValue.ACE).and(CardValue.JACK).getStrength();
+        int hand2 = CombinationStrength.name(Combination.TWO_PAIR).of(CardValue.ACE).and(CardValue.TEN).getStrength();
+        Assert.assertTrue(hand1 > hand2);
+    }
 }
