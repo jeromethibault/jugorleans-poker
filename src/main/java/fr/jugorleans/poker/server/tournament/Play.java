@@ -1,9 +1,8 @@
-package fr.jugorleans.poker.server.core.play;
+package fr.jugorleans.poker.server.tournament;
 
 import com.google.common.collect.Maps;
 import fr.jugorleans.poker.server.core.hand.Hand;
-import fr.jugorleans.poker.server.core.tournament.Player;
-import fr.jugorleans.poker.server.core.tournament.Tournament;
+import fr.jugorleans.poker.server.core.play.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -68,6 +67,7 @@ public class Play {
 
         // Initialisation du pot, jeu de cartes, et du round PREFLOP
         pot = new Pot();
+        board = new Board();
         deck = new Deck();
         deck.shuffleUp();
         round = Round.PREFLOP;
@@ -142,6 +142,7 @@ public class Play {
         nextPlayer();
 
         return this;
+
     }
 
     /**
@@ -168,10 +169,21 @@ public class Play {
         // Nouveau round si les deux conditions sont remplies
         boolean newRound = everybodyPlays && allActivePlayersHaveSameBet;
         if (newRound) {
-            round = round.next();
+            startNewRound();
         }
 
         return newRound;
+    }
+
+    /**
+     * Démarrage d'un nouveau round
+     */
+    private void startNewRound() {
+        // Passage au round suivant
+        round = round.next();
+
+        // Ajout d'éventuelles cartes sur le board
+        board.addCards(deck.deal(round.nbCardsToAddOnBoard()));
     }
 
     /**

@@ -19,6 +19,10 @@ public class BoardTest {
     public void addNullCardTest() {
         board.addCard(null);
     }
+    @Test(expected = IllegalArgumentException.class)
+     public void addNullCardsTest() {
+        board.addCards(null);
+    }
 
     @Test(expected = IllegalStateException.class)
     public void addSixCardTest() {

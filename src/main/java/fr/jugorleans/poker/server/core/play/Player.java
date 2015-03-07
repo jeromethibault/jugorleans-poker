@@ -1,7 +1,6 @@
-package fr.jugorleans.poker.server.core.tournament;
+package fr.jugorleans.poker.server.core.play;
 
 import fr.jugorleans.poker.server.core.hand.Hand;
-import fr.jugorleans.poker.server.core.play.Action;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

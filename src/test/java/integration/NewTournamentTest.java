@@ -2,10 +2,10 @@ package integration;
 
 import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.core.play.Action;
-import fr.jugorleans.poker.server.core.play.Play;
+import fr.jugorleans.poker.server.tournament.Play;
 import fr.jugorleans.poker.server.core.play.Round;
-import fr.jugorleans.poker.server.core.tournament.Player;
-import fr.jugorleans.poker.server.core.tournament.Tournament;
+import fr.jugorleans.poker.server.core.play.Player;
+import fr.jugorleans.poker.server.tournament.Tournament;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -56,6 +56,7 @@ public class NewTournamentTest {
         Assert.assertEquals("Nombre cartes restantes KO", 44, play.getDeck().cardsLeft());
         Assert.assertEquals("Round courant KO", Round.PREFLOP, play.getRound());
 
+
         // Check init des Action
         wsop.getPlayers().stream().forEach(p -> {
             Assert.assertEquals(Action.NONE, p.getLastAction());
@@ -95,11 +96,16 @@ public class NewTournamentTest {
         play.fold(nicolas);
         Assert.assertEquals("Last Action du joueur " + nicolas, Action.FOLD, nicolas.getLastAction());
 
+        Assert.assertEquals("Nb cards sur le board - preflop ", 0, play.getBoard().nbCard());
+
         play.bet(julien, 200);
         Assert.assertEquals("Stack restant du joueur " + julien, 650, jerome.getStack().intValue());
         Assert.assertEquals("Last Action du joueur " + julien, Action.BET, jerome.getLastAction());
         Assert.assertEquals("Montant du pot", 1050, play.getPot().getAmount().intValue());
         Assert.assertEquals("Round courant KO", Round.FLOP, play.getRound());
+
+
+        Assert.assertEquals("Nb cards sur le board - flop ", 3, play.getBoard().nbCard());
 
     }
 }

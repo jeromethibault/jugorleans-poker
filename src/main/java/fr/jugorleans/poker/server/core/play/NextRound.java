@@ -10,4 +10,13 @@ public interface NextRound {
      * @return le retour suivant le round courant
      */
     Round next();
+
+    /**
+     * Nombre de cartes à ajouter au board
+     * @return le nombre de cartes
+     */
+    default int nbCardsToAddOnBoard(){
+        return 0;
+    }
+
 }

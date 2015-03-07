@@ -1,4 +1,4 @@
-package fr.jugorleans.poker.server.core.tournament;
+package fr.jugorleans.poker.server.core.play;
 
 import lombok.Builder;
 import lombok.Getter;

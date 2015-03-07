@@ -34,6 +34,16 @@ public class Board implements HasValue {
     }
 
     /**
+     * Ajouter une carte sur le board. Le board ne peut pas accueillir plus de 5 cartes
+     *
+     * @param cards liste de cartes
+     */
+    public void addCards(final List<Card> cards) {
+        Preconditions.checkArgument(cards != null);
+        cards.stream().forEach(c -> addCard(c));
+    }
+
+    /**
      * La valeur du board est la concaténation de la valeur des cartes du board
      *
      * @return la valeur du board
