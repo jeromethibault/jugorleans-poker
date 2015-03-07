@@ -7,6 +7,7 @@ public enum Action {
 
     FOLD,
     CHECK,
+    CALL,
     BET,
     NONE
 }

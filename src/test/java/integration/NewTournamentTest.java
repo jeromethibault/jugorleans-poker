@@ -2,9 +2,10 @@ package integration;
 
 import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.core.play.Action;
-import fr.jugorleans.poker.server.tournament.Play;
-import fr.jugorleans.poker.server.core.play.Round;
 import fr.jugorleans.poker.server.core.play.Player;
+import fr.jugorleans.poker.server.core.play.Pot;
+import fr.jugorleans.poker.server.core.play.Round;
+import fr.jugorleans.poker.server.tournament.Play;
 import fr.jugorleans.poker.server.tournament.Tournament;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
@@ -18,9 +19,9 @@ public class NewTournamentTest {
 
     public static final int INITIAL_STACK = 10000;
 
+    private Pot pot;
     @Test
     public void newTournament() {
-
 
         Player jerome = Player.builder().nickName("Jer").build();
         Player francois = Player.builder().nickName("Fra").build();
@@ -53,6 +54,7 @@ public class NewTournamentTest {
         wsop.setSeatPlayDealer(1);
 
         Play play = wsop.newPlay();
+        pot = play.getPot();
         Assert.assertEquals("Nombre cartes restantes KO", 44, play.getDeck().cardsLeft());
         Assert.assertEquals("Round courant KO", Round.PREFLOP, play.getRound());
 
@@ -68,58 +70,93 @@ public class NewTournamentTest {
         Assert.assertEquals(julien, player);
 
         play.action(julien, Action.BET, 150);
-        Assert.assertEquals("Stack restant du joueur " , 9850, julien.getStack().intValue());
-        Assert.assertEquals("Last Action du joueur " , Action.BET, julien.getLastAction());
-        Assert.assertEquals("Montant du pot", 150, play.getPot().getAmount().intValue());
+        checkPlayerState(julien, 9850, Action.BET, 150);
 
         try {
             play.action(julien, Action.BET, 150);
-            Assert.fail("Pas au tour du joueur " );
-        } catch (RuntimeException e) {
+            Assert.fail("Pas au tour du joueur ");
+        } catch (IllegalStateException e) {
         }
 
         play.action(jerome, Action.BET, 350);
-        Assert.assertEquals("Stack restant du joueur " , 9650, jerome.getStack().intValue());
-        Assert.assertEquals("Last Action du joueur " , Action.BET, jerome.getLastAction());
-        Assert.assertEquals("Montant du pot", 500, play.getPot().getAmount().intValue());
+        checkPlayerState(jerome, 9650, Action.BET, 500);
 
-        play.action(francois, Action.BET, 350);
-        Assert.assertEquals("Stack restant du joueur " , 9650, francois.getStack().intValue());
-        Assert.assertEquals("Last Action du joueur " , Action.BET, francois.getLastAction());
-        Assert.assertEquals("Montant du pot", 850, play.getPot().getAmount().intValue());
+        play.action(francois, Action.CALL, 350);
+        checkPlayerState(francois, 9650, Action.CALL, 850);
 
         try {
             play.action(julien, Action.FOLD, 0);
-            Assert.fail("Pas au tour du joueur " );
-        } catch (RuntimeException e) {
+            Assert.fail("Pas au tour du joueur");
+        } catch (IllegalStateException e) {
         }
         play.action(nicolas, Action.FOLD, 0);
-        Assert.assertEquals("Last Action du joueur " , Action.FOLD, nicolas.getLastAction());
-        Assert.assertEquals("Stack restant du joueur " , INITIAL_STACK, nicolas.getStack().intValue());
-
+        checkPlayerState(nicolas, INITIAL_STACK, Action.FOLD, 850);
         Assert.assertEquals("Nb cards sur le board - preflop ", 0, play.getBoard().nbCard());
 
-        play.action(julien,Action.BET, 200);
+        play.action(julien, Action.CALL, 200);
+        // LastAction Action.NONE car nouveau round
+        checkPlayerState(julien, 9650, Action.NONE, 1050);
         Assert.assertEquals("Round courant KO", Round.FLOP, play.getRound());
-        Assert.assertEquals("Stack restant du joueur " , 9650, julien.getStack().intValue());
-        // LastAction NONE car nouveau round
-        Assert.assertEquals("Last Action du joueur " , Action.NONE, julien.getLastAction());
-        Assert.assertEquals("Montant du pot", 1050, play.getPot().getAmount().intValue());
-
-
         Assert.assertEquals("Nb cards sur le board - flop ", 3, play.getBoard().nbCard());
 
         // Au tour de Fra (car nouveau round après le dealer)
         play.action(francois, Action.CHECK, 0);
-        Assert.assertEquals("Stack restant du joueur " , 9650, francois.getStack().intValue());
-        Assert.assertEquals("Last Action du joueur " , Action.CHECK, francois.getLastAction());
-        Assert.assertEquals("Montant du pot", 1050, play.getPot().getAmount().intValue());
+        checkPlayerState(francois, 9650, Action.CHECK, 1050);
 
-        play.action(julien,Action.BET, 500);
-        Assert.assertEquals("Stack restant du joueur ", 9150, julien.getStack().intValue());
-        Assert.assertEquals("Last Action du joueur ", Action.BET, julien.getLastAction());
-        Assert.assertEquals("Montant du pot", 1550, play.getPot().getAmount().intValue());
+        play.action(julien, Action.BET, 500);
+        checkPlayerState(julien, 9150, Action.BET, 1550);
+
+        // Mauvaise relance
+        play.action(jerome, Action.BET, 999);
+        checkPlayerState(jerome, 9150, Action.CALL, 2050);
+
+        // Check interdit -> call; Action.NONE car nouveau round (turn)
+        play.action(francois, Action.CHECK, 0);
+        checkPlayerState(jerome, 9150, Action.NONE, 2550);
+        Assert.assertEquals("Round courant KO", Round.TURN, play.getRound());
+        Assert.assertEquals("Nb cards sur le board - turn ", 4, play.getBoard().nbCard());
 
 
+        // Au tour de Fra (car nouveau round après le dealer)
+        play.action(francois, Action.CHECK, 0);
+        checkPlayerState(francois, 9150, Action.CHECK, 2550);
+
+        // Call suite à un check -> check
+        play.action(julien, Action.CALL, 700);
+        checkPlayerState(julien, 9150, Action.CHECK, 2550);
+
+        // TODO A reprendre avec ajout gestion des blinds - mise de 1 < BB - sera un call donc un check ici
+        play.action(jerome, Action.BET, 1);
+        checkPlayerState(jerome, 9149, Action.BET, 2551);
+
+        play.action(francois, Action.BET, 1000);
+        checkPlayerState(francois, 8150, Action.BET, 3551);
+
+        play.action(julien, Action.CALL, 1000);
+        checkPlayerState(julien, 8150, Action.CALL, 4551);
+
+        // Call pourr voir la river
+        play.action(jerome, Action.CALL, 1);
+        checkPlayerState(jerome, 8150, Action.NONE, 5550);
+
+        Assert.assertEquals("Round courant KO", Round.RIVER, play.getRound());
+        Assert.assertEquals("Nb cards sur le board - river ", 5, play.getBoard().nbCard());
+
+        // Au tour de Fra (car nouveau round après le dealer) - 3 checks
+        play.action(francois, Action.CHECK, 0);
+        play.action(julien, Action.CHECK, 0);
+        play.action(jerome, Action.CHECK, 0);
+        checkPlayerState(jerome, 8150, Action.NONE, 5550);
+
+        Assert.assertEquals("Round courant KO", Round.SHOWDOWN, play.getRound());
+        Assert.assertEquals("Nb cards sur le board - showdown ", 5, play.getBoard().nbCard());
+
+
+    }
+
+    public void checkPlayerState(Player player, int stackExpected, Action lastActionExpected, int potAmountExpected){
+        Assert.assertEquals("Stack restant du joueur ", stackExpected, player.getStack().intValue());
+        Assert.assertEquals("Last Action du joueur ", lastActionExpected, player.getLastAction());
+        Assert.assertEquals("Montant du pot", potAmountExpected, pot.getAmount().intValue());
     }
 }

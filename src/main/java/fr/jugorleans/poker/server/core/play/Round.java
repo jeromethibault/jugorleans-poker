@@ -36,7 +36,7 @@ public enum Round implements NextRound {
     RIVER {
         @Override
         public Round next() {
-            return END;
+            return SHOWDOWN;
         }
 
         @Override
@@ -44,7 +44,7 @@ public enum Round implements NextRound {
             return 1;
         }
     },
-    END {
+    SHOWDOWN {
         @Override
         public Round next() {
             return null;

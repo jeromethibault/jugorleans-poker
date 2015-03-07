@@ -21,6 +21,7 @@ public interface PlayerAction {
      * @param player joueur concerné
      * @param bet    montant investi dans cette action
      * @return le Play courant
+     * @throws MustCallException en cas d'action non autorisée
      */
-    Play action(Player player, int bet);
+    Play action(Player player, int bet) throws MustCallException;
 }

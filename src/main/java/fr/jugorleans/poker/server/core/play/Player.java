@@ -54,7 +54,21 @@ public class Player {
 
 
     /**
-     * Mise du joueur
+     * Call
+     *
+     * @param callValue valeur de la mise à retirer du Stack
+     */
+    public void call(int callValue) {
+        stack = stack - callValue;
+        if (callValue == 0) {
+            check();
+        } else {
+            lastAction = Action.CALL;
+        }
+    }
+
+    /**
+     * Mise initiale ou relance
      *
      * @param betValue valeur de la mise à retirer du stack
      */
@@ -72,9 +86,10 @@ public class Player {
 
     /**
      * Vérification que le joueur est foldé durant un Play
+     *
      * @return vrai s'il est foldé, faux dans le cas contraire
      */
-    public boolean isFolded(){
+    public boolean isFolded() {
         return Action.FOLD.equals(lastAction);
     }
 

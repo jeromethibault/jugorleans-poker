@@ -3,10 +3,7 @@ package fr.jugorleans.poker.server.tournament;
 import com.google.common.collect.Maps;
 import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.core.play.*;
-import fr.jugorleans.poker.server.tournament.action.BetAction;
-import fr.jugorleans.poker.server.tournament.action.CheckAction;
-import fr.jugorleans.poker.server.tournament.action.FoldAction;
-import fr.jugorleans.poker.server.tournament.action.PlayerAction;
+import fr.jugorleans.poker.server.tournament.action.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -60,11 +57,6 @@ public class Play {
     private Round round;
 
     /**
-     * Montant de la dernière relance
-     */
-    private int lastRaise;
-
-    /**
      * Ensemble des PlayerAction
      */
     private static final Map<Action, PlayerAction> ACTIONS = Maps.newHashMap();
@@ -74,6 +66,7 @@ public class Play {
      */
     static {
         ACTIONS.put(Action.CHECK, new CheckAction());
+        ACTIONS.put(Action.CALL, new CallAction());
         ACTIONS.put(Action.BET, new BetAction());
         ACTIONS.put(Action.FOLD, new FoldAction());
     }
@@ -131,7 +124,15 @@ public class Play {
         checkGoodPlayer(player);
 
         // Traitement de l'action du joueur
-        ACTIONS.get(action).action(player, betValue);
+        try {
+            ACTIONS.get(action).action(player, betValue);
+        } catch (MustCallException e) {
+            try {
+                ACTIONS.get(Action.CALL).action(player, 0);
+            } catch (MustCallException e1) {
+                throw new IllegalStateException("Ne doit pas arriver");
+            }
+        }
 
         // Check si fin d'un round
         checkNewRound();
@@ -193,6 +194,9 @@ public class Play {
 
         // Positionnement initial sur le dealer
         seatCurrentPlayer = seatCurrentDealer;
+
+        // Prise en compte au niveau du pot
+        pot.newRound();
     }
 
     /**

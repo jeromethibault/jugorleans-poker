@@ -25,6 +25,12 @@ public class Pot {
      */
     private Optional<List<Integer>> sidePot = Optional.empty();
 
+    /** Montant du round courant surlequel il faut s'aligner pour accéder au round suivant */
+    private Integer roundBet = 0;
+
+    /** Montan de la dernière relance */
+    private Integer lastRaise = 0;
+
     /**
      * Ajout d'une mise dans le pot principal
      * @param betValue montant de la mise
@@ -33,5 +39,12 @@ public class Pot {
         amount = amount + betValue;
     }
 
+    /**
+     * Prise en compte d'un nouveau round
+     */
+    public void newRound(){
+        roundBet = 0;
+        lastRaise = 0;
+    }
 
 }
