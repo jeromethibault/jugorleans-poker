@@ -1,17 +1,17 @@
 package fr.jugorleans.poker.server.game;
 
 import com.google.common.collect.Maps;
-import fr.jugorleans.poker.server.core.play.Board;
 import fr.jugorleans.poker.server.core.hand.Combination;
 import fr.jugorleans.poker.server.core.hand.CombinationComparator;
 import fr.jugorleans.poker.server.core.hand.Hand;
+import fr.jugorleans.poker.server.core.play.Board;
 import fr.jugorleans.poker.server.spec.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -24,7 +24,7 @@ public class DefaultCombinationResolver implements CombinationResolver {
     /**
      * La liste des spécifications
      */
-    private static final HashMap<Combination, Class> SPECIFICATIONS = Maps.newHashMap();
+    private static final Map<Combination, Class> SPECIFICATIONS = Maps.newHashMap();
 
     /**
      * Initialisation de la liste des spécifications

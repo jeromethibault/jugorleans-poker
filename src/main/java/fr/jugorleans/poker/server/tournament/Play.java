@@ -3,6 +3,9 @@ package fr.jugorleans.poker.server.tournament;
 import com.google.common.collect.Maps;
 import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.core.play.*;
+import fr.jugorleans.poker.server.tournament.action.BetAction;
+import fr.jugorleans.poker.server.tournament.action.FoldAction;
+import fr.jugorleans.poker.server.tournament.action.PlayerAction;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -60,8 +63,24 @@ public class Play {
      */
     private boolean started = false;
 
+    /**
+     * Ensemble des PlayerAction
+     */
+    private static final Map<Action, PlayerAction> ACTIONS = Maps.newHashMap();
+
+    /**
+     * Initialisation de la liste des spécifications
+     */
+    static {
+        ACTIONS.put(Action.BET, new BetAction());
+        ACTIONS.put(Action.FOLD, new FoldAction());
+    }
+
 
     public void start(Tournament tournament) {
+        // Passage de la main courante - Attention pas threadsafe pour multitables (mais on reste single table)
+        ACTIONS.entrySet().forEach(impl -> impl.getValue().setPlay(this));
+
         // Positionnement du dealer (à conserver car important pour chaque début de round)
         seatCurrentDealer = tournament.getSeatPlayDealer();
 
@@ -102,16 +121,15 @@ public class Play {
      * Mise d'un joueur
      *
      * @param player   joueur concerné
+     * @param action   action du joueur
      * @param betValue montant de la mise
      * @return la main courante
      */
-    public Play bet(Player player, int betValue) {
+    public Play action(Player player, Action action, int betValue) {
         checkGoodPlayer(player);
 
-        // Bet = MAJ du pot, diminution du stack du joueur et MAJ montant engagé sur le round
-        pot.addToPot(betValue);
-        player.bet(betValue);
-        players.merge(player, betValue, (v1, v2) -> v1 + v2);
+        // Traitement de l'action du joueur
+        ACTIONS.get(action).action(player, betValue);
 
         // Check si fin d'un round
         checkNewRound();
@@ -120,29 +138,6 @@ public class Play {
         nextPlayer();
 
         return this;
-    }
-
-
-    /**
-     * Fold d'un joueur
-     *
-     * @param player joueur qui fold
-     * @return la main courante
-     */
-    public Play fold(Player player) {
-        checkGoodPlayer(player);
-
-        // Fold du joueur
-        player.fold();
-
-        // Check si fin d'un round
-        checkNewRound();
-
-        // Passage au joueur suivant
-        nextPlayer();
-
-        return this;
-
     }
 
     /**
