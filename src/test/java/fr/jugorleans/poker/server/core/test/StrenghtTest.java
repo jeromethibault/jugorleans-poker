@@ -47,4 +47,9 @@ public class StrenghtTest {
         Assert.assertTrue(hand1 > hand2);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testKO(){
+        Strength.calculate(Combination.FLUSH,null,Optional.empty(),Optional.empty());
+    }
+
 }

@@ -39,6 +39,7 @@ public class DefaultHandStrengthResolver implements HandStrengthResolver {
         populators.add(new PairPopulator());
         populators.add(new TwoPairPopulator());
         populators.add(new ThreeOfKindPopulator());
+        populators.add(new StraightPopulator());
         populators.add(new FullHousePopulator());
     }
 

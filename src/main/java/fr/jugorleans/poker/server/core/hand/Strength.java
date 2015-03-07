@@ -1,5 +1,7 @@
 package fr.jugorleans.poker.server.core.hand;
 
+import com.google.common.base.Preconditions;
+
 import java.util.Optional;
 
 /**
@@ -39,6 +41,7 @@ public class Strength {
      * @return la force de la main sous forme d'entier unique
      */
     public static int calculate(Combination combination, CardValue mainCard, Optional<CardValue> secondValue, Optional<CardValue> kicker) {
+        Preconditions.checkArgument(mainCard != null);
         int secondValueForce = secondValue.isPresent() ? secondValue.get().getForce() : 0;
         int kickerForce = kicker.isPresent() ? kicker.get().getForce() : 0;
         return COEFF_COMBINATION * combination.getForce() + mainCard.getForce() * COEFF_FIRST_VALUE + secondValueForce * COEFF_SECOND_VALUE + kickerForce;
