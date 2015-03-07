@@ -1,5 +1,6 @@
 package fr.jugorleans.poker.server.util;
 
+import fr.jugorleans.poker.server.core.hand.CardSuit;
 import fr.jugorleans.poker.server.core.play.Board;
 import fr.jugorleans.poker.server.core.hand.Card;
 import fr.jugorleans.poker.server.core.hand.CardValue;
@@ -50,12 +51,22 @@ public final class ListCard {
     }
 
     /**
-     * Retourner sous forme de Map le nombre de chaque CardValue dans la liste
+     * Retourner sous forme de <code>Map</code> le nombre de chaque CardValue dans la liste
      *
      * @param list la liste de carte
-     * @return la map
+     * @return <code>Map</code>
      */
     public static Map<CardValue,Long> countCardValue(List<Card> list){
         return list.stream().collect(Collectors.groupingBy(Card::getCardValue, Collectors.counting()));
+    }
+
+    /**
+     * Retourner sous forme de <code>Map</code> le nombre de chaque famille dans la liste
+     *
+     * @param list la liste de carte
+     * @return <code>Map</code>
+     */
+    public static Map<CardSuit,Long> countCardSuit(List<Card> list){
+        return list.stream().collect(Collectors.groupingBy(Card::getCardSuit, Collectors.counting()));
     }
 }
