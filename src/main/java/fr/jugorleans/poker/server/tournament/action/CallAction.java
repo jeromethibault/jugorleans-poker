@@ -19,6 +19,8 @@ public class CallAction implements PlayerAction {
     @Override
     public Play action(Player player, int bet) {
 
+        // TODO gérer stack insuffisant / auto allin
+
         Pot pot = play.getPot();
 
         // Montant sur lequel le joueur a besoin de s'aligner pour continuer sur le round (plus grande mise cumulée d'un joueur en jeu)

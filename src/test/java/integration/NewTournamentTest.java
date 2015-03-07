@@ -1,25 +1,39 @@
 package integration;
 
 import com.google.common.collect.Lists;
+import fr.jugorleans.poker.server.conf.test.ConfigurationTest;
 import fr.jugorleans.poker.server.core.play.Action;
 import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.core.play.Pot;
 import fr.jugorleans.poker.server.core.play.Round;
+import fr.jugorleans.poker.server.game.DefaultStrongestHandResolver;
 import fr.jugorleans.poker.server.tournament.Play;
 import fr.jugorleans.poker.server.tournament.Tournament;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * Test d'intégration
  */
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = ConfigurationTest.class)
 @Slf4j
 public class NewTournamentTest {
 
     public static final int INITIAL_STACK = 10000;
 
+
+    @Autowired
+    private DefaultStrongestHandResolver defaultStrongestHandResolver;
+
     private Pot pot;
+
     @Test
     public void newTournament() {
 
@@ -51,9 +65,13 @@ public class NewTournamentTest {
         francois.getSeat().setNumber(2);
         nicolas.getSeat().setNumber(3);
         julien.getSeat().setNumber(4);
-        wsop.setSeatPlayDealer(1);
+        wsop.setSeatPlayDealer(4);
 
+        /**
+         * New Play
+         */
         Play play = wsop.newPlay();
+        play.setDefaultStrongestHandResolver(defaultStrongestHandResolver);
         pot = play.getPot();
         Assert.assertEquals("Nombre cartes restantes KO", 44, play.getDeck().cardsLeft());
         Assert.assertEquals("Round courant KO", Round.PREFLOP, play.getRound());
@@ -146,17 +164,66 @@ public class NewTournamentTest {
         play.action(francois, Action.CHECK, 0);
         play.action(julien, Action.CHECK, 0);
         play.action(jerome, Action.CHECK, 0);
-        checkPlayerState(jerome, 8150, Action.NONE, 5550);
+        Assert.assertEquals("Montant du pot final", 5550, pot.getAmount().intValue());
 
         Assert.assertEquals("Round courant KO", Round.SHOWDOWN, play.getRound());
         Assert.assertEquals("Nb cards sur le board - showdown ", 5, play.getBoard().nbCard());
 
+        checkCumulStacks(play);
+
+        try {
+            play.action(julien, Action.BET, 0);
+            Assert.fail("Play terminé");
+        } catch (IllegalStateException e) {
+        }
+
+        /**
+         * New Play
+         */
+        play = wsop.newPlay();
+        pot = play.getPot();
+        Assert.assertEquals("Round courant KO", Round.PREFLOP, play.getRound());
+        Assert.assertEquals("Nb cards sur le board - preflop ", 0, play.getBoard().nbCard());
+
+        int stackNicolas = nicolas.getStack();
+        // Dealer passe de Jérôme à François, SB Nicolas, BB Julien, Jérôme UTG
+        play.action(jerome, Action.FOLD, 50);
+
+        play.action(francois, Action.BET, 200);
+        checkPlayerState(francois, Action.BET, 200);
+
+        play.action(nicolas, Action.BET, 400);
+        checkPlayerState(nicolas, Action.BET, 600);
+
+        play.action(julien, Action.FOLD,0);
+
+        play.action(francois, Action.FOLD, 200);
+        checkPlayerState(francois, Action.FOLD, 600);
+
+        Assert.assertEquals("Stack Nicolas apres gain", stackNicolas + 200, nicolas.getStack().intValue());
+
+        Assert.assertEquals("Round courant KO", Round.SHOWDOWN, play.getRound());
+        Assert.assertEquals("Nb cards sur le board - showdown preflop ", 0, play.getBoard().nbCard());
+
+        checkCumulStacks(play);
+
 
     }
 
-    public void checkPlayerState(Player player, int stackExpected, Action lastActionExpected, int potAmountExpected){
-        Assert.assertEquals("Stack restant du joueur ", stackExpected, player.getStack().intValue());
+    private void checkCumulStacks(Play play) {
+        Assert.assertEquals("Somme des stacks", 4 * INITIAL_STACK,
+                play.getPlayers().keySet().stream().mapToInt(p -> p.getStack()).sum());
+    }
+
+    public void checkPlayerState(Player player, Integer stackExpected, Action lastActionExpected, int potAmountExpected) {
+        if (stackExpected != null) {
+            Assert.assertEquals("Stack restant du joueur ", stackExpected, player.getStack());
+        }
         Assert.assertEquals("Last Action du joueur ", lastActionExpected, player.getLastAction());
         Assert.assertEquals("Montant du pot", potAmountExpected, pot.getAmount().intValue());
+    }
+
+    public void checkPlayerState(Player player, Action lastActionExpected, int potAmountExpected) {
+        checkPlayerState(player, null, lastActionExpected, potAmountExpected);
     }
 }

@@ -3,6 +3,7 @@ package fr.jugorleans.poker.server.core.hand;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.util.HasValue;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  * Représente une main. Une main est composé de deux cartes
  */
 @ToString
+@EqualsAndHashCode
 public class Hand implements HasValue {
 
     /**

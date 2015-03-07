@@ -19,6 +19,8 @@ public class BetAction implements PlayerAction {
     @Override
     public Play action(Player player, int bet) throws MustCallException {
 
+        // TODO gérer stack insuffisant / auto allin
+
         Pot pot = play.getPot();
 
         // Récupération montant dernière relance

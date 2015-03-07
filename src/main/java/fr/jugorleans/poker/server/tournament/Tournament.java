@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -77,6 +78,8 @@ public class Tournament {
      * Démarrage du tournoi
      */
     public void start() {
+        Preconditions.checkState(!started, "Tournament déjà démarré");
+
         AtomicInteger seatNumber = new AtomicInteger(0);
 
         players.stream().forEach(p -> {
@@ -116,7 +119,32 @@ public class Tournament {
             seatPlayDealer = ((Double) (Math.random() * players.size())).intValue();
         } else {
             // TODO gérer déplacement en fonction des présents
+            seatPlayDealer = nextPlayer().getSeat().getNumber();
         }
+    }
+
+    /**
+     * Passage au prochain joueur
+     *
+     * @return le prochain joueur
+     */
+    private Player nextPlayer() {
+        int seatCurrentPlayer = seatPlayDealer;
+        Optional<Player> next = findNextPlayer(seatCurrentPlayer);
+        while (!next.isPresent()) {
+            seatCurrentPlayer++;
+            next = findNextPlayer(seatCurrentPlayer);
+        }
+
+        return next.get();
+    }
+
+    private Optional<Player> findNextPlayer(int seatCurrentPlayer) {
+        int nextSeatPlayer = 1 + seatCurrentPlayer % players.size();
+        return players.stream()
+                .filter(p -> (p.getSeat().getNumber() == nextSeatPlayer
+                        && !p.isOut()))
+                .findFirst();
     }
 
     /**

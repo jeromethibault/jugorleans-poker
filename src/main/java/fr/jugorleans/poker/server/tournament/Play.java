@@ -1,13 +1,17 @@
 package fr.jugorleans.poker.server.tournament;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.core.play.*;
+import fr.jugorleans.poker.server.game.DefaultStrongestHandResolver;
 import fr.jugorleans.poker.server.tournament.action.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,6 +20,7 @@ import java.util.stream.Collectors;
  * Partie (au sens une main) jouée entre plusieurs joueurs
  */
 @Getter
+@Setter
 @Builder
 @ToString
 public class Play {
@@ -60,6 +65,9 @@ public class Play {
      * Ensemble des PlayerAction
      */
     private static final Map<Action, PlayerAction> ACTIONS = Maps.newHashMap();
+
+
+    private DefaultStrongestHandResolver defaultStrongestHandResolver;
 
     /**
      * Initialisation de la liste des spécifications
@@ -121,6 +129,9 @@ public class Play {
      * @return la main courante
      */
     public Play action(Player player, Action action, int betValue) {
+
+        Preconditions.checkState(!Round.SHOWDOWN.equals(round), "Play terminé");
+
         checkGoodPlayer(player);
 
         // Traitement de l'action du joueur
@@ -170,6 +181,8 @@ public class Play {
             startNewRound();
         }
 
+        // TODO checker nombre de joueurs restants pour éventuel showdown
+
         return newRound;
     }
 
@@ -177,8 +190,16 @@ public class Play {
      * Démarrage d'un nouveau round
      */
     private void startNewRound() {
-        // Passage au round suivant
-        round = round.next();
+
+        // Cas avec un seul joueur restant => showdown individuel
+        int nbPlayersNotFolded = countNbPlayersNotFolded();
+        if (nbPlayersNotFolded == 1){
+            round = Round.SHOWDOWN;
+        } else {
+            // Passage au round suivant
+            round = round.next();
+        }
+
 
         // Ajout d'éventuelles cartes sur le board
         board.addCards(deck.deal(round.nbCardsToAddOnBoard()));
@@ -197,6 +218,46 @@ public class Play {
 
         // Prise en compte au niveau du pot
         pot.newRound();
+
+        if (Round.SHOWDOWN.equals(round)) {
+            showdown();
+        }
+
+
+    }
+
+    /**
+     * Nombre de joueurs encore dans la main
+     * @ le nombre
+     */
+    private int countNbPlayersNotFolded() {
+        return (int) players.keySet().stream().filter(p -> !p.isFolded()).count();
+    }
+
+    /**
+     * Showdown
+     */
+    private void showdown() {
+        List<Player> winners = null;
+        if (countNbPlayersNotFolded() == 1){
+            // Cas d'une fin de partie sans réel showdown (1 seul joueur restant)
+            winners = players.keySet().stream().filter(p -> !p.isFolded()).collect(Collectors.toList());
+        } else {
+            // Réel showdown
+
+            // Récupération des mains des joueurs en jeu
+            List<Hand> hands = players.keySet().stream().filter(p -> !p.isFolded()).map(p -> p.getCurrentHand()).collect(Collectors.toList());
+
+            // Récupération des mains gagnantes
+            List<Hand> winningHands = defaultStrongestHandResolver.getWinningHand(board, hands);
+
+            // Récupération des joueurs gagnants
+            winners = players.keySet().stream().filter(p -> winningHands.contains(p.getCurrentHand())).collect(Collectors.toList());
+        }
+
+        // Distribution des gains TODO gérer multipots
+        int potSplit = pot.getAmount() / winners.size();
+        winners.forEach(p -> p.win(potSplit));
     }
 
     /**

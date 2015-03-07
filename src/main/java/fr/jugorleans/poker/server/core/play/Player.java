@@ -93,5 +93,14 @@ public class Player {
         return Action.FOLD.equals(lastAction);
     }
 
+    /**
+     * Encaissement des gains
+     *
+     * @param amount montant à ajouter au stack
+     */
+    public void win(int amount) {
+        stack = stack + amount;
+    }
+
 
 }
