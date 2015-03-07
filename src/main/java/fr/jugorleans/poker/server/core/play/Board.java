@@ -27,7 +27,7 @@ public class Board implements HasValue {
      * @param card la carte
      */
     public void addCard(final Card card) {
-        Preconditions.checkArgument(card != null);
+        Preconditions.checkNotNull(card);
         Preconditions.checkState(!this.board.contains(card));
         Preconditions.checkState(this.board.size() < 5);
         this.board.add(card);
@@ -39,7 +39,7 @@ public class Board implements HasValue {
      * @param cards liste de cartes
      */
     public void addCards(final List<Card> cards) {
-        Preconditions.checkArgument(cards != null);
+        Preconditions.checkNotNull(cards);
         cards.stream().forEach(c -> addCard(c));
     }
 

@@ -4,9 +4,9 @@ import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.tournament.Play;
 
 /**
- * Action associée à un fold
+ * Action associée à un check
  */
-public class FoldAction implements PlayerAction {
+public class CheckAction implements PlayerAction {
 
     private Play play;
 
@@ -17,7 +17,7 @@ public class FoldAction implements PlayerAction {
 
     @Override
     public Play action(Player player, int bet) {
-        player.fold();
+        player.check();
 
         return this.play;
     }

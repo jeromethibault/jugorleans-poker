@@ -1,12 +1,12 @@
 package fr.jugorleans.poker.server.tournament;
 
+import com.google.common.base.Preconditions;
 import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.core.play.Seat;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.util.Assert;
 
 import java.util.Arrays;
 import java.util.List;
@@ -96,7 +96,7 @@ public class Tournament {
      * @return la main créée
      */
     public Play newPlay() {
-        Assert.isTrue(started, "Tournament non démarré");
+        Preconditions.checkState(started, "Tournament non démarré");
         currentPlay = Play.builder().build();
         lastPlays.add(currentPlay);
 
@@ -111,7 +111,7 @@ public class Tournament {
     }
 
     private void moveDealerButton() {
-        if (seatPlayDealer == null){
+        if (seatPlayDealer == null) {
             // Choix aléatoire du tout premier dealer
             seatPlayDealer = ((Double) (Math.random() * players.size())).intValue();
         } else {

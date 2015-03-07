@@ -26,7 +26,7 @@ public class Player {
     private Integer stack;
 
     /**
-     * Booléen indiquant si le joueur est éliminé (out)
+     * Booléen indiquant si le joueur est éliminé du tournoi (out)
      */
     private boolean out = false;
 
@@ -45,6 +45,13 @@ public class Player {
      */
     private Seat seat;
 
+    /**
+     * Check
+     */
+    public void check() {
+        lastAction = Action.CHECK;
+    }
+
 
     /**
      * Mise du joueur
@@ -62,4 +69,14 @@ public class Player {
     public void fold() {
         lastAction = Action.FOLD;
     }
+
+    /**
+     * Vérification que le joueur est foldé durant un Play
+     * @return vrai s'il est foldé, faux dans le cas contraire
+     */
+    public boolean isFolded(){
+        return Action.FOLD.equals(lastAction);
+    }
+
+
 }

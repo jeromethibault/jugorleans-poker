@@ -16,7 +16,7 @@ import org.junit.Test;
 @Slf4j
 public class NewTournamentTest {
 
-    public static final int INITIAL_STACK = 1000;
+    public static final int INITIAL_STACK = 10000;
 
     @Test
     public void newTournament() {
@@ -68,44 +68,58 @@ public class NewTournamentTest {
         Assert.assertEquals(julien, player);
 
         play.action(julien, Action.BET, 150);
-        Assert.assertEquals("Stack restant du joueur " + julien, 850, julien.getStack().intValue());
-        Assert.assertEquals("Last Action du joueur " + julien, Action.BET, julien.getLastAction());
+        Assert.assertEquals("Stack restant du joueur " , 9850, julien.getStack().intValue());
+        Assert.assertEquals("Last Action du joueur " , Action.BET, julien.getLastAction());
         Assert.assertEquals("Montant du pot", 150, play.getPot().getAmount().intValue());
 
         try {
             play.action(julien, Action.BET, 150);
-            Assert.fail("Pas au tour du joueur " + julien);
+            Assert.fail("Pas au tour du joueur " );
         } catch (RuntimeException e) {
         }
 
         play.action(jerome, Action.BET, 350);
-        Assert.assertEquals("Stack restant du joueur " + jerome, 650, jerome.getStack().intValue());
-        Assert.assertEquals("Last Action du joueur " + jerome, Action.BET, jerome.getLastAction());
+        Assert.assertEquals("Stack restant du joueur " , 9650, jerome.getStack().intValue());
+        Assert.assertEquals("Last Action du joueur " , Action.BET, jerome.getLastAction());
         Assert.assertEquals("Montant du pot", 500, play.getPot().getAmount().intValue());
 
         play.action(francois, Action.BET, 350);
-        Assert.assertEquals("Stack restant du joueur " + francois, 650, francois.getStack().intValue());
-        Assert.assertEquals("Last Action du joueur " + francois, Action.BET, francois.getLastAction());
+        Assert.assertEquals("Stack restant du joueur " , 9650, francois.getStack().intValue());
+        Assert.assertEquals("Last Action du joueur " , Action.BET, francois.getLastAction());
         Assert.assertEquals("Montant du pot", 850, play.getPot().getAmount().intValue());
 
         try {
             play.action(julien, Action.FOLD, 0);
-            Assert.fail("Pas au tour du joueur " + julien);
+            Assert.fail("Pas au tour du joueur " );
         } catch (RuntimeException e) {
         }
         play.action(nicolas, Action.FOLD, 0);
-        Assert.assertEquals("Last Action du joueur " + nicolas, Action.FOLD, nicolas.getLastAction());
+        Assert.assertEquals("Last Action du joueur " , Action.FOLD, nicolas.getLastAction());
+        Assert.assertEquals("Stack restant du joueur " , INITIAL_STACK, nicolas.getStack().intValue());
 
         Assert.assertEquals("Nb cards sur le board - preflop ", 0, play.getBoard().nbCard());
 
         play.action(julien,Action.BET, 200);
-        Assert.assertEquals("Stack restant du joueur " + julien, 650, jerome.getStack().intValue());
-        Assert.assertEquals("Last Action du joueur " + julien, Action.BET, jerome.getLastAction());
-        Assert.assertEquals("Montant du pot", 1050, play.getPot().getAmount().intValue());
         Assert.assertEquals("Round courant KO", Round.FLOP, play.getRound());
+        Assert.assertEquals("Stack restant du joueur " , 9650, julien.getStack().intValue());
+        // LastAction NONE car nouveau round
+        Assert.assertEquals("Last Action du joueur " , Action.NONE, julien.getLastAction());
+        Assert.assertEquals("Montant du pot", 1050, play.getPot().getAmount().intValue());
 
 
         Assert.assertEquals("Nb cards sur le board - flop ", 3, play.getBoard().nbCard());
+
+        // Au tour de Fra (car nouveau round après le dealer)
+        play.action(francois, Action.CHECK, 0);
+        Assert.assertEquals("Stack restant du joueur " , 9650, francois.getStack().intValue());
+        Assert.assertEquals("Last Action du joueur " , Action.CHECK, francois.getLastAction());
+        Assert.assertEquals("Montant du pot", 1050, play.getPot().getAmount().intValue());
+
+        play.action(julien,Action.BET, 500);
+        Assert.assertEquals("Stack restant du joueur ", 9150, julien.getStack().intValue());
+        Assert.assertEquals("Last Action du joueur ", Action.BET, julien.getLastAction());
+        Assert.assertEquals("Montant du pot", 1550, play.getPot().getAmount().intValue());
+
 
     }
 }

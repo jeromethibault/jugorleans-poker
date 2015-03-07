@@ -1,10 +1,11 @@
 package fr.jugorleans.poker.server.tournament.action;
 
+import com.google.common.base.Preconditions;
 import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.tournament.Play;
 
 /**
- * Created by francoispenaud on 07/03/15.
+ * Action associée à un bet
  */
 public class BetAction implements PlayerAction {
 
@@ -17,6 +18,10 @@ public class BetAction implements PlayerAction {
 
     @Override
     public Play action(Player player, int bet) {
+
+        Preconditions.checkState(bet >= play.getLastRaise(), "Fausse relance");
+
+
         play.getPot().addToPot(bet);
         player.bet(bet);
         play.getPlayers().merge(player, bet, (v1, v2) -> v1 + v2);

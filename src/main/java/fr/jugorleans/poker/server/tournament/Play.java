@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.core.play.*;
 import fr.jugorleans.poker.server.tournament.action.BetAction;
+import fr.jugorleans.poker.server.tournament.action.CheckAction;
 import fr.jugorleans.poker.server.tournament.action.FoldAction;
 import fr.jugorleans.poker.server.tournament.action.PlayerAction;
 import lombok.Builder;
@@ -59,9 +60,9 @@ public class Play {
     private Round round;
 
     /**
-     * Main démarrée
+     * Montant de la dernière relance
      */
-    private boolean started = false;
+    private int lastRaise;
 
     /**
      * Ensemble des PlayerAction
@@ -72,6 +73,7 @@ public class Play {
      * Initialisation de la liste des spécifications
      */
     static {
+        ACTIONS.put(Action.CHECK, new CheckAction());
         ACTIONS.put(Action.BET, new BetAction());
         ACTIONS.put(Action.FOLD, new FoldAction());
     }
@@ -152,13 +154,13 @@ public class Play {
 
         // Calcul moyenne du montant investi par les joueurs non foldés
         Double averageBetActivePlayers = players.entrySet().stream()
-                .filter(p -> !Action.FOLD.equals(p.getKey().getLastAction()))
+                .filter(p -> !p.getKey().isFolded())
                 .collect(Collectors.averagingInt(p -> p.getValue())).doubleValue();
 
         // Tous les joueurs non foldés ont-ils investi la moyenne précédemment calculée ?
         // == ont-ils tous fait la même mise ?
         boolean allActivePlayersHaveSameBet = players.entrySet().stream()
-                .filter(p -> p.getKey().getLastAction() != Action.FOLD)
+                .filter(p -> !p.getKey().isFolded())
                 .allMatch(p -> p.getValue() == averageBetActivePlayers.intValue());
 
         // Nouveau round si les deux conditions sont remplies
@@ -179,6 +181,18 @@ public class Play {
 
         // Ajout d'éventuelles cartes sur le board
         board.addCards(deck.deal(round.nbCardsToAddOnBoard()));
+
+        // Remise à 0 des mises du Round
+        players.entrySet().forEach(p -> p.setValue(0));
+
+        // Remise à NONE des dernières actions des joueurs encore en jeu
+        players.keySet()
+                .stream()
+                .filter(p -> !p.isFolded())
+                .forEach(p -> p.setLastAction(Action.NONE));
+
+        // Positionnement initial sur le dealer
+        seatCurrentPlayer = seatCurrentDealer;
     }
 
     /**
@@ -201,13 +215,13 @@ public class Play {
         int nextSeatPlayer = 1 + seatCurrentPlayer % players.size();
         return players.keySet().stream()
                 .filter(p -> (p.getSeat().getNumber() == nextSeatPlayer
-                        && !Action.FOLD.equals(p.getLastAction())))
+                        && !p.isFolded()))
                 .findFirst();
     }
 
     private void checkGoodPlayer(Player player) {
         if (!whoMustPlay().equals(player)) {
-            throw new RuntimeException("Pas au tour du joueur " + player);
+            throw new IllegalStateException("Pas au tour du joueur " + player);
         }
     }
 
