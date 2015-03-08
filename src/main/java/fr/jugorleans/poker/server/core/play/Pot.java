@@ -25,7 +25,7 @@ public class Pot {
      */
     private Optional<List<Integer>> sidePot = Optional.empty();
 
-    /** Montant du currentRound courant surlequel il faut s'aligner pour accéder au currentRound suivant */
+    /** Montant du round courant surlequel il faut s'aligner pour accéder au currentRound suivant */
     private Integer roundBet = 0;
 
     /** Montan de la dernière relance */
