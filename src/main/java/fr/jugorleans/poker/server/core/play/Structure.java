@@ -1,13 +1,16 @@
 package fr.jugorleans.poker.server.core.play;
 
+import com.google.common.collect.Maps;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by francoispenaud on 06/03/15.
+ * Structure d'un tournoi
  */
 @Getter
 @Builder
@@ -15,12 +18,32 @@ import java.util.List;
 public class Structure {
 
     /**
-     * Liste des rounds dans l'ordre
+     * Map des rounds (clé étant numéro du currentRound de 1 à n)
      */
-    private List<Blind> rounds;
+    private Map<Integer, Blind> rounds;
 
     /**
-     * Durée d'un round en minutes
+     * Durée d'un currentRound en minutes (TODO plus tard gérer duration par currentRound)
      */
     private int duration;
+
+    /**
+     * Ajouter des blinds à la structure
+     *
+     * @param blinds blinds à ajouter
+     */
+    public void initializeRounds(Blind... blinds) {
+        rounds = Maps.newHashMap();
+        AtomicInteger index = new AtomicInteger(0);
+        Arrays.stream(blinds).sequential().forEach(b -> rounds.put(index.incrementAndGet(), b));
+    }
+
+    /**
+     * Vérification de la validité de la structure
+     *
+     * @return vrai si au moins un currentRound est présent et que tous les rounds sont valides, faux dans le cas contraire
+     */
+    public boolean isValid() {
+        return !rounds.isEmpty() && rounds.entrySet().stream().allMatch(entry -> entry.getValue().isValid());
+    }
 }

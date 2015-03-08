@@ -85,6 +85,30 @@ public class Player {
     }
 
     /**
+     * Paiement de la small blind
+     * @param sbValue montant de la SB
+     */
+    public void paySmallBlind(int sbValue){
+        stack = stack - sbValue;
+    }
+
+    /**
+     * Paiement de la big blind
+     * @param bbValue montant de la BB
+     */
+    public void payBigBlind(int bbValue){
+        stack = stack - bbValue;
+    }
+
+    /**
+     * Paiement d'une ante
+     * @param anteValue montant de la BB
+     */
+    public void payAnte(int anteValue){
+        stack = stack - anteValue;
+    }
+
+    /**
      * Vérification que le joueur est foldé durant un Play
      *
      * @return vrai s'il est foldé, faux dans le cas contraire

@@ -59,7 +59,12 @@ public class Play {
     /**
      * Round courant
      */
-    private Round round;
+    private Round currentRound;
+
+    /**
+     * Blinds courantes
+     */
+    private Blind currentBlind;
 
     /**
      * Ensemble des PlayerAction
@@ -87,12 +92,12 @@ public class Play {
         // Positionnement du dealer (à conserver car important pour chaque début de round)
         seatCurrentDealer = tournament.getSeatPlayDealer();
 
-        // Initialisation du pot, jeu de cartes, et du round PREFLOP
+        // Initialisation du pot, jeu de cartes, et du currentRound PREFLOP
         pot = new Pot();
         board = new Board();
         deck = new Deck();
         deck.shuffleUp();
-        round = Round.PREFLOP;
+        currentRound = Round.PREFLOP;
 
         // Distribution des cartes
         players = Maps.newHashMap();
@@ -102,13 +107,17 @@ public class Play {
             players.put(p, 0);
         });
 
-        // TODO gerer les blinds (attention HU)
 
         // Positionnement du joueur courant au niveau du dealer, puis passage au joueur UTGs
         seatCurrentPlayer = seatCurrentDealer;
-        nextPlayer(); // small blind (ou BB en HU)
-        nextPlayer(); // big blind (ou SB en HU)
+        // Récupération blinds du round courant
+        currentBlind = tournament.getStructure().getRounds().get(tournament.getCurrentBlindRound());
+        Player sbPlayer = nextPlayer(); // small blind (ou BB en HU)
+        Player bbPlayer = nextPlayer(); // big blind (ou SB en HU)
         nextPlayer(); // UTG
+
+        // Gestion de la collecte des blinds
+        collectBlinds(sbPlayer, bbPlayer);
     }
 
     /**
@@ -128,9 +137,9 @@ public class Play {
      * @param betValue montant de la mise
      * @return la main courante
      */
-    public Play action(Player player, Action action, int betValue) {
+    public Player action(Player player, Action action, int betValue) {
 
-        Preconditions.checkState(!Round.SHOWDOWN.equals(round), "Play terminé");
+        Preconditions.checkState(!Round.SHOWDOWN.equals(currentRound), "Play terminé");
 
         checkGoodPlayer(player);
 
@@ -149,9 +158,41 @@ public class Play {
         checkNewRound();
 
         // Passage au joueur suivant
-        nextPlayer();
+        return nextPlayer();
+    }
 
-        return this;
+    /**
+     * Collecte des blinds
+     *
+     * @param sbPlayer joueur devant payer la SB
+     * @param bbPlayer joueur devant payer la BB
+     */
+    private void collectBlinds(Player sbPlayer, Player bbPlayer) {
+        // Collecte SB
+        int sb = currentBlind.getSmallBlind();
+        sbPlayer.paySmallBlind(sb);
+        updatePlayerPlayAmount(sbPlayer, sb);
+
+        // Collecte BB
+        int bb = currentBlind.getBigBlind();
+        bbPlayer.payBigBlind(bb);
+        updatePlayerPlayAmount(bbPlayer, bb);
+
+        // Collecte des antes s'il y en a sur le round
+        int ante = currentBlind.getAnte();
+        if (ante > 0) {
+            players.keySet().forEach(p -> {
+                p.payAnte(ante);
+                updatePlayerPlayAmount(p, ante);
+            });
+        }
+
+        // MAJ du pot
+        int blindsSum = sb + bb + players.size() * ante;
+        pot.addToPot(blindsSum);
+        // Roundbet et lastraise positionnés à hauteur de la BB (car c'est la mise minimum autorisée par la première mise)
+        pot.newRound(bb);
+
     }
 
     /**
@@ -181,8 +222,6 @@ public class Play {
             startNewRound();
         }
 
-        // TODO checker nombre de joueurs restants pour éventuel showdown
-
         return newRound;
     }
 
@@ -193,16 +232,16 @@ public class Play {
 
         // Cas avec un seul joueur restant => showdown individuel
         int nbPlayersNotFolded = countNbPlayersNotFolded();
-        if (nbPlayersNotFolded == 1){
-            round = Round.SHOWDOWN;
+        if (nbPlayersNotFolded == 1) {
+            currentRound = Round.SHOWDOWN;
         } else {
-            // Passage au round suivant
-            round = round.next();
+            // Passage au currentRound suivant
+            currentRound = currentRound.next();
         }
 
 
         // Ajout d'éventuelles cartes sur le board
-        board.addCards(deck.deal(round.nbCardsToAddOnBoard()));
+        board.addCards(deck.deal(currentRound.nbCardsToAddOnBoard()));
 
         // Remise à 0 des mises du Round
         players.entrySet().forEach(p -> p.setValue(0));
@@ -217,9 +256,9 @@ public class Play {
         seatCurrentPlayer = seatCurrentDealer;
 
         // Prise en compte au niveau du pot
-        pot.newRound();
+        pot.newRound(currentBlind.getBigBlind());
 
-        if (Round.SHOWDOWN.equals(round)) {
+        if (Round.SHOWDOWN.equals(currentRound)) {
             showdown();
         }
 
@@ -228,6 +267,7 @@ public class Play {
 
     /**
      * Nombre de joueurs encore dans la main
+     *
      * @ le nombre
      */
     private int countNbPlayersNotFolded() {
@@ -239,7 +279,7 @@ public class Play {
      */
     private void showdown() {
         List<Player> winners = null;
-        if (countNbPlayersNotFolded() == 1){
+        if (countNbPlayersNotFolded() == 1) {
             // Cas d'une fin de partie sans réel showdown (1 seul joueur restant)
             winners = players.keySet().stream().filter(p -> !p.isFolded()).collect(Collectors.toList());
         } else {
@@ -276,6 +316,11 @@ public class Play {
         return next.get();
     }
 
+    /**
+     * Recherche du prochain joueur
+     *
+     * @return le prochain joueur
+     */
     private Optional<Player> findNextPlayer() {
         int nextSeatPlayer = 1 + seatCurrentPlayer % players.size();
         return players.keySet().stream()
@@ -284,6 +329,11 @@ public class Play {
                 .findFirst();
     }
 
+    /**
+     * Vérification que le joueur réalisant l'action est le joueur attendu
+     *
+     * @param player joueur réalisant l'action
+     */
     private void checkGoodPlayer(Player player) {
         if (!whoMustPlay().equals(player)) {
             throw new IllegalStateException("Pas au tour du joueur " + player);
@@ -291,4 +341,12 @@ public class Play {
     }
 
 
+    /**
+     * Mise à jour du montant investi par le joueur sur le round
+     * @param player joueur concerné
+     * @param value montant à cumuler
+     */
+    public void updatePlayerPlayAmount(Player player, int value){
+        players.merge(player, value, (v1, v2) -> v1 + v2);
+    }
 }

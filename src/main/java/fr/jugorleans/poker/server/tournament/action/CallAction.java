@@ -35,7 +35,8 @@ public class CallAction implements PlayerAction {
 
         // MAJ pot + montant investi par le joueur
         pot.addToPot(callValue);
-        play.getPlayers().merge(player, callValue, (v1, v2) -> v1 + v2);
+        play.updatePlayerPlayAmount(player, callValue);
+
 
         return this.play;
     }

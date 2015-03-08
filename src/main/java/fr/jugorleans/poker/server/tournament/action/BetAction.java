@@ -43,7 +43,7 @@ public class BetAction implements PlayerAction {
         // MAJ pot
         pot.addToPot(bet);
         player.bet(bet);
-        play.getPlayers().merge(player, bet, (v1, v2) -> v1 + v2);
+        play.updatePlayerPlayAmount(player, bet);
 
         // MAJ montant investi par le joueur
         pot.setLastRaise(Math.max(lastRaise, bet - roundBet));

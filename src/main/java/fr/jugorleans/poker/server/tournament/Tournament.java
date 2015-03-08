@@ -3,6 +3,7 @@ package fr.jugorleans.poker.server.tournament;
 import com.google.common.base.Preconditions;
 import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.core.play.Seat;
+import fr.jugorleans.poker.server.core.play.Structure;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,11 @@ import java.util.stream.Collectors;
 @Setter
 @Builder
 @ToString
+
+/**
+ * Tournoi
+ * TODO gérer le changement de round (blinds) avec timer à initialiser au start
+ */
 public class Tournament {
 
     /**
@@ -36,7 +42,7 @@ public class Tournament {
     /**
      * Nombre maximum de joueurs
      */
-    private Integer nbMaxPlayers = 10;
+    private int nbMaxPlayers = 10;
 
     /**
      * Vainqueur
@@ -64,6 +70,16 @@ public class Tournament {
      */
     private Integer seatPlayDealer;
 
+    /**
+     * Structure du tournoi
+     */
+    private Structure structure;
+
+    /**
+     * Round (blinds) courant
+     */
+    private Integer currentBlindRound;
+
 
     /**
      * Ajout de joueurs
@@ -77,11 +93,17 @@ public class Tournament {
     /**
      * Démarrage du tournoi
      */
-    public void start() {
+    public void start(Structure structure) {
         Preconditions.checkState(!started, "Tournament déjà démarré");
+        Preconditions.checkState(structure != null && structure.isValid(), "Structure invalide");
+
+        // Conservation de la structure
+        this.structure = structure;
+
+        // Position au 1er round de blinds
+        currentBlindRound = 1;
 
         AtomicInteger seatNumber = new AtomicInteger(0);
-
         players.stream().forEach(p -> {
             // Attribution des places
             p.setSeat(Seat.builder().number(seatNumber.incrementAndGet()).build());
@@ -104,6 +126,9 @@ public class Tournament {
         lastPlays.add(currentPlay);
 
 
+
+        // TODO gérer multitables --> dealer au niveau de la table et pas du tournament
+
         // Déplacement du dealer
         moveDealerButton();
 
@@ -118,7 +143,6 @@ public class Tournament {
             // Choix aléatoire du tout premier dealer
             seatPlayDealer = ((Double) (Math.random() * players.size())).intValue();
         } else {
-            // TODO gérer déplacement en fonction des présents
             seatPlayDealer = nextPlayer().getSeat().getNumber();
         }
     }

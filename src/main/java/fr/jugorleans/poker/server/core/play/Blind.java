@@ -21,4 +21,18 @@ public class Blind {
      * BB
      */
     private int bigBlind;
+
+    /**
+     * Ante
+     */
+    private int ante;
+
+    /**
+     * Vérification de la validité des blinds
+     *
+     * @return vrai si les valeurs sont correctes, faux dans le cas contraire
+     */
+    public boolean isValid() {
+        return smallBlind < bigBlind && smallBlind > 0 && bigBlind > 0 && ante >= 0;
+    }
 }
