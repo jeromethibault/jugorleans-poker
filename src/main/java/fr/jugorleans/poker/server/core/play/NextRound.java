@@ -7,7 +7,7 @@ public interface NextRound {
 
     /**
      * Round suivant
-     * @return le retour suivant le round courant
+     * @return le retour suivant le currentRound courant
      */
     Round next();
 

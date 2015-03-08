@@ -25,7 +25,7 @@ public class Pot {
      */
     private Optional<List<Integer>> sidePot = Optional.empty();
 
-    /** Montant du round courant surlequel il faut s'aligner pour accéder au round suivant */
+    /** Montant du currentRound courant surlequel il faut s'aligner pour accéder au currentRound suivant */
     private Integer roundBet = 0;
 
     /** Montan de la dernière relance */
@@ -40,11 +40,12 @@ public class Pot {
     }
 
     /**
-     * Prise en compte d'un nouveau round
+     * Prise en compte d'un nouveau currentRound
+     * @param bigBling montant big blind (mise minimum)
      */
-    public void newRound(){
+    public void newRound(int bigBling){
         roundBet = 0;
-        lastRaise = 0;
+        lastRaise = bigBling;
     }
 
 }

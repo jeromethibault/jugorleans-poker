@@ -26,10 +26,10 @@ public class BetAction implements PlayerAction {
         // Récupération montant dernière relance
         int lastRaise = pot.getLastRaise();
 
-        // Montant sur lequel le joueur a besoin de s'aligner pour continuer sur le round (plus grande mise cumulée d'un joueur en jeu)
+        // Montant sur lequel le joueur a besoin de s'aligner pour continuer sur le currentRound (plus grande mise cumulée d'un joueur en jeu)
         int roundBet = pot.getRoundBet();
 
-        // Récupération mises engagées par le joueur sur le round
+        // Récupération mises engagées par le joueur sur le currentRound
         Integer roundPlayerBet = play.getPlayers().get(player);
 
         boolean validBet = (bet + roundPlayerBet == roundBet) ||
@@ -43,7 +43,7 @@ public class BetAction implements PlayerAction {
         // MAJ pot
         pot.addToPot(bet);
         player.bet(bet);
-        play.getPlayers().merge(player, bet, (v1, v2) -> v1 + v2);
+        play.updatePlayerPlayAmount(player, bet);
 
         // MAJ montant investi par le joueur
         pot.setLastRaise(Math.max(lastRaise, bet - roundBet));
