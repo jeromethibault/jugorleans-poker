@@ -89,7 +89,7 @@ public class Play {
         // Passage de la main courante - Attention pas threadsafe pour multitables (mais on reste single table)
         ACTIONS.entrySet().forEach(impl -> impl.getValue().setPlay(this));
 
-        // Positionnement du dealer (à conserver car important pour chaque début de currentRound)
+        // Positionnement du dealer (à conserver car important pour chaque début de round)
         seatCurrentDealer = tournament.getSeatPlayDealer();
 
         // Initialisation du pot, jeu de cartes, et du currentRound PREFLOP
@@ -154,7 +154,7 @@ public class Play {
             }
         }
 
-        // Check si fin d'un currentRound
+        // Check si fin d'un round
         checkNewRound();
 
         // Passage au joueur suivant
@@ -196,9 +196,9 @@ public class Play {
     }
 
     /**
-     * Vérification d'un éventuel changement de currentRound
+     * Vérification d'un éventuel changement de round
      *
-     * @return vrai si la dernière action a engendré un changement de currentRound
+     * @return vrai si la dernière action a engendré un changement de round
      */
     private boolean checkNewRound() {
         // Tous les joueurs ont-ils joué ?
@@ -216,7 +216,7 @@ public class Play {
                 .filter(p -> !p.getKey().isFolded())
                 .allMatch(p -> p.getValue() == averageBetActivePlayers.intValue());
 
-        // Nouveau currentRound si les deux conditions sont remplies
+        // Nouveau round si les deux conditions sont remplies
         boolean newRound = everybodyPlays && allActivePlayersHaveSameBet;
         if (newRound) {
             startNewRound();
@@ -226,7 +226,7 @@ public class Play {
     }
 
     /**
-     * Démarrage d'un nouveau currentRound
+     * Démarrage d'un nouveau round
      */
     private void startNewRound() {
 

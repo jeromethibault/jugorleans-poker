@@ -18,7 +18,7 @@ public class CheckAction implements PlayerAction {
     @Override
     public Play action(Player player, int bet) throws MustCallException {
 
-        // Check possible si aucune mise n'a été effectuée sur le currentRound, sinon c'est un call
+        // Check possible si aucune mise n'a été effectuée sur le round, sinon c'est un call
         boolean actionAutorisee = play.getPot().getRoundBet() == 0;
         if (!actionAutorisee) {
             throw new MustCallException();

@@ -23,10 +23,10 @@ public class CallAction implements PlayerAction {
 
         Pot pot = play.getPot();
 
-        // Montant sur lequel le joueur a besoin de s'aligner pour continuer sur le currentRound (plus grande mise cumulée d'un joueur en jeu)
+        // Montant sur lequel le joueur a besoin de s'aligner pour continuer sur le round (plus grande mise cumulée d'un joueur en jeu)
         int roundBet = pot.getRoundBet();
 
-        // Récupération mises engagées par le joueur sur le currentRound
+        // Récupération mises engagées par le joueur sur le round
         Integer roundPlayerBet = play.getPlayers().get(player);
 
         // Calcul du call
