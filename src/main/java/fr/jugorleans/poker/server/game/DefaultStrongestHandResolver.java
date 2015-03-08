@@ -7,11 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Implémentation par defaut de <code></code>
+ * Implémentation par defaut de <code>StrongestHandResolver</code>
  */
 @Component
 public class DefaultStrongestHandResolver implements StrongestHandResolver {
