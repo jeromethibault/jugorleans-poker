@@ -4,6 +4,7 @@ import fr.jugorleans.poker.server.conf.test.ConfigurationTest;
 import fr.jugorleans.poker.server.core.hand.*;
 import fr.jugorleans.poker.server.core.play.Board;
 import fr.jugorleans.poker.server.game.DefaultHandStrengthResolver;
+import fr.jugorleans.poker.server.spec.FullHouseSpecification;
 import fr.jugorleans.poker.server.util.ListCard;
 import org.junit.Assert;
 import org.junit.Test;
@@ -193,6 +194,74 @@ public class DefaultHandStrenghtResolverTest {
                 .secondCard(CardValue.KING, CardSuit.HEARTS).build();
         int combination = defaultHandStrenghtResolver.getHandStrenght(hand, board);
         int combination2 = CombinationStrength.name(Combination.FLUSH).of(CardValue.ACE).getStrength();
+        Assert.assertEquals(combination2,combination);
+    }
+
+    /**
+     * Board => 4HJH4S2H9C
+     * Hand => JC4C
+     */
+    @Test
+    public void testFullHouseCombination2(){
+        Board board = new Board();
+        Card card = Card.newBuilder().value(CardValue.FOUR).suit(CardSuit.HEARTS).build();
+        board.addCard(card);
+        Card card1 = Card.newBuilder().value(CardValue.JACK).suit(CardSuit.HEARTS).build();
+        board.addCard(card1);
+        Card card2 = Card.newBuilder().value(CardValue.FOUR).suit(CardSuit.SPADES).build();
+        board.addCard(card2);
+        Card card3 = Card.newBuilder().value(CardValue.TWO).suit(CardSuit.HEARTS).build();
+        board.addCard(card3);
+        Card card4 = Card.newBuilder().value(CardValue.NINE).suit(CardSuit.CLUBS).build();
+        board.addCard(card4);
+
+        Hand hand = Hand.newBuilder().firstCard(CardValue.JACK, CardSuit.CLUBS).secondCard(CardValue.FOUR, CardSuit.CLUBS).build();
+        int combination = defaultHandStrenghtResolver.getHandStrenght(hand, board);
+        int combination2 = CombinationStrength.name(Combination.FULL_HOUSE).of(CardValue.FOUR).and(CardValue.JACK).getStrength();
+        Assert.assertEquals(combination2, combination);
+    }
+
+    @Test
+    public void testFourOfKindCombination(){
+        Board board = new Board();
+        Card card = Card.newBuilder().value(CardValue.FOUR).suit(CardSuit.DIAMONDS).build();
+        board.addCard(card);
+        Card card1 = Card.newBuilder().value(CardValue.SIX).suit(CardSuit.DIAMONDS).build();
+        board.addCard(card1);
+        Card card2 = Card.newBuilder().value(CardValue.FOUR).suit(CardSuit.SPADES).build();
+        board.addCard(card2);
+        Card card3 = Card.newBuilder().value(CardValue.QUEEN).suit(CardSuit.CLUBS).build();
+        board.addCard(card3);
+        Card card4 = Card.newBuilder().value(CardValue.FOUR).suit(CardSuit.HEARTS).build();
+        board.addCard(card4);
+
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.FOUR, CardSuit.CLUBS).build();
+        int combination = defaultHandStrenghtResolver.getHandStrenght(hand, board);
+        int combination2 = CombinationStrength.name(Combination.FOUR_OF_KIND).of(CardValue.FOUR).with(CardValue.ACE).getStrength();
+        Assert.assertEquals(combination2,combination);
+    }
+
+    /**
+     * Board => ACKS3SKHJS
+     * Hand => 3CAD
+     */
+    @Test
+    public void testTwoPairCombinatin2(){
+        Board board = new Board();
+        Card card = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.CLUBS).build();
+        board.addCard(card);
+        Card card1 = Card.newBuilder().value(CardValue.KING).suit(CardSuit.CLUBS).build();
+        board.addCard(card1);
+        Card card2 = Card.newBuilder().value(CardValue.THREE).suit(CardSuit.SPADES).build();
+        board.addCard(card2);
+        Card card3 = Card.newBuilder().value(CardValue.KING).suit(CardSuit.HEARTS).build();
+        board.addCard(card3);
+        Card card4 = Card.newBuilder().value(CardValue.JACK).suit(CardSuit.SPADES).build();
+        board.addCard(card4);
+
+        Hand hand = Hand.newBuilder().firstCard(CardValue.THREE, CardSuit.CLUBS).secondCard(CardValue.ACE, CardSuit.DIAMONDS).build();
+        int combination = defaultHandStrenghtResolver.getHandStrenght(hand, board);
+        int combination2 = CombinationStrength.name(Combination.TWO_PAIR).of(CardValue.ACE).and(CardValue.KING).with(CardValue.JACK).getStrength();
         Assert.assertEquals(combination2,combination);
     }
 

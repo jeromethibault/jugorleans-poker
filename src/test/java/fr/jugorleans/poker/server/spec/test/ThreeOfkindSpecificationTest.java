@@ -108,4 +108,27 @@ public class ThreeOfkindSpecificationTest {
         ThreeOfKindSpecification specification = new ThreeOfKindSpecification(board);
         Assert.assertFalse(specification.isSatisfiedBy(hand));
     }
+
+    /**
+     * Board => 4D6D4SQC4H
+     * Hand => AS4C
+     */
+    @Test
+    public void test(){
+        Board board = new Board();
+        Card card = Card.newBuilder().value(CardValue.FOUR).suit(CardSuit.DIAMONDS).build();
+        board.addCard(card);
+        Card card1 = Card.newBuilder().value(CardValue.SIX).suit(CardSuit.DIAMONDS).build();
+        board.addCard(card1);
+        Card card2 = Card.newBuilder().value(CardValue.FOUR).suit(CardSuit.SPADES).build();
+        board.addCard(card2);
+        Card card3 = Card.newBuilder().value(CardValue.QUEEN).suit(CardSuit.CLUBS).build();
+        board.addCard(card3);
+        Card card4 = Card.newBuilder().value(CardValue.FOUR).suit(CardSuit.HEARTS).build();
+        board.addCard(card4);
+
+        Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.FOUR, CardSuit.CLUBS).build();
+        ThreeOfKindSpecification specification = new ThreeOfKindSpecification(board);
+        Assert.assertFalse(specification.isSatisfiedBy(hand));
+    }
 }

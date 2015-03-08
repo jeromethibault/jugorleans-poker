@@ -43,6 +43,7 @@ public class DefaultHandStrengthResolver implements HandStrengthResolver {
         populators.add(new FlushPopulator());
         populators.add(new FullHousePopulator());
         populators.add(new StraightFlushPopulator());
+        populators.add(new FourOfKindPopulator());
     }
 
     /**

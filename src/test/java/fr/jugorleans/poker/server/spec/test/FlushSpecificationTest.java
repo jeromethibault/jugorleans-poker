@@ -1,11 +1,9 @@
 package fr.jugorleans.poker.server.spec.test;
 
-import fr.jugorleans.poker.server.core.hand.Card;
-import fr.jugorleans.poker.server.core.hand.CardSuit;
-import fr.jugorleans.poker.server.core.hand.CardValue;
-import fr.jugorleans.poker.server.core.hand.Hand;
+import fr.jugorleans.poker.server.core.hand.*;
 import fr.jugorleans.poker.server.core.play.Board;
 import fr.jugorleans.poker.server.spec.FlushSpecification;
+import fr.jugorleans.poker.server.util.ListCard;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -86,6 +84,30 @@ public class FlushSpecificationTest {
         board.addCard(card4);
 
         Hand hand = Hand.newBuilder().firstCard(CardValue.ACE, CardSuit.SPADES).secondCard(CardValue.JACK, CardSuit.DIAMONDS).build();
+        FlushSpecification specification = new FlushSpecification(board);
+        Assert.assertTrue(specification.isSatisfiedBy(hand));
+    }
+
+    /**
+     * Board => 9C6C5CQCAD
+     * Hand => 3C8C
+     */
+    @Test
+    public void testFlush4(){
+        Board board = new Board();
+        Card card = Card.newBuilder().value(CardValue.NINE).suit(CardSuit.CLUBS).build();
+        board.addCard(card);
+        Card card1 = Card.newBuilder().value(CardValue.SIX).suit(CardSuit.CLUBS).build();
+        board.addCard(card1);
+        Card card2 = Card.newBuilder().value(CardValue.FIVE).suit(CardSuit.CLUBS).build();
+        board.addCard(card2);
+        Card card3 = Card.newBuilder().value(CardValue.QUEEN).suit(CardSuit.CLUBS).build();
+        board.addCard(card3);
+        Card card4 = Card.newBuilder().value(CardValue.ACE).suit(CardSuit.DIAMONDS).build();
+        board.addCard(card4);
+
+        Hand hand = Hand.newBuilder().firstCard(CardValue.THREE, CardSuit.CLUBS)
+                .secondCard(CardValue.EIGHT, CardSuit.CLUBS).build();
         FlushSpecification specification = new FlushSpecification(board);
         Assert.assertTrue(specification.isSatisfiedBy(hand));
     }

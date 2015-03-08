@@ -30,13 +30,21 @@ public class FullHousePopulator implements CombinationPopulator {
     public CombinationStrength populate(List<Card> list) {
         Map<CardValue, Long> counters = ListCard.countCardValue(list);
         CombinationStrength combinationStrength = CombinationStrength.name(Combination.FULL_HOUSE);
+        int populate = 0;
+        boolean of = false;
         for(CardValue cardValue : counters.keySet().stream().sorted((c1,c2) -> c2.getForce() - c1.getForce()).collect(Collectors.toList())){
             Long nb = counters.get(cardValue);
-            if(nb == 3L){
+            if(nb == 3L && !of){
+                populate++;
+                of = true;
                 combinationStrength.of(cardValue);
+            }else{
+                if(nb == 2L || (nb == 3L && of)){
+                    populate++;
+                    combinationStrength.and(cardValue);
+                }
             }
-            if(nb == 2L){
-                combinationStrength.and(cardValue);
+            if(populate == 2){
                 break;
             }
         }

@@ -39,7 +39,12 @@ public class FullHouseSpecification implements Specification<Hand> {
         List<Card> listCard = ListCard.newArrayList(this.board, hand);
         Map<CardValue, Long> counters = listCard.stream().collect(Collectors.groupingBy(Card::getCardValue, Collectors.counting()));
         List<Long> list = counters.values().stream().filter(l -> (l == 3 || l == 2)).collect(Collectors.toList());
+        // Pour skipper la fameuse triple paire
+        if(!list.contains(3L)){
+            return false;
+        }
+        long sum = list.stream().mapToLong(l -> l).sum();
         final FourOfKindSpecification fourOfKindSpecification = new FourOfKindSpecification(this.board);
-        return fourOfKindSpecification.negate().isSatisfiedBy(hand) && list.contains(3L) && list.contains(2L);
+        return fourOfKindSpecification.negate().isSatisfiedBy(hand) && (sum == 6L || sum == 5L);
     }
 }

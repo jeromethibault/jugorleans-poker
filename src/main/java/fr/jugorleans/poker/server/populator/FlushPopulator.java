@@ -42,7 +42,7 @@ public class FlushPopulator implements CombinationPopulator {
 
         for(CardSuit cardSuit : map.keySet()){
             long nb = map.get(cardSuit);
-            if(nb == 5L){
+            if(nb >= 5L){
                 combinationStrength.of(getMaxCardValue(cardSuit,list));
                 break;
             }
