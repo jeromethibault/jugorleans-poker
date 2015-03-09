@@ -46,6 +46,11 @@ public class Player {
     private Seat seat;
 
     /**
+     * Booléen permettant de savoir si le joueur est allin
+     */
+    private boolean isAllIn = false;
+
+    /**
      * Check
      */
     public void check() {
@@ -65,7 +70,11 @@ public class Player {
         } else {
             lastAction = Action.CALL;
         }
+
+        checkIsAllIn();
     }
+
+
 
     /**
      * Mise initiale ou relance
@@ -75,6 +84,7 @@ public class Player {
     public void bet(int betValue) {
         stack = stack - betValue;
         lastAction = Action.BET;
+        checkIsAllIn();
     }
 
     /**
@@ -86,26 +96,31 @@ public class Player {
 
     /**
      * Paiement de la small blind
+     *
      * @param sbValue montant de la SB
      */
-    public void paySmallBlind(int sbValue){
+    public void paySmallBlind(int sbValue) {
         stack = stack - sbValue;
+        checkIsAllIn();
     }
 
     /**
      * Paiement de la big blind
+     *
      * @param bbValue montant de la BB
      */
-    public void payBigBlind(int bbValue){
+    public void payBigBlind(int bbValue) {
         stack = stack - bbValue;
     }
 
     /**
      * Paiement d'une ante
+     *
      * @param anteValue montant de la BB
      */
-    public void payAnte(int anteValue){
+    public void payAnte(int anteValue) {
         stack = stack - anteValue;
+        checkIsAllIn();
     }
 
     /**
@@ -126,5 +141,13 @@ public class Player {
         stack = stack + amount;
     }
 
+    /**
+     * Vérification que le joueur n'est pas automatiquement allin
+     */
+    private void checkIsAllIn() {
+        if (stack == 0){
+            isAllIn = true;
+        }
+    }
 
 }

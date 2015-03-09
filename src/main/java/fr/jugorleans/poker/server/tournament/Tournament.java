@@ -167,7 +167,7 @@ public class Tournament {
         int nextSeatPlayer = 1 + seatCurrentPlayer % players.size();
         return players.stream()
                 .filter(p -> (p.getSeat().getNumber() == nextSeatPlayer
-                        && !p.isOut()))
+                        && !p.isOut()) && !p.isAllIn())
                 .findFirst();
     }
 
