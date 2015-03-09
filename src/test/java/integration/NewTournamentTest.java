@@ -98,7 +98,7 @@ public class NewTournamentTest {
         play.action(jerome, Action.BET, 350);
         checkPlayerState(jerome, 9650, Action.BET, 530);
 
-        play.action(francois, Action.CALL, 350);
+        play.action(francois, Action.CALL, 5);
         checkPlayerState(francois, 9650, Action.CALL, 870);
 
         try {
@@ -110,14 +110,14 @@ public class NewTournamentTest {
         checkPlayerState(nicolas, 9980, Action.FOLD, 870);
         Assert.assertEquals("Nb cards sur le board - preflop ", 0, play.getBoard().nbCard());
 
-        play.action(julien, Action.CALL, 200);
+        play.action(julien, Action.CALL, 2000);
         // LastAction Action.NONE car nouveau currentRound
         checkPlayerState(julien, 9650, Action.NONE, 1070);
         Assert.assertEquals("Round courant KO", Round.FLOP, play.getCurrentRound());
         Assert.assertEquals("Nb cards sur le board - flop ", 3, play.getBoard().nbCard());
 
         // Au tour de Fra (car nouveau currentRound après le dealer)
-        play.action(francois, Action.CHECK, 0);
+        play.action(francois, Action.CHECK, 1);
         checkPlayerState(francois, 9650, Action.CHECK, 1070);
 
         play.action(julien, Action.BET, 500);
@@ -128,20 +128,20 @@ public class NewTournamentTest {
         checkPlayerState(jerome, 9150, Action.CALL, 2070);
 
         // Check interdit -> call; Action.NONE car nouveau currentRound (turn)
-        play.action(francois, Action.CHECK, 0);
+        play.action(francois, Action.CHECK, 1);
         checkPlayerState(jerome, 9150, Action.NONE, 2570);
         Assert.assertEquals("Round courant KO", Round.TURN, play.getCurrentRound());
         Assert.assertEquals("Nb cards sur le board - turn ", 4, play.getBoard().nbCard());
 
 
         // Au tour de Fra (car nouveau currentRound après le dealer)
-        play.action(francois, Action.CHECK, 0);
+        play.action(francois, Action.CHECK, 3);
         checkPlayerState(francois, 9150, Action.CHECK, 2570);
 
         play.action(julien, Action.BET, 1000);
         checkPlayerState(julien, 8150, Action.BET, 3570);
 
-        play.action(jerome, Action.CALL, 1000);
+        play.action(jerome, Action.CALL, 6);
         checkPlayerState(jerome, 8150, Action.CALL, 4570);
 
         // Fausse relance -> Call
@@ -152,9 +152,9 @@ public class NewTournamentTest {
         Assert.assertEquals("Nb cards sur le board - river ", 5, play.getBoard().nbCard());
 
         // Au tour de Fra (car nouveau currentRound après le dealer) - 3 checks
-        play.action(francois, Action.CHECK, 0);
+        play.action(francois, Action.CHECK, 33);
         // Call suite à un check -> check
-        play.action(julien, Action.CALL, 0);
+        play.action(julien, Action.CALL, 8);
         // Bet < big blind => call
         play.action(jerome, Action.CALL, 15);
         Assert.assertEquals("Montant du pot final", 5570, pot.getAmount().intValue());

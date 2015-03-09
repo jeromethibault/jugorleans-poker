@@ -75,7 +75,6 @@ public class Player {
     }
 
 
-
     /**
      * Mise initiale ou relance
      *
@@ -145,8 +144,9 @@ public class Player {
      * Vérification que le joueur n'est pas automatiquement allin
      */
     private void checkIsAllIn() {
-        if (stack == 0){
+        if (stack == 0) {
             isAllIn = true;
+            lastAction = Action.ALL_IN;
         }
     }
 

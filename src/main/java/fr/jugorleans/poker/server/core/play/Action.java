@@ -9,5 +9,6 @@ public enum Action {
     CHECK,
     CALL,
     BET,
+    ALL_IN,
     NONE
 }
