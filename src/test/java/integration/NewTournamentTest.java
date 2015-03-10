@@ -25,46 +25,19 @@ public class NewTournamentTest {
 
     public static final int INITIAL_STACK = 10000;
 
-
     @Autowired
     private DefaultStrongestHandResolver defaultStrongestHandResolver;
 
+    private Tournament wsop;
     private Pot pot;
+    private Player jerome;
+    private Player francois;
+    private Player nicolas;
+    private Player julien;
 
     @Test
-    public void newTournament() {
-
-        Player jerome = Player.builder().nickName("Jer").build();
-        Player francois = Player.builder().nickName("Fra").build();
-        Player nicolas = Player.builder().nickName("Nic").build();
-        Player julien = Player.builder().nickName("Jul").build();
-
-        Tournament wsop = Tournament.builder()
-                .initialStack(INITIAL_STACK)
-                .nbMaxPlayers(10)
-                .players(Lists.newArrayList(jerome, francois, nicolas, julien))
-                .lastPlays(Lists.newArrayList())
-                .build();
-
-        Structure structure = Structure.builder().duration(20).build();
-        structure.initializeRounds(Blind.builder().smallBlind(10).bigBlind(20).build());
-        wsop.start(structure);
-
-        Assert.assertEquals("Nombre de joueurs inscrits KO", 4, wsop.nbPlayersIn());
-        Assert.assertNull("Aucune main jouée", wsop.getCurrentPlay());
-
-        // Check init des stacks + sieges
-        wsop.getPlayers().stream().forEach(p -> {
-            Assert.assertTrue(p.getStack() == INITIAL_STACK);
-            Assert.assertTrue(p.getSeat().getNumber() > 0);
-        });
-
-        // on remplace les sièges tirés aléatoirement pour maitriser les données du test
-        jerome.getSeat().setNumber(1);
-        francois.getSeat().setNumber(2);
-        nicolas.getSeat().setNumber(3);
-        julien.getSeat().setNumber(4);
-        wsop.setSeatPlayDealer(4);
+    public void testTournamentWithFoldCallCheckBet() {
+        initAndStartTournament();
 
         /**
          * New Play
@@ -188,7 +161,7 @@ public class NewTournamentTest {
         play.action(nicolas, Action.BET, 400);
         checkPlayerState(nicolas, Action.BET, 630);
 
-        play.action(julien, Action.FOLD,0);
+        play.action(julien, Action.FOLD, 0);
 
         play.action(francois, Action.FOLD, 200);
         checkPlayerState(francois, Action.FOLD, 630);
@@ -196,8 +169,34 @@ public class NewTournamentTest {
         // +220 (20 BB + 200 François) - pas de réel showdown
         Assert.assertEquals("Stack Nicolas apres gain", stackNicolasAfterFirstPlay + 220, nicolas.getStack().intValue());
 
-        Assert.assertEquals("Round courant KO", Round.SHOWDOWN, play.getCurrentRound());
+        Assert.assertEquals("Round courant KO", Round.PREFLOP, play.getCurrentRound());
         Assert.assertEquals("Nb cards sur le board - showdown preflop ", 0, play.getBoard().nbCard());
+
+        checkCumulStacks(play);
+
+    }
+
+
+    @Test
+    public void testTournamentWithAllInsPreflop() {
+
+        initAndStartTournament();
+
+        Play play = wsop.newPlay();
+        play.setDefaultStrongestHandResolver(defaultStrongestHandResolver);
+        pot = play.getPot();
+
+        play.action(julien, Action.ALL_IN, 7);
+        checkPlayerState(julien, 0, Action.ALL_IN, 10030);
+
+        play.action(jerome, Action.FOLD, 8);
+        checkPlayerState(jerome, INITIAL_STACK, Action.FOLD, 10030);
+
+        play.action(francois,  Action.FOLD, 3);
+        checkPlayerState(francois, INITIAL_STACK - 10, Action.FOLD, 10030);
+
+        play.action(nicolas, Action.CALL, 66);
+        checkPlayerState(nicolas, Action.ALL_IN, 20010);
 
         checkCumulStacks(play);
 
@@ -218,5 +217,39 @@ public class NewTournamentTest {
 
     public void checkPlayerState(Player player, Action lastActionExpected, int potAmountExpected) {
         checkPlayerState(player, null, lastActionExpected, potAmountExpected);
+    }
+
+    private void initAndStartTournament() {
+        jerome = Player.builder().nickName("Jer").build();
+        francois = Player.builder().nickName("Fra").build();
+        nicolas = Player.builder().nickName("Nic").build();
+        julien = Player.builder().nickName("Jul").build();
+
+        wsop = Tournament.builder()
+                .initialStack(INITIAL_STACK)
+                .nbMaxPlayers(10)
+                .players(Lists.newArrayList(jerome, francois, nicolas, julien))
+                .lastPlays(Lists.newArrayList())
+                .build();
+
+        Structure structure = Structure.builder().duration(20).build();
+        structure.initializeRounds(Blind.builder().smallBlind(10).bigBlind(20).build());
+        wsop.start(structure);
+
+        Assert.assertEquals("Nombre de joueurs inscrits KO", 4, wsop.nbPlayersIn());
+        Assert.assertNull("Aucune main jouée", wsop.getCurrentPlay());
+
+        // Check init des stacks + sieges
+        wsop.getPlayers().stream().forEach(p -> {
+            Assert.assertTrue(p.getStack() == INITIAL_STACK);
+            Assert.assertTrue(p.getSeat().getNumber() > 0);
+        });
+
+        // on remplace les sièges tirés aléatoirement pour maitriser les données du test
+        jerome.getSeat().setNumber(1);
+        francois.getSeat().setNumber(2);
+        nicolas.getSeat().setNumber(3);
+        julien.getSeat().setNumber(4);
+        wsop.setSeatPlayDealer(4);
     }
 }

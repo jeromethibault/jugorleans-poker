@@ -29,8 +29,8 @@ public class CallAction extends CommonAction implements PlayerAction {
         // Récupération mises engagées par le joueur sur le round
         Integer roundPlayerBet = play.getPlayers().get(player);
 
-        // Calcul du call : min entre la mise demandée et le stack du joueur, - le montant déjà investi
-        int callValue = Math.min(bet, stack) - roundPlayerBet;
+        // Calcul du call : min entre la mise demandée - montant déjà investi, et le stack du joueur
+        int callValue = Math.min(bet - roundPlayerBet, stack);
         player.call(callValue);
 
         // MAJ pot + montant investi par le joueur

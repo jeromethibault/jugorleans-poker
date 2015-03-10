@@ -113,4 +113,13 @@ public class Board implements HasValue {
         }
         return nb;
     }
+
+    /**
+     * Vérification que le board est complet (5 cartes)
+     *
+     * @return vrai si 5 cartes sont présentes, faux dans le cas contraire
+     */
+    public boolean isFull() {
+        return nbCard() == 5;
+    }
 }

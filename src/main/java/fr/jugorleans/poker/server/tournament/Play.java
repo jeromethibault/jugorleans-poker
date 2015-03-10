@@ -75,13 +75,14 @@ public class Play {
     private DefaultStrongestHandResolver defaultStrongestHandResolver;
 
     /**
-     * Initialisation de la liste des spécifications
+     * Initialisation de la liste des actions
      */
     static {
         ACTIONS.put(Action.CHECK, new CheckAction());
         ACTIONS.put(Action.CALL, new CallAction());
         ACTIONS.put(Action.BET, new BetAction());
         ACTIONS.put(Action.FOLD, new FoldAction());
+        ACTIONS.put(Action.ALL_IN, new AllInAction());
     }
 
 
@@ -216,6 +217,7 @@ public class Play {
                 .filter(p -> !p.getKey().isFolded())
                 .allMatch(p -> p.getValue() == averageBetActivePlayers.intValue());
 
+
         // Nouveau round si les deux conditions sont remplies
         boolean newRound = everybodyPlays && allActivePlayersHaveSameBet;
         if (newRound) {
@@ -231,47 +233,56 @@ public class Play {
     private void startNewRound() {
 
         // Cas avec un seul joueur restant => showdown individuel
-        int nbPlayersNotFolded = countNbPlayersNotFolded();
-        if (nbPlayersNotFolded == 1) {
-            currentRound = Round.SHOWDOWN;
+        int nbPlayersActive = countNbPlayersActive();
+
+        // S'il reste moins d'un joueur actif (pas foldé, pas all in) => showdown
+        if (nbPlayersActive <= 1) {
+            showdown();
         } else {
             // Passage au currentRound suivant
             currentRound = currentRound.next();
+            // Ajout d'éventuelles cartes sur le board
+            deck.deal(); // Carte brûlée
+            board.addCards(deck.deal(currentRound.nbCardsToAddOnBoard()));
+
+            // Remise à 0 des mises du Round
+            players.entrySet().forEach(p -> p.setValue(0));
+
+            // Remise à NONE des dernières actions des joueurs encore en jeu
+            players.keySet()
+                    .stream()
+                    .filter(p -> !p.isFolded())
+                    .forEach(p -> p.setLastAction(Action.NONE));
+
+            // Positionnement initial sur le dealer
+            seatCurrentPlayer = seatCurrentDealer;
+
+            // Prise en compte au niveau du pot
+            pot.newRound(currentBlind.getBigBlind());
+
+            if (Round.SHOWDOWN.equals(currentRound)) {
+                showdown();
+            }
         }
-
-
-        // Ajout d'éventuelles cartes sur le board
-        board.addCards(deck.deal(currentRound.nbCardsToAddOnBoard()));
-
-        // Remise à 0 des mises du Round
-        players.entrySet().forEach(p -> p.setValue(0));
-
-        // Remise à NONE des dernières actions des joueurs encore en jeu
-        players.keySet()
-                .stream()
-                .filter(p -> !p.isFolded())
-                .forEach(p -> p.setLastAction(Action.NONE));
-
-        // Positionnement initial sur le dealer
-        seatCurrentPlayer = seatCurrentDealer;
-
-        // Prise en compte au niveau du pot
-        pot.newRound(currentBlind.getBigBlind());
-
-        if (Round.SHOWDOWN.equals(currentRound)) {
-            showdown();
-        }
-
 
     }
 
     /**
      * Nombre de joueurs encore dans la main
      *
-     * @ le nombre
+     * @return le nombre de joueurs non foldés
      */
     private int countNbPlayersNotFolded() {
         return (int) players.keySet().stream().filter(p -> !p.isFolded()).count();
+    }
+
+    /**
+     * Nombre de joueurs actifs (non folded et non all in)
+     *
+     * @return le nombre de joueurs correspondants
+     */
+    private int countNbPlayersActive() {
+        return (int) players.keySet().stream().filter(p -> !p.isAllIn() && !p.isFolded()).count();
     }
 
     /**
@@ -284,6 +295,13 @@ public class Play {
             winners = players.keySet().stream().filter(p -> !p.isFolded()).collect(Collectors.toList());
         } else {
             // Réel showdown
+
+            // Cas board non complet --> on complète les cartes
+            while (!board.isFull()) {
+                // Passage au currentRound suivant
+                currentRound = currentRound.next();
+                board.addCards(deck.deal(currentRound.nbCardsToAddOnBoard()));
+            }
 
             // Récupération des mains des joueurs en jeu
             List<Hand> hands = players.keySet().stream().filter(p -> !p.isFolded()).map(p -> p.getCurrentHand()).collect(Collectors.toList());
@@ -343,10 +361,11 @@ public class Play {
 
     /**
      * Mise à jour du montant investi par le joueur sur le round
+     *
      * @param player joueur concerné
-     * @param value montant à cumuler
+     * @param value  montant à cumuler
      */
-    public void updatePlayerPlayAmount(Player player, int value){
+    public void updatePlayerPlayAmount(Player player, int value) {
         players.merge(player, value, (v1, v2) -> v1 + v2);
     }
 }
