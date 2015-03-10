@@ -1,6 +1,7 @@
 package fr.jugorleans.poker.server.tournament;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.core.play.Seat;
 import fr.jugorleans.poker.server.core.play.Structure;
@@ -62,7 +63,6 @@ public class Tournament {
      */
     private boolean started = false;
 
-
     /**
      * Dealer de la main courante (identifié par son numéro de siège)
      */
@@ -85,6 +85,9 @@ public class Tournament {
      * @param playersToAdd joueurs à ajouter
      */
     public void addPlayers(Player... playersToAdd) {
+        if (players == null) {
+            players = Lists.newArrayList();
+        }
         players.addAll(Arrays.stream(playersToAdd).collect(Collectors.toList()));
     }
 
@@ -107,9 +110,8 @@ public class Tournament {
             @Override
             public void run() {
                 currentBlindRound++;
-                System.out.println("********************************************************");
             }
-        }, 0, structure.getDuration() * 60000) ;
+        }, 0, structure.getDuration() * 60000);
 
         AtomicInteger seatNumber = new AtomicInteger(0);
         players.stream().forEach(p -> {
@@ -130,6 +132,7 @@ public class Tournament {
      */
     public Play newPlay() {
         Preconditions.checkState(started, "Tournament non démarré");
+        Preconditions.checkState(winner == null, "Tournament terminé");
         currentPlay = Play.builder().build();
         lastPlays.add(currentPlay);
 
@@ -143,7 +146,6 @@ public class Tournament {
         currentPlay.start(this);
 
 
-
         return currentPlay;
     }
 
@@ -154,6 +156,40 @@ public class Tournament {
         } else {
             seatPlayDealer = nextPlayer().getSeat().getNumber();
         }
+    }
+
+
+    /**
+     * Nombre de joueurs inscrits
+     *
+     * @return le nombre de joueurs
+     */
+    public int nbPlayersIn() {
+        return players.size();
+    }
+
+
+    /**
+     * Nombre de joueurs encore en jeu
+     *
+     * @return le nombre de joueurs en jeu
+     */
+    public int nbRemainingPlayers() {
+        return (int) players.stream().filter(p -> !p.isOut()).count();
+    }
+
+
+    /**
+     * Fin d'une main
+     *
+     * @param play main terminée
+     */
+    public void endPlay(Play play) {
+        if (nbRemainingPlayers() == 1){
+            winner = players.stream().filter(p -> !p.isOut()).findFirst().get();
+        }
+
+        // TODO gérer cassage de table pour multitables
     }
 
     /**
@@ -172,20 +208,17 @@ public class Tournament {
         return next.get();
     }
 
+    /**
+     * Recherche du joueur suivant
+     *
+     * @param seatCurrentPlayer joueur courant
+     * @return le jouer
+     */
     private Optional<Player> findNextPlayer(int seatCurrentPlayer) {
         int nextSeatPlayer = 1 + seatCurrentPlayer % players.size();
         return players.stream()
                 .filter(p -> (p.getSeat().getNumber() == nextSeatPlayer
-                        && !p.isOut()) && !p.isAllIn())
+                        && !p.isOut()))
                 .findFirst();
-    }
-
-    /**
-     * Nombre de joueurs inscrits
-     *
-     * @return le nombre de joueurs
-     */
-    public int nbPlayersIn() {
-        return players.size();
     }
 }

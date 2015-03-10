@@ -67,6 +67,16 @@ public class Play {
     private Blind currentBlind;
 
     /**
+     * Tournoi
+     */
+    private Tournament tournament;
+
+    /**
+     * Vainqueur(s) de la main
+     */
+    private List<Player> winners;
+
+    /**
      * Ensemble des PlayerAction
      */
     private static final Map<Action, PlayerAction> ACTIONS = Maps.newHashMap();
@@ -87,6 +97,9 @@ public class Play {
 
 
     public void start(Tournament tournament) {
+
+        this.tournament = tournament;
+
         // Passage de la main courante - Attention pas threadsafe pour multitables (mais on reste single table)
         ACTIONS.entrySet().forEach(impl -> impl.getValue().setPlay(this));
 
@@ -107,7 +120,6 @@ public class Play {
             p.setLastAction(Action.NONE);
             players.put(p, 0);
         });
-
 
         // Positionnement du joueur courant au niveau du dealer, puis passage au joueur UTGs
         seatCurrentPlayer = seatCurrentDealer;
@@ -218,9 +230,10 @@ public class Play {
                 .filter(p -> !p.getKey().isFolded())
                 .allMatch(p -> p.getValue() == averageBetActivePlayers.intValue());
 
+        boolean inactivePlayers = countNbPlayersActive() == 0;
 
-        // Nouveau round si les deux conditions sont remplies
-        boolean newRound = everybodyPlays && allActivePlayersHaveSameBet;
+        // Nouveau round si les deux conditions sont remplies : tout le monde a joué et (tous ont fait la meme mise ou tous sont inactifs (non all in / non foldés)
+        boolean newRound = everybodyPlays && (allActivePlayersHaveSameBet || inactivePlayers);
         if (newRound) {
             startNewRound();
         }
@@ -283,14 +296,13 @@ public class Play {
      * @return le nombre de joueurs correspondants
      */
     private int countNbPlayersActive() {
-        return (int) players.keySet().stream().filter(p -> !p.isAllIn() && !p.isFolded()).count();
+       return (int) players.keySet().stream().filter(p -> !p.isAllIn() && !p.isFolded()).count();
     }
 
     /**
      * Showdown
      */
     private void showdown() {
-        List<Player> winners = null;
         if (countNbPlayersNotFolded() == 1) {
             // Cas d'une fin de partie sans réel showdown (1 seul joueur restant)
             winners = players.keySet().stream().filter(p -> !p.isFolded()).collect(Collectors.toList());
@@ -300,6 +312,7 @@ public class Play {
             // Cas board non complet --> on complète les cartes
             while (!board.isFull()) {
                 // Passage au currentRound suivant
+                deck.deal(); // Carte brûlée
                 currentRound = currentRound.next();
                 board.addCards(deck.deal(currentRound.nbCardsToAddOnBoard()));
             }
@@ -317,6 +330,15 @@ public class Play {
         // Distribution des gains TODO gérer multipots
         int potSplit = pot.getAmount() / winners.size();
         winners.forEach(p -> p.win(potSplit));
+
+        // Vérification que chaque joueur n'est pas éliminé
+        players.entrySet().forEach(p ->{
+            p.getKey().checkIsOut();
+            p.getKey().setAllIn(false);
+        });
+
+        // Fin de la main
+        tournament.endPlay(this);
     }
 
     /**
@@ -341,7 +363,7 @@ public class Play {
      * @return le prochain joueur
      */
     private Optional<Player> findNextPlayer() {
-        int nextSeatPlayer = 1 + seatCurrentPlayer % players.size();
+        int nextSeatPlayer = 1 + seatCurrentPlayer % tournament.getPlayers().size();
         return players.keySet().stream()
                 .filter(p -> (p.getSeat().getNumber() == nextSeatPlayer
                         && !p.isFolded()))

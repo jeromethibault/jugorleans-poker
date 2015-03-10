@@ -51,6 +51,11 @@ public class Player {
     private boolean isAllIn = false;
 
     /**
+     * Classement
+     */
+    private int rank;
+
+    /**
      * Check
      */
     public void check() {
@@ -141,6 +146,15 @@ public class Player {
     }
 
     /**
+     * Vérification que le joueur n'est pas éliminé
+     */
+    public void checkIsOut(){
+        if (stack == 0){
+            out = true;
+        }
+    }
+
+    /**
      * Vérification que le joueur n'est pas automatiquement allin
      */
     private void checkIsAllIn() {
@@ -149,5 +163,7 @@ public class Player {
             lastAction = Action.ALL_IN;
         }
     }
+
+
 
 }
