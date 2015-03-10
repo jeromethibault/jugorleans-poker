@@ -113,6 +113,7 @@ public class Play {
         seatCurrentPlayer = seatCurrentDealer;
         // Récupération blinds du round courant
         currentBlind = tournament.getStructure().getRounds().get(tournament.getCurrentBlindRound());
+        Preconditions.checkState(currentBlind != null && currentBlind.isValid(), "Problème de structures - blinds incorrectes");
         Player sbPlayer = nextPlayer(); // small blind (ou BB en HU)
         Player bbPlayer = nextPlayer(); // big blind (ou SB en HU)
         nextPlayer(); // UTG

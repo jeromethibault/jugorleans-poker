@@ -9,9 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -101,7 +99,17 @@ public class Tournament {
         this.structure = structure;
 
         // Position au 1er round de blinds
-        currentBlindRound = 1;
+        Timer timer = new Timer("Structure", true);
+
+        // Gestion du timer des blinds
+        currentBlindRound = 0;
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                currentBlindRound++;
+                System.out.println("********************************************************");
+            }
+        }, 0, structure.getDuration() * 60000) ;
 
         AtomicInteger seatNumber = new AtomicInteger(0);
         players.stream().forEach(p -> {
@@ -126,7 +134,6 @@ public class Tournament {
         lastPlays.add(currentPlay);
 
 
-
         // TODO gérer multitables --> dealer au niveau de la table et pas du tournament
 
         // Déplacement du dealer
@@ -134,6 +141,8 @@ public class Tournament {
 
         // Démarrage de la main
         currentPlay.start(this);
+
+
 
         return currentPlay;
     }
