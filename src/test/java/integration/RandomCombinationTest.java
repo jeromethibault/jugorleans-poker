@@ -2,7 +2,6 @@ package integration;
 
 import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.conf.test.ConfigurationTest;
-import fr.jugorleans.poker.server.core.hand.Card;
 import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.core.play.Board;
 import fr.jugorleans.poker.server.core.play.Deck;
@@ -40,10 +39,12 @@ public class RandomCombinationTest {
             board.addCards(deck.deal(5));
 
             Hand hand = Hand.newBuilder().firstCard(deck.deal(1).get(0)).secondCard(deck.deal(1).get(0)).build();
+/*
 
             log.debug("****** New Play *******");
             log.debug("Board => "+board.getValue());
             log.debug("Hand => "+hand.getValue());
+*/
 
             List<Hand> list = defaultStrongestHandResolver.getWinningHand(board, Lists.newArrayList(hand));
             Assert.assertTrue(list.size() != 0);
