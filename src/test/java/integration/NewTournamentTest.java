@@ -42,9 +42,7 @@ public class NewTournamentTest {
         /**
          * New Play
          */
-        System.out.println("before");
         Play play = wsop.newPlay();
-        System.out.println("after");
         play.setDefaultStrongestHandResolver(defaultStrongestHandResolver);
         pot = play.getPot();
         Assert.assertEquals("Nombre cartes restantes KO", 44, play.getDeck().cardsLeft());
@@ -56,7 +54,7 @@ public class NewTournamentTest {
             Assert.assertEquals(Action.NONE, p.getLastAction());
         });
 
-        Assert.assertNotNull("Main en cours", wsop.getCurrentPlay());
+        Assert.assertNotNull("Main en cours", wsop.getTable().getCurrentPlay());
         Player player = play.whoMustPlay();
         // Julien UTG doit commencer, François SB, Nicolas BB
         Assert.assertEquals(julien, player);
@@ -267,11 +265,12 @@ public class NewTournamentTest {
         wsop.addPlayers(jerome, francois, nicolas, julien);
 
         Structure structure = Structure.builder().duration(20).build();
-        structure.initializeRounds(Blind.builder().smallBlind(10).bigBlind(20).build());
+        Blind blind = Blind.builder().smallBlind(10).bigBlind(20).build();
+        structure.initializeRounds(blind, blind, blind, blind);
         wsop.start(structure);
 
         Assert.assertEquals("Nombre de joueurs inscrits KO", 4, wsop.nbPlayersIn());
-        Assert.assertNull("Aucune main jouée", wsop.getCurrentPlay());
+        Assert.assertNull("Aucune main jouée", wsop.getTable().getCurrentPlay());
 
         // Check init des stacks + sieges
         wsop.getPlayers().stream().forEach(p -> {
@@ -284,6 +283,6 @@ public class NewTournamentTest {
         francois.getSeat().setNumber(2);
         nicolas.getSeat().setNumber(3);
         julien.getSeat().setNumber(4);
-        wsop.setSeatPlayDealer(4);
+        wsop.getTable().setSeatPlayDealer(4);
     }
 }

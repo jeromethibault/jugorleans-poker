@@ -104,7 +104,7 @@ public class Play {
         ACTIONS.entrySet().forEach(impl -> impl.getValue().setPlay(this));
 
         // Positionnement du dealer (à conserver car important pour chaque début de round)
-        seatCurrentDealer = tournament.getSeatPlayDealer();
+        seatCurrentDealer = tournament.getTable().getSeatPlayDealer();
 
         // Initialisation du pot, jeu de cartes, et du currentRound PREFLOP
         pot = new Pot();
@@ -296,7 +296,7 @@ public class Play {
      * @return le nombre de joueurs correspondants
      */
     private int countNbPlayersActive() {
-       return (int) players.keySet().stream().filter(p -> !p.isAllIn() && !p.isFolded()).count();
+        return (int) players.keySet().stream().filter(p -> !p.isAllIn() && !p.isFolded()).count();
     }
 
     /**
@@ -332,13 +332,13 @@ public class Play {
         winners.forEach(p -> p.win(potSplit));
 
         // Vérification que chaque joueur n'est pas éliminé
-        players.entrySet().forEach(p ->{
+        players.entrySet().forEach(p -> {
             p.getKey().checkIsOut();
             p.getKey().setAllIn(false);
         });
 
         // Fin de la main
-        tournament.endPlay(this);
+        tournament.checkEnd();
     }
 
     /**

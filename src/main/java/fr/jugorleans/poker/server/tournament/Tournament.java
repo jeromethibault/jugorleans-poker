@@ -3,7 +3,6 @@ package fr.jugorleans.poker.server.tournament;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.core.play.Player;
-import fr.jugorleans.poker.server.core.play.Seat;
 import fr.jugorleans.poker.server.core.play.Structure;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +10,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 /**
@@ -53,10 +54,6 @@ public class Tournament {
      */
     private List<Play> lastPlays;
 
-    /**
-     * Main courante
-     */
-    private Play currentPlay;
 
     /**
      * Flag de lancement du tournoi
@@ -64,9 +61,9 @@ public class Tournament {
     private boolean started = false;
 
     /**
-     * Dealer de la main courante (identifié par son numéro de siège)
+     * Table se déroule le tournoi
      */
-    private Integer seatPlayDealer;
+    private Table table;
 
     /**
      * Structure du tournoi
@@ -120,22 +117,18 @@ public class Tournament {
         timer = new Timer("Structure", true);
 
         // Gestion du timer des blinds
-        currentBlindRound = 0;
+        currentBlindRound = 1;
+        long frequency = structure.getDuration() * 60000;
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 currentBlindRound++;
             }
-        }, 0, structure.getDuration() * 60000);
+        }, frequency, frequency);
 
-        AtomicInteger seatNumber = new AtomicInteger(0);
-        players.stream().forEach(p -> {
-            // Attribution des places
-            p.setSeat(Seat.builder().number(seatNumber.incrementAndGet()).build());
 
-            // Initialisation des stacks
-            p.setStack(initialStack);
-        });
+        table = Table.builder().id("1").name("table1").build();
+        table.placePlayers(this);
 
         clock = new GameClock();
         clock.start(LocalDateTime.now());
@@ -151,31 +144,10 @@ public class Tournament {
     public Play newPlay() {
         Preconditions.checkState(started, "Tournament non démarré");
         Preconditions.checkState(winner == null, "Tournament terminé");
-        currentPlay = Play.builder().build();
-        lastPlays.add(currentPlay);
-
-
-        // TODO gérer multitables --> dealer au niveau de la table et pas du tournament
-
-        // Déplacement du dealer
-        moveDealerButton();
-
-        // Démarrage de la main
-        currentPlay.start(this);
-
-
-        return currentPlay;
+        Play play = table.newPlay();
+        lastPlays.add(play);
+        return play;
     }
-
-    private void moveDealerButton() {
-        if (seatPlayDealer == null) {
-            // Choix aléatoire du tout premier dealer
-            seatPlayDealer = ((Double) (Math.random() * players.size())).intValue();
-        } else {
-            seatPlayDealer = nextPlayer().getSeat().getNumber();
-        }
-    }
-
 
     /**
      * Nombre de joueurs inscrits
@@ -199,10 +171,8 @@ public class Tournament {
 
     /**
      * Fin d'une main
-     *
-     * @param play main terminée
      */
-    public void endPlay(Play play) {
+    public void checkEnd() {
         if (nbRemainingPlayers() == 1) {
             winner = players.stream().filter(p -> !p.isOut()).findFirst().get();
 
@@ -215,35 +185,5 @@ public class Tournament {
         // TODO gérer cassage de table pour multitables
     }
 
-//    public void
 
-    /**
-     * Passage au prochain joueur
-     *
-     * @return le prochain joueur
-     */
-    private Player nextPlayer() {
-        int seatCurrentPlayer = seatPlayDealer;
-        Optional<Player> next = findNextPlayer(seatCurrentPlayer);
-        while (!next.isPresent()) {
-            seatCurrentPlayer++;
-            next = findNextPlayer(seatCurrentPlayer);
-        }
-
-        return next.get();
-    }
-
-    /**
-     * Recherche du joueur suivant
-     *
-     * @param seatCurrentPlayer joueur courant
-     * @return le jouer
-     */
-    private Optional<Player> findNextPlayer(int seatCurrentPlayer) {
-        int nextSeatPlayer = 1 + seatCurrentPlayer % players.size();
-        return players.stream()
-                .filter(p -> (p.getSeat().getNumber() == nextSeatPlayer
-                        && !p.isOut()))
-                .findFirst();
-    }
 }
