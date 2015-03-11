@@ -42,7 +42,9 @@ public class NewTournamentTest {
         /**
          * New Play
          */
+        System.out.println("before");
         Play play = wsop.newPlay();
+        System.out.println("after");
         play.setDefaultStrongestHandResolver(defaultStrongestHandResolver);
         pot = play.getPot();
         Assert.assertEquals("Nombre cartes restantes KO", 44, play.getDeck().cardsLeft());
@@ -207,7 +209,7 @@ public class NewTournamentTest {
 
         play = wsop.newPlay();
         play.setDefaultStrongestHandResolver(defaultStrongestHandResolver);
-        Assert.assertEquals("Nombre de joueurs en jeu sur la main", 3, play.getPlayers().size());
+        Assert.assertEquals("Nombre de joueurs en jeu sur la main ", 3, play.getPlayers().size());
 
         // Check init des actions
         wsop.getPlayers().stream().filter(p -> !p.isOut()).forEach(p -> {
@@ -223,7 +225,14 @@ public class NewTournamentTest {
 
         checkCumulStacks(play);
 
-
+        // Vérification temps écoulé
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        long nbSec = wsop.getClock().getElapsedTime();
+        Assert.assertTrue("Temps écoulé : " + nbSec, nbSec >= 1 && nbSec < 5);
     }
 
     private void checkCumulStacks(Play play) {

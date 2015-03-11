@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -24,7 +25,6 @@ import java.util.stream.Collectors;
 
 /**
  * Tournoi
- * TODO gérer le changement de round (blinds) avec timer à initialiser au start
  */
 public class Tournament {
 
@@ -78,6 +78,21 @@ public class Tournament {
      */
     private Integer currentBlindRound;
 
+    /**
+     * Horloge du tournoi
+     */
+    private GameClock clock;
+
+    /**
+     * Timer de gestion automatiquement de changement de rounds
+     */
+    private Timer timer;
+
+    /**
+     * Horloge du round
+     *//*
+    private Clock round; //voir si pertinent
+    */
 
     /**
      * Ajout de joueurs
@@ -102,7 +117,7 @@ public class Tournament {
         this.structure = structure;
 
         // Position au 1er round de blinds
-        Timer timer = new Timer("Structure", true);
+        timer = new Timer("Structure", true);
 
         // Gestion du timer des blinds
         currentBlindRound = 0;
@@ -122,7 +137,10 @@ public class Tournament {
             p.setStack(initialStack);
         });
 
+        clock = new GameClock();
+        clock.start(LocalDateTime.now());
         started = true;
+
     }
 
     /**
@@ -185,12 +203,19 @@ public class Tournament {
      * @param play main terminée
      */
     public void endPlay(Play play) {
-        if (nbRemainingPlayers() == 1){
+        if (nbRemainingPlayers() == 1) {
             winner = players.stream().filter(p -> !p.isOut()).findFirst().get();
+
+            // Stop du timer
+            timer.cancel();
+            // Enregistrement date de fin
+            clock.setEndTime(LocalDateTime.now());
         }
 
         // TODO gérer cassage de table pour multitables
     }
+
+//    public void
 
     /**
      * Passage au prochain joueur
