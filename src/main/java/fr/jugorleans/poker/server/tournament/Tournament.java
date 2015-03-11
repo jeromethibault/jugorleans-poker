@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 /**
  * Tournoi
+ * TODO gérer id de tournoi et propager jusqu'au Play
  */
 public class Tournament {
 
@@ -127,7 +128,8 @@ public class Tournament {
         }, frequency, frequency);
 
 
-        table = Table.builder().id("1").name("table1").build();
+        // Création de la table et ajout des joueurs
+        table = Table.builder().id("1").name("table1").build(); // TODO gérer proprement l'id et nom de table
         table.placePlayers(this);
 
         clock = new GameClock();

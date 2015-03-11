@@ -1,5 +1,6 @@
 package fr.jugorleans.poker.server.tournament;
 
+import com.google.common.base.Preconditions;
 import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.core.play.Seat;
 import lombok.Builder;
@@ -47,6 +48,7 @@ public class Table {
 
     /**
      * Placement des joueurs
+     *
      * @param tournament tournoi
      */
     protected void placePlayers(Tournament tournament) {
@@ -69,6 +71,7 @@ public class Table {
      * @return la main créée
      */
     protected Play newPlay() {
+        Preconditions.checkState(tournament != null, "Joueurs non placés");
         currentPlay = Play.builder().build();
 
         // TODO gérer multitables --> dealer au niveau de la table et pas du tournament
@@ -78,7 +81,6 @@ public class Table {
 
         // Démarrage de la main
         currentPlay.start(tournament);
-
 
         return currentPlay;
     }
