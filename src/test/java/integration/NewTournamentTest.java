@@ -1,9 +1,12 @@
 package integration;
 
-import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.conf.test.ConfigurationTest;
-import fr.jugorleans.poker.server.core.play.*;
+import fr.jugorleans.poker.server.core.play.Action;
+import fr.jugorleans.poker.server.core.play.Player;
+import fr.jugorleans.poker.server.core.play.Pot;
+import fr.jugorleans.poker.server.core.play.Round;
 import fr.jugorleans.poker.server.game.DefaultStrongestHandResolver;
+import fr.jugorleans.poker.server.service.TournamentService;
 import fr.jugorleans.poker.server.tournament.Play;
 import fr.jugorleans.poker.server.tournament.Tournament;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +30,9 @@ public class NewTournamentTest {
 
     @Autowired
     private DefaultStrongestHandResolver defaultStrongestHandResolver;
+
+    @Autowired
+    private TournamentService tournamentService;
 
     private Tournament wsop;
     private Pot pot;
@@ -256,17 +262,8 @@ public class NewTournamentTest {
         nicolas = Player.builder().nickName("Nic").build();
         julien = Player.builder().nickName("Jul").build();
 
-        Structure structure = Structure.builder().duration(20).build();
-        Blind blind = Blind.builder().smallBlind(10).bigBlind(20).build();
-        structure.initializeRounds(blind, blind, blind, blind);
 
-        wsop = Tournament.builder()
-                .structure(structure)
-                .initialStack(INITIAL_STACK)
-                .nbMaxPlayers(10)
-                .lastPlays(Lists.newArrayList())
-                .build();
-        wsop.init();
+        wsop = tournamentService.createNewTournament();
         wsop.addPlayers(jerome, francois, nicolas, julien);
         wsop.start();
 
