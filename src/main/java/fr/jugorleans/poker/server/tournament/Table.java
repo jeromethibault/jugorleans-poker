@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -53,6 +54,9 @@ public class Table {
      */
     protected void placePlayers(Tournament tournament) {
         this.tournament = tournament;
+
+        // Placement au hasard des joueurs
+        Collections.shuffle(tournament.getPlayers());
 
         AtomicInteger seatNumber = new AtomicInteger(0);
         tournament.getPlayers().stream().forEach(p -> {

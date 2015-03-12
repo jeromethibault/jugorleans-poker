@@ -10,25 +10,24 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Tournoi
- */
 @Getter
 @Setter
 @Builder
 @ToString
-
 /**
  * Tournoi
  * TODO gérer id de tournoi et propager jusqu'au Play
  */
 public class Tournament {
+
+    /**
+     * Id
+     */
+    private String id;
 
     /**
      * Joueurs inscrits
@@ -91,6 +90,15 @@ public class Tournament {
      *//*
     private Clock round; //voir si pertinent
     */
+    public void init() {
+        LocalDateTime start = LocalDateTime.now();
+        id = start.format(DateTimeFormatter.BASIC_ISO_DATE) + "_" + UUID.randomUUID().toString();
+        clock = new GameClock();
+        clock.start(start);
+
+        // Création de la table et ajout des joueurs
+        table = Table.builder().id(id + "_1").name("WSOP").build(); // TODO le nom de table
+    }
 
     /**
      * Ajout de joueurs
@@ -98,6 +106,7 @@ public class Tournament {
      * @param playersToAdd joueurs à ajouter
      */
     public void addPlayers(Player... playersToAdd) {
+        Preconditions.checkState(id != null, "Tournament non initialisé");
         if (players == null) {
             players = Lists.newArrayList();
         }
@@ -107,15 +116,17 @@ public class Tournament {
     /**
      * Démarrage du tournoi
      */
-    public void start(Structure structure) {
+    public void start() {
+        Preconditions.checkState(id != null, "Tournament non initialisé");
         Preconditions.checkState(!started, "Tournament déjà démarré");
+        Preconditions.checkState(players != null && players.size() > 1, "Manque de joueurs");
         Preconditions.checkState(structure != null && structure.isValid(), "Structure invalide");
-
-        // Conservation de la structure
-        this.structure = structure;
 
         // Position au 1er round de blinds
         timer = new Timer("Structure", true);
+
+        // Placement des joueurs
+        table.placePlayers(this);
 
         // Gestion du timer des blinds
         currentBlindRound = 1;
@@ -127,15 +138,7 @@ public class Tournament {
             }
         }, frequency, frequency);
 
-
-        // Création de la table et ajout des joueurs
-        table = Table.builder().id("1").name("table1").build(); // TODO gérer proprement l'id et nom de table
-        table.placePlayers(this);
-
-        clock = new GameClock();
-        clock.start(LocalDateTime.now());
         started = true;
-
     }
 
     /**

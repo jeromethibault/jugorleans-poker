@@ -256,18 +256,19 @@ public class NewTournamentTest {
         nicolas = Player.builder().nickName("Nic").build();
         julien = Player.builder().nickName("Jul").build();
 
+        Structure structure = Structure.builder().duration(20).build();
+        Blind blind = Blind.builder().smallBlind(10).bigBlind(20).build();
+        structure.initializeRounds(blind, blind, blind, blind);
+
         wsop = Tournament.builder()
+                .structure(structure)
                 .initialStack(INITIAL_STACK)
                 .nbMaxPlayers(10)
                 .lastPlays(Lists.newArrayList())
                 .build();
-
+        wsop.init();
         wsop.addPlayers(jerome, francois, nicolas, julien);
-
-        Structure structure = Structure.builder().duration(20).build();
-        Blind blind = Blind.builder().smallBlind(10).bigBlind(20).build();
-        structure.initializeRounds(blind, blind, blind, blind);
-        wsop.start(structure);
+        wsop.start();
 
         Assert.assertEquals("Nombre de joueurs inscrits KO", 4, wsop.nbPlayersIn());
         Assert.assertNull("Aucune main jouée", wsop.getTable().getCurrentPlay());
