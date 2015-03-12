@@ -25,6 +25,10 @@ import java.util.stream.Collectors;
 @ToString
 public class Play {
 
+    /**
+     * Id
+     */
+    private String id;
 
     /**
      * Pots (principal et éventuels secondaires)
@@ -81,7 +85,9 @@ public class Play {
      */
     private static final Map<Action, PlayerAction> ACTIONS = Maps.newHashMap();
 
-
+    /**
+     * Resolver permettant de résoudre la meilleure main lors du showdown
+     */
     private DefaultStrongestHandResolver defaultStrongestHandResolver;
 
     /**
@@ -96,9 +102,16 @@ public class Play {
     }
 
 
+    /**
+     * Démarrage de la main
+     *
+     * @param tournament tournoi courant
+     */
     public void start(Tournament tournament) {
 
         this.tournament = tournament;
+
+        id = tournament.getTable().getId() + "_" + tournament.getLastPlays().size();
 
         // Passage de la main courante - Attention pas threadsafe pour multitables (mais on reste single table)
         ACTIONS.entrySet().forEach(impl -> impl.getValue().setPlay(this));
@@ -144,7 +157,7 @@ public class Play {
     }
 
     /**
-     * Mise d'un joueur
+     * Action d'un joueur
      *
      * @param player   joueur concerné
      * @param action   action du joueur
