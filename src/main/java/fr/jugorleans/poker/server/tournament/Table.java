@@ -78,8 +78,6 @@ public class Table {
         Preconditions.checkState(tournament != null, "Joueurs non placés");
         currentPlay = Play.builder().build();
 
-        // TODO gérer multitables --> dealer au niveau de la table et pas du tournament
-
         // Déplacement du dealer
         moveDealerButton();
 
