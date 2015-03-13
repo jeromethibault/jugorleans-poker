@@ -264,8 +264,11 @@ public class NewTournamentTest {
 
 
         wsop = tournamentService.createNewTournament();
-        wsop.addPlayers(jerome, francois, nicolas, julien);
-        wsop.start();
+
+        tournamentService.addPlayer(wsop.getId(), jerome);
+        tournamentService.addPlayer(wsop.getId(), francois);
+        tournamentService.addPlayer(wsop.getId(), nicolas);
+        tournamentService.addPlayer(wsop.getId(), julien);
 
         Assert.assertEquals("Nombre de joueurs inscrits KO", 4, wsop.nbPlayersIn());
         Assert.assertNull("Aucune main jouée", wsop.getTable().getCurrentPlay());

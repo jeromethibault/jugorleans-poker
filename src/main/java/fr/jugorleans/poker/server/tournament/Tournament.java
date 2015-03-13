@@ -92,7 +92,7 @@ public class Tournament {
      *//*
     private Clock round; //voir si pertinent
     */
-    public void init() {
+    public Tournament init() {
         LocalDateTime start = LocalDateTime.now();
         id = start.format(DateTimeFormatter.BASIC_ISO_DATE) + "_" + UUID.randomUUID().toString();
         clock = new GameClock();
@@ -100,6 +100,7 @@ public class Tournament {
 
         // Création de la table et ajout des joueurs
         table = Table.builder().id(id + "_1").name("WSOP").build(); // TODO le nom de table
+        return this;
     }
 
     /**
@@ -107,18 +108,19 @@ public class Tournament {
      *
      * @param playersToAdd joueurs à ajouter
      */
-    public void addPlayers(Player... playersToAdd) {
+    public Tournament addPlayers(Player... playersToAdd) {
         Preconditions.checkState(id != null, "Tournament non initialisé");
         if (players == null) {
             players = Lists.newArrayList();
         }
         players.addAll(Arrays.stream(playersToAdd).collect(Collectors.toList()));
+        return this;
     }
 
     /**
      * Démarrage du tournoi
      */
-    public void start() {
+    public Tournament start() {
         Preconditions.checkState(id != null, "Tournament non initialisé");
         Preconditions.checkState(!started, "Tournament déjà démarré");
         Preconditions.checkState(players != null && players.size() > 1, "Manque de joueurs");
@@ -143,6 +145,7 @@ public class Tournament {
         started = true;
 
         log.info("Démarrage du tournoi {}", id);
+        return this;
     }
 
     /**
