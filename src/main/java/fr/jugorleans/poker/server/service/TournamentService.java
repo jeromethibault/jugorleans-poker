@@ -3,9 +3,11 @@ package fr.jugorleans.poker.server.service;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import fr.jugorleans.poker.server.core.play.Action;
 import fr.jugorleans.poker.server.core.play.Blind;
 import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.core.play.Structure;
+import fr.jugorleans.poker.server.tournament.Play;
 import fr.jugorleans.poker.server.tournament.Tournament;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,7 @@ import java.util.Objects;
 public class TournamentService {
 
     private Map<String, Tournament> tempTournamentDAO = Maps.newHashMap(); // TODO remplacer par appel DAO
+    private Map<String, Play> tempPlayDAO = Maps.newHashMap(); // TODO remplacer par appel DAO
 
     /**
      * Création d'un nouveau tournoi
@@ -60,6 +63,21 @@ public class TournamentService {
             tournament.start();
         }
         return tournament;
+    }
+
+    /**
+     * Action d'un joueur
+     *
+     * @param idPlay id du Play
+     * @param player joueur concerné
+     * @param action action réalisée
+     * @param bet    montant de l'éventuelle mise
+     * @return le Play actualisé
+     */
+    public Play action(String idPlay, Player player, Action action, int bet) {
+        Play play = tempPlayDAO.get(idPlay);
+        play.action(player, action, bet);
+        return play;
     }
 
 

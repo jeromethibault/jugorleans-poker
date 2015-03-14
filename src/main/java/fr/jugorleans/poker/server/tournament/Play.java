@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -107,17 +108,17 @@ public class Play {
      *
      * @param tournament tournoi courant
      */
-    public void start(Tournament tournament) {
+    public void start(Table table) {
 
-        this.tournament = tournament;
+        tournament = table.getTournament();
 
-        id = tournament.getTable().getId() + "_" + tournament.getLastPlays().size();
+        id = table.getId() + "_" + StringUtils.leftPad(String.valueOf(tournament.getLastPlays().size()), 5, '0');
 
         // Passage de la main courante - Attention pas threadsafe pour multitables (mais on reste single table)
         ACTIONS.entrySet().forEach(impl -> impl.getValue().setPlay(this));
 
         // Positionnement du dealer (à conserver car important pour chaque début de round)
-        seatCurrentDealer = tournament.getTable().getSeatPlayDealer();
+        seatCurrentDealer = table.getSeatPlayDealer();
 
         // Initialisation du pot, jeu de cartes, et du currentRound PREFLOP
         pot = new Pot();

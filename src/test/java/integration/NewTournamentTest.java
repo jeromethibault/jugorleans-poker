@@ -60,7 +60,7 @@ public class NewTournamentTest {
             Assert.assertEquals(Action.NONE, p.getLastAction());
         });
 
-        Assert.assertNotNull("Main en cours", wsop.getTable().getCurrentPlay());
+        Assert.assertNotNull("Main en cours", wsop.getTable1().getCurrentPlay());
         Player player = play.whoMustPlay();
         // Julien UTG doit commencer, François SB, Nicolas BB
         Assert.assertEquals(julien, player);
@@ -271,7 +271,7 @@ public class NewTournamentTest {
         tournamentService.addPlayer(wsop.getId(), julien);
 
         Assert.assertEquals("Nombre de joueurs inscrits KO", 4, wsop.nbPlayersIn());
-        Assert.assertNull("Aucune main jouée", wsop.getTable().getCurrentPlay());
+        Assert.assertNull("Aucune main jouée", wsop.getTable1().getCurrentPlay());
 
         // Check init des stacks + sieges
         wsop.getPlayers().stream().forEach(p -> {
@@ -284,6 +284,6 @@ public class NewTournamentTest {
         francois.getSeat().setNumber(2);
         nicolas.getSeat().setNumber(3);
         julien.getSeat().setNumber(4);
-        wsop.getTable().setSeatPlayDealer(4);
+        wsop.getTable1().setSeatPlayDealer(4);
     }
 }

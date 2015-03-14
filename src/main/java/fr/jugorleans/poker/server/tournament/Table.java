@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -82,7 +83,7 @@ public class Table {
         moveDealerButton();
 
         // Démarrage de la main
-        currentPlay.start(tournament);
+        currentPlay.start(this);
 
         return currentPlay;
     }
