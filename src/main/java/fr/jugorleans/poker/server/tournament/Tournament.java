@@ -57,7 +57,6 @@ public class Tournament {
      */
     private List<Play> lastPlays;
 
-
     /**
      * Flag de lancement du tournoi
      */
@@ -137,7 +136,7 @@ public class Tournament {
         Preconditions.checkState(structure != null && structure.isValid(), "Structure invalide");
 
         // Position au 1er round de blinds
-        timer = new Timer("Structure", true);
+        timer = new Timer("Struct" + id, true);
 
         // Placement des joueurs
         tables.entrySet().forEach(t -> t.getValue().placePlayers(this)); // TODO à faire évoluer si multitables pour ventiler les joueurs

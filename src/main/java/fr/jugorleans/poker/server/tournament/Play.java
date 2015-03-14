@@ -12,9 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -82,6 +80,11 @@ public class Play {
     private List<Player> winners;
 
     /**
+     * Timer de gestion automatiquement de fold si délai max atteint pour l'action d'un joueur
+     */
+    private Timer timerPlayer;
+
+    /**
      * Ensemble des PlayerAction
      */
     private static final Map<Action, PlayerAction> ACTIONS = Maps.newHashMap();
@@ -146,6 +149,8 @@ public class Play {
 
         // Gestion de la collecte des blinds
         collectBlinds(sbPlayer, bbPlayer);
+
+        newTimerActionNextPlayer(3); // TODO externaliser le délai
     }
 
     /**
@@ -186,8 +191,24 @@ public class Play {
         checkNewRound();
 
         // Passage au joueur suivant
-        return nextPlayer();
+        Player playerNext = nextPlayer();
+
+        // Positionnement du timer pour temps max joueur suivant
+        newTimerActionNextPlayer(3); // TODO externaliser le délai
+
+        return playerNext;
     }
+
+    /**
+     * Mise à jour du montant investi par le joueur sur le round
+     *
+     * @param player joueur concerné
+     * @param value  montant à cumuler
+     */
+    public void updatePlayerPlayAmount(Player player, int value) {
+        players.merge(player, value, (v1, v2) -> v1 + v2);
+    }
+
 
     /**
      * Collecte des blinds
@@ -222,6 +243,7 @@ public class Play {
         pot.newRound(bb);
 
     }
+
 
     /**
      * Vérification d'un éventuel changement de round
@@ -259,7 +281,6 @@ public class Play {
      * Démarrage d'un nouveau round
      */
     private void startNewRound() {
-
         // Cas avec un seul joueur restant => showdown individuel
         int nbPlayersActive = countNbPlayersActive();
 
@@ -317,6 +338,9 @@ public class Play {
      * Showdown
      */
     private void showdown() {
+        // Stop timer autocheck/fold car fin de la main
+        timerPlayer.cancel();
+
         if (countNbPlayersNotFolded() == 1) {
             // Cas d'une fin de partie sans réel showdown (1 seul joueur restant)
             winners = players.keySet().stream().filter(p -> !p.isFolded()).collect(Collectors.toList());
@@ -397,12 +421,17 @@ public class Play {
 
 
     /**
-     * Mise à jour du montant investi par le joueur sur le round
+     * Positionnement d'un timer pour gérer autocheck/fold si le prochain joueur est trop lent
      *
-     * @param player joueur concerné
-     * @param value  montant à cumuler
+     * @param delaySec délai en secondes
      */
-    public void updatePlayerPlayAmount(Player player, int value) {
-        players.merge(player, value, (v1, v2) -> v1 + v2);
+    private void newTimerActionNextPlayer(long delaySec) {
+        if (timerPlayer != null) {
+            timerPlayer.cancel();
+        }
+        TimerTask timerTask = TimerTaskAction.builder().play(this).build();
+        timerPlayer = new Timer("PlayAction" + id, true);
+        timerPlayer.schedule(timerTask, delaySec * 1000);
     }
+
 }
