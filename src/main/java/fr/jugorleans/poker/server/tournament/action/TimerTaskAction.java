@@ -1,9 +1,11 @@
 package fr.jugorleans.poker.server.tournament.action;
 
 import fr.jugorleans.poker.server.core.play.Action;
+import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.tournament.Play;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.TimerTask;
 
@@ -12,6 +14,7 @@ import java.util.TimerTask;
  */
 @Getter
 @Builder
+@Slf4j
 public class TimerTaskAction extends TimerTask {
 
     /**
@@ -21,13 +24,15 @@ public class TimerTaskAction extends TimerTask {
 
     @Override
     public void run() {
+        Player player = play.whoMustPlay();
+        log.info("Délai écoulé pour " + player.getNickName());
+
         boolean checkPossible = play.getPot().getRoundBet() == 0;
         if (checkPossible){
-            play.action(play.whoMustPlay(), Action.CHECK, 0);
+            play.action(player, Action.CHECK, 0);
         } else {
             // Autofold
-            play.action(play.whoMustPlay(), Action.FOLD, 0);
+            play.action(player, Action.FOLD, 0);
         }
-
     }
 }

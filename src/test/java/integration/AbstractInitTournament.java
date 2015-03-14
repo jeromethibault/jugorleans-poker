@@ -63,6 +63,13 @@ public abstract class AbstractInitTournament {
         wsop.getTable1().setSeatPlayDealer(4);
     }
 
+    protected Play newPlay(){
+        Play play = wsop.newPlay();
+        play.setDefaultStrongestHandResolver(defaultStrongestHandResolver);
+        pot = play.getPot();
+        return play;
+    }
+
     protected void checkCumulStacks(Play play) {
         Assert.assertEquals("Somme des stacks", 4 * INITIAL_STACK,
                 play.getPlayers().keySet().stream().mapToInt(p -> p.getStack()).sum());

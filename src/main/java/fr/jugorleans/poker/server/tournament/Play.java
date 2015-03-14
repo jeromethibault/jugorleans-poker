@@ -150,7 +150,7 @@ public class Play {
         // Gestion de la collecte des blinds
         collectBlinds(sbPlayer, bbPlayer);
 
-        newTimerActionNextPlayer(3); // TODO externaliser le délai
+        newTimerActionNextPlayer(1); // TODO externaliser le délai
     }
 
     /**
@@ -193,8 +193,10 @@ public class Play {
         // Passage au joueur suivant
         Player playerNext = nextPlayer();
 
-        // Positionnement du timer pour temps max joueur suivant
-        newTimerActionNextPlayer(3); // TODO externaliser le délai
+        if (!Round.SHOWDOWN.equals(currentRound)) {
+            // Positionnement du timer pour temps max joueur suivant
+            newTimerActionNextPlayer(1); // TODO externaliser le délai
+        }
 
         return playerNext;
     }
@@ -240,7 +242,7 @@ public class Play {
         int blindsSum = sb + bb + players.size() * ante;
         pot.addToPot(blindsSum);
         // Roundbet et lastraise positionnés à hauteur de la BB (car c'est la mise minimum autorisée par la première mise)
-        pot.newRound(bb);
+        pot.newRound(bb, bb);
 
     }
 
@@ -307,7 +309,7 @@ public class Play {
             seatCurrentPlayer = seatCurrentDealer;
 
             // Prise en compte au niveau du pot
-            pot.newRound(currentBlind.getBigBlind());
+            pot.newRound(0, currentBlind.getBigBlind());
 
             if (Round.SHOWDOWN.equals(currentRound)) {
                 showdown();
@@ -374,6 +376,8 @@ public class Play {
             p.getKey().checkIsOut();
             p.getKey().setAllIn(false);
         });
+
+        currentRound = Round.SHOWDOWN;
 
         // Fin de la main
         tournament.checkEnd();

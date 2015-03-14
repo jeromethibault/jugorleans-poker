@@ -27,8 +27,7 @@ public class NewTournamentTest extends AbstractInitTournament {
         /**
          * New Play
          */
-        Play play = wsop.newPlay();
-        play.setDefaultStrongestHandResolver(defaultStrongestHandResolver);
+        Play play = newPlay();
         pot = play.getPot();
         Assert.assertEquals("Nombre cartes restantes KO", 44, play.getDeck().cardsLeft());
         Assert.assertEquals("Round courant KO", Round.PREFLOP, play.getCurrentRound());
@@ -132,7 +131,7 @@ public class NewTournamentTest extends AbstractInitTournament {
          * New Play
          */
         int stackNicolasAfterFirstPlay = nicolas.getStack();
-        play = wsop.newPlay();
+        play = newPlay();
         pot = play.getPot();
         Assert.assertEquals("Round courant KO", Round.PREFLOP, play.getCurrentRound());
         Assert.assertEquals("Nb cards sur le board - preflop ", 0, play.getBoard().nbCard());
@@ -154,7 +153,7 @@ public class NewTournamentTest extends AbstractInitTournament {
         // +220 (20 BB + 200 François) - pas de réel showdown
         Assert.assertEquals("Stack Nicolas apres gain", stackNicolasAfterFirstPlay + 220, nicolas.getStack().intValue());
 
-        Assert.assertEquals("Round courant KO", Round.PREFLOP, play.getCurrentRound());
+        Assert.assertEquals("Round courant KO", Round.SHOWDOWN, play.getCurrentRound());
         Assert.assertEquals("Nb cards sur le board - showdown preflop ", 0, play.getBoard().nbCard());
         Assert.assertNotNull("Main terminée", play.getWinners());
 
@@ -165,9 +164,7 @@ public class NewTournamentTest extends AbstractInitTournament {
 
     @Test
     public void testTournamentWithAllInsPreflop() {
-
-        Play play = wsop.newPlay();
-        play.setDefaultStrongestHandResolver(defaultStrongestHandResolver);
+        Play play = newPlay();
         pot = play.getPot();
 
         // Julien UTG doit commencer, François SB, Nicolas BB
@@ -188,8 +185,7 @@ public class NewTournamentTest extends AbstractInitTournament {
         Assert.assertEquals("Nombre de joueurs restants", 3, wsop.nbRemainingPlayers());
         checkCumulStacks(play);
 
-        play = wsop.newPlay();
-        play.setDefaultStrongestHandResolver(defaultStrongestHandResolver);
+        play = newPlay();
         Assert.assertEquals("Nombre de joueurs en jeu sur la main ", 3, play.getPlayers().size());
 
         // Check init des actions
@@ -211,6 +207,7 @@ public class NewTournamentTest extends AbstractInitTournament {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Assert.fail(e.getMessage());
         }
         long nbSec = wsop.getClock().getElapsedTime();
         Assert.assertTrue("Temps écoulé : " + nbSec, nbSec >= 1 && nbSec < 5);

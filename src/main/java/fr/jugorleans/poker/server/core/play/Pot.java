@@ -25,27 +25,34 @@ public class Pot {
      */
     private Optional<List<Integer>> sidePot = Optional.empty();
 
-    /** Montant du round courant surlequel il faut s'aligner pour accéder au currentRound suivant */
+    /**
+     * Montant du round courant surlequel il faut s'aligner pour accéder au currentRound suivant
+     */
     private Integer roundBet = 0;
 
-    /** Montan de la dernière relance */
+    /**
+     * Montant de la dernière relance
+     */
     private Integer lastRaise = 0;
 
     /**
      * Ajout d'une mise dans le pot principal
+     *
      * @param betValue montant de la mise
      */
-    public void addToPot(int betValue){
+    public void addToPot(int betValue) {
         amount = amount + betValue;
     }
 
     /**
      * Prise en compte d'un nouveau currentRound
-     * @param bigBling montant big blind (mise minimum)
+     *
+     * @param roundBet  montant roundbet (bb si début de partie, sinon 0)
+     * @param lastRaise montant big blind (mise minimum)
      */
-    public void newRound(int bigBling){
-        roundBet = 0;
-        lastRaise = bigBling;
+    public void newRound(int roundBet, int lastRaise) {
+        this.roundBet = roundBet;
+        this.lastRaise = lastRaise;
     }
 
 }
