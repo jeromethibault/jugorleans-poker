@@ -18,7 +18,7 @@ public final class Identification {
      * @param idPlay identifiant d'un Play
      * @return l'id de la table associée
      */
-    public String getIdTable(String idPlay) {
-        return StringUtils.substringAfterLast(idPlay, ID_SEPARATOR);
+    public static String getIdTableFromIdPlay(String idPlay) {
+        return StringUtils.substringBeforeLast(idPlay, ID_SEPARATOR);
     }
 }
