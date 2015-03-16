@@ -3,10 +3,12 @@ package integration;
 import fr.jugorleans.poker.server.core.play.Action;
 import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.core.play.Pot;
+import fr.jugorleans.poker.server.core.play.Round;
 import fr.jugorleans.poker.server.game.DefaultStrongestHandResolver;
 import fr.jugorleans.poker.server.service.TournamentService;
 import fr.jugorleans.poker.server.tournament.Play;
 import fr.jugorleans.poker.server.tournament.Tournament;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,16 +65,18 @@ public abstract class AbstractInitTournament {
         wsop.getTable1().setSeatPlayDealer(4);
     }
 
-    protected Play newPlay(){
+
+    @After
+    public void checkCumulStacks() {
+        Assert.assertEquals("Somme des stacks", 4 * INITIAL_STACK,
+                wsop.getPlayers().stream().mapToInt(p -> p.getStack()).sum());
+    }
+
+    protected Play newPlay() {
         Play play = wsop.newPlay();
         play.setDefaultStrongestHandResolver(defaultStrongestHandResolver);
         pot = play.getPot();
         return play;
-    }
-
-    protected void checkCumulStacks(Play play) {
-        Assert.assertEquals("Somme des stacks", 4 * INITIAL_STACK,
-                play.getPlayers().keySet().stream().mapToInt(p -> p.getStack()).sum());
     }
 
     protected void checkPlayerState(Player player, Integer stackExpected, Action lastActionExpected, int potAmountExpected) {
@@ -80,10 +84,15 @@ public abstract class AbstractInitTournament {
             Assert.assertEquals("Stack restant du joueur ", stackExpected, player.getStack());
         }
         Assert.assertEquals("Last Action du joueur ", lastActionExpected, player.getLastAction());
-        Assert.assertEquals("Montant du pot", potAmountExpected, pot.getAmount().intValue());
+        Assert.assertEquals("Montant du pot", potAmountExpected, pot.getAmount());
     }
 
     protected void checkPlayerState(Player player, Action lastActionExpected, int potAmountExpected) {
         checkPlayerState(player, null, lastActionExpected, potAmountExpected);
+    }
+
+    protected void checkPlayOver(Play play) {
+        Assert.assertEquals("Round courant KO", Round.SHOWDOWN, play.getCurrentRound());
+        Assert.assertNotNull("Main terminée", play.getWinners());
     }
 }

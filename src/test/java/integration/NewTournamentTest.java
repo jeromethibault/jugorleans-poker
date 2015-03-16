@@ -114,12 +114,10 @@ public class NewTournamentTest extends AbstractInitTournament {
         play.action(julien, Action.CALL, 8);
         // Bet < big blind => call
         play.action(jerome, Action.CALL, 15);
-        Assert.assertEquals("Montant du pot final", 5570, pot.getAmount().intValue());
+        Assert.assertEquals("Montant du pot final", 5570, pot.getAmount());
 
-        Assert.assertEquals("Round courant KO", Round.SHOWDOWN, play.getCurrentRound());
         Assert.assertEquals("Nb cards sur le board - showdown ", 5, play.getBoard().nbCard());
-
-        checkCumulStacks(play);
+        checkPlayOver(play);
 
         try {
             play.action(julien, Action.BET, 0);
@@ -153,12 +151,8 @@ public class NewTournamentTest extends AbstractInitTournament {
         // +220 (20 BB + 200 François) - pas de réel showdown
         Assert.assertEquals("Stack Nicolas apres gain", stackNicolasAfterFirstPlay + 220, nicolas.getStack().intValue());
 
-        Assert.assertEquals("Round courant KO", Round.SHOWDOWN, play.getCurrentRound());
         Assert.assertEquals("Nb cards sur le board - showdown preflop ", 0, play.getBoard().nbCard());
-        Assert.assertNotNull("Main terminée", play.getWinners());
-
-        checkCumulStacks(play);
-
+        checkPlayOver(play);
     }
 
 
@@ -183,7 +177,6 @@ public class NewTournamentTest extends AbstractInitTournament {
 
         Assert.assertNotNull("Main terminée", play.getWinners());
         Assert.assertEquals("Nombre de joueurs restants", 3, wsop.nbRemainingPlayers());
-        checkCumulStacks(play);
 
         play = newPlay();
         Assert.assertEquals("Nombre de joueurs en jeu sur la main ", 3, play.getPlayers().size());
@@ -198,10 +191,7 @@ public class NewTournamentTest extends AbstractInitTournament {
         for (int i = 0; i < 3; i++) {
             play.action(play.whoMustPlay(), Action.ALL_IN, 3);
         }
-        Assert.assertNotNull("Main terminée", play.getWinners());
-
-        checkCumulStacks(play);
-
+        checkPlayOver(play);
         // Vérification temps écoulé
         try {
             Thread.sleep(1000);

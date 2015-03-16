@@ -39,10 +39,9 @@ public class AutoCheckFoldTimerTest extends AbstractInitTournament {
             Assert.fail(e.getMessage());
         }
 
-        Assert.assertNotNull("Main terminée", play.getWinners());
+        checkPlayOver(play);
         Assert.assertEquals("Vainqueur erroné", julien, play.getWinners().stream().findFirst().get());
         checkPlayerState(julien, 10030, Action.ALL_IN, 10030);
-        checkCumulStacks(play);
     }
 
     /**
@@ -76,8 +75,6 @@ public class AutoCheckFoldTimerTest extends AbstractInitTournament {
             Assert.fail(e.getMessage());
         }
 
-        Assert.assertEquals("Round courant KO", Round.SHOWDOWN, play.getCurrentRound());
-        Assert.assertNotNull("Main terminée", play.getWinners());
-        checkCumulStacks(play);
+        checkPlayOver(play);
     }
 }

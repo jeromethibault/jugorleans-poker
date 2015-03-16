@@ -259,13 +259,13 @@ public class Play {
 
         // Calcul moyenne du montant investi par les joueurs non foldés
         Double averageBetActivePlayers = players.entrySet().stream()
-                .filter(p -> !p.getKey().isFolded())
+                .filter(p -> p.getKey().canPlay())
                 .collect(Collectors.averagingInt(p -> p.getValue())).doubleValue();
 
         // Tous les joueurs non foldés ont-ils investi la moyenne précédemment calculée ?
         // == ont-ils tous fait la même mise ?
         boolean allActivePlayersHaveSameBet = players.entrySet().stream()
-                .filter(p -> !p.getKey().isFolded())
+                .filter(p -> p.getKey().canPlay())
                 .allMatch(p -> p.getValue() == averageBetActivePlayers.intValue());
 
         boolean inactivePlayers = countNbPlayersActive() == 0;
@@ -302,7 +302,7 @@ public class Play {
             // Remise à NONE des dernières actions des joueurs encore en jeu
             players.keySet()
                     .stream()
-                    .filter(p -> !p.isFolded())
+                    .filter(p -> p.canPlay())
                     .forEach(p -> p.setLastAction(Action.NONE));
 
             // Positionnement initial sur le dealer
@@ -333,7 +333,7 @@ public class Play {
      * @return le nombre de joueurs correspondants
      */
     private int countNbPlayersActive() {
-        return (int) players.keySet().stream().filter(p -> !p.isAllIn() && !p.isFolded()).count();
+        return (int) players.keySet().stream().filter(p -> p.canPlay()).count();
     }
 
     /**

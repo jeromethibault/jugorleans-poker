@@ -146,6 +146,13 @@ public class Player {
     }
 
     /**
+     * Vérification que le joueur est encore actif à table (pas foldé, pas allin)
+     * @return vrai s'il n'est ni allin ni foldé, faux dans le cas contraire
+     */
+    public boolean canPlay(){
+        return !isFolded() && !isAllIn();
+    }
+    /**
      * Vérification que le joueur n'est pas éliminé
      */
     public void checkIsOut(){

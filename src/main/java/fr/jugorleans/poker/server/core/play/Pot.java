@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Représente le pot
+ * Pot contenant les mises des joueurs
  */
 @Getter
 @Setter
@@ -16,24 +16,29 @@ import java.util.Optional;
 public class Pot {
 
     /**
-     * le montant du pot
+     * Montant du pot
      */
-    private Integer amount = 0;
+    private int amount = 0;
 
     /**
-     * La liste des side pots - TODO nécessité de garder les joueurs associés à un sidePot, donc Integer insuffisant
+     * Montant du round courant surlequel il faut s'aligner pour accéder au round suivant
      */
-    private Optional<List<Integer>> sidePot = Optional.empty();
-
-    /**
-     * Montant du round courant surlequel il faut s'aligner pour accéder au currentRound suivant
-     */
-    private Integer roundBet = 0;
+    private int roundBet = 0;
 
     /**
      * Montant de la dernière relance
      */
-    private Integer lastRaise = 0;
+    private int lastRaise = 0;
+
+    /**
+     * Joueurs pouvant se partager le pot
+     */
+    private List<Player> players;
+
+    /**
+     * Liste des éventuels side pots
+     */
+    private Optional<List<Pot>> sidePots = Optional.empty();
 
     /**
      * Ajout d'une mise dans le pot principal
@@ -45,7 +50,7 @@ public class Pot {
     }
 
     /**
-     * Prise en compte d'un nouveau currentRound
+     * Prise en compte d'un nouveau round
      *
      * @param roundBet  montant roundbet (bb si début de partie, sinon 0)
      * @param lastRaise montant big blind (mise minimum)
