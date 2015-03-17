@@ -52,6 +52,10 @@ public class SidePotsTest extends AbstractInitTournament {
         play.action(nicolas, Action.ALL_IN, 0);
         play.action(julien, Action.CALL, 0);
 
+/*
+        Assert.assertTrue("Side pots manquants", pot.getSidePots().isPresent());
+
         checkPlayOver(play);
+*/
     }
 }

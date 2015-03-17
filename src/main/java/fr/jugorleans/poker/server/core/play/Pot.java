@@ -1,11 +1,11 @@
 package fr.jugorleans.poker.server.core.play;
 
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Pot contenant les mises des joueurs
@@ -33,12 +33,7 @@ public class Pot {
     /**
      * Joueurs pouvant se partager le pot
      */
-    private List<Player> players;
-
-    /**
-     * Liste des éventuels side pots
-     */
-    private Optional<List<Pot>> sidePots = Optional.empty();
+    private List<Player> players = Lists.newArrayList();
 
     /**
      * Ajout d'une mise dans le pot principal
@@ -60,4 +55,14 @@ public class Pot {
         this.lastRaise = lastRaise;
     }
 
+    /**
+     * Ajout d'un joueur en lisse pour le gain du pot
+     *
+     * @param player       joueur ajouté
+     * @param betPlayValue mise globale investie par le joueur dans le play courant
+     */
+    public void addPlayer(Player player, int betPlayValue) {
+        players.add(player);
+        amount = amount + betPlayValue;
+    }
 }

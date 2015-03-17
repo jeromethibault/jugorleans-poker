@@ -1,6 +1,7 @@
 package fr.jugorleans.poker.server.tournament;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.core.play.*;
@@ -30,9 +31,14 @@ public class Play {
     private String id;
 
     /**
-     * Pots (principal et éventuels secondaires)
+     * Pot principal
      */
     private Pot pot;
+
+    /**
+     * Liste des éventuels side pots
+     */
+    private Optional<List<Pot>> sidePots = Optional.empty();
 
     /**
      * Paquet de cartes
@@ -47,7 +53,7 @@ public class Play {
     /**
      * Joueurs et montants associées investis pour le joueur durant cette main
      */
-    private Map<Player, Integer> players;
+    private Map<Player, BetPlay> players;
 
     /**
      * Joueur qui est en train de jouer (identifié par son numéro siège)
@@ -117,7 +123,7 @@ public class Play {
 
         id = table.getId() + "_" + StringUtils.leftPad(String.valueOf(tournament.getLastPlays().size()), 5, '0');
 
-        // Passage de la main courante - Attention pas threadsafe pour multitables (mais on reste single table)
+        // Passage de la main courante - FIXME Attention pas threadsafe pour multitables (mais on reste single table)
         ACTIONS.entrySet().forEach(impl -> impl.getValue().setPlay(this));
 
         // Positionnement du dealer (à conserver car important pour chaque début de round)
@@ -135,7 +141,7 @@ public class Play {
         tournament.getPlayers().stream().filter(p -> !p.isOut()).forEach(p -> {
             p.setCurrentHand(Hand.newBuilder().firstCard(deck.deal()).secondCard(deck.deal()).build());
             p.setLastAction(Action.NONE);
-            players.put(p, 0);
+            players.put(p, BetPlay.builder().build());
         });
 
         // Positionnement du joueur courant au niveau du dealer, puis passage au joueur UTGs
@@ -208,7 +214,7 @@ public class Play {
      * @param value  montant à cumuler
      */
     public void updatePlayerPlayAmount(Player player, int value) {
-        players.merge(player, value, (v1, v2) -> v1 + v2);
+        players.get(player).update(value);
     }
 
 
@@ -257,16 +263,16 @@ public class Play {
         boolean everybodyPlays = players.keySet().stream()
                 .noneMatch(p -> Action.NONE.equals(p.getLastAction()));
 
-        // Calcul moyenne du montant investi par les joueurs non foldés
+        // Calcul moyenne du montant investi par les joueurs non foldés et non all in
         Double averageBetActivePlayers = players.entrySet().stream()
                 .filter(p -> p.getKey().canPlay())
-                .collect(Collectors.averagingInt(p -> p.getValue())).doubleValue();
+                .collect(Collectors.averagingInt(p -> p.getValue().getCurrentRound())).doubleValue();
 
-        // Tous les joueurs non foldés ont-ils investi la moyenne précédemment calculée ?
+        // Tous les joueurs non foldés et non allin ont-ils investi la moyenne précédemment calculée ?
         // == ont-ils tous fait la même mise ?
         boolean allActivePlayersHaveSameBet = players.entrySet().stream()
                 .filter(p -> p.getKey().canPlay())
-                .allMatch(p -> p.getValue() == averageBetActivePlayers.intValue());
+                .allMatch(p -> p.getValue().getCurrentRound() == averageBetActivePlayers.intValue());
 
         boolean inactivePlayers = countNbPlayersActive() == 0;
 
@@ -297,7 +303,7 @@ public class Play {
             board.addCards(deck.deal(currentRound.nbCardsToAddOnBoard()));
 
             // Remise à 0 des mises du Round
-            players.entrySet().forEach(p -> p.setValue(0));
+            players.entrySet().stream().forEach(p -> p.getValue().newRound());
 
             // Remise à NONE des dernières actions des joueurs encore en jeu
             players.keySet()
@@ -348,6 +354,7 @@ public class Play {
             winners = players.keySet().stream().filter(p -> !p.isFolded()).collect(Collectors.toList());
         } else {
             // Réel showdown
+            splitPot();
 
             // Cas board non complet --> on complète les cartes
             while (!board.isFull()) {
@@ -366,6 +373,7 @@ public class Play {
             // Récupération des joueurs gagnants
             winners = players.keySet().stream().filter(p -> winningHands.contains(p.getCurrentHand())).collect(Collectors.toList());
         }
+
 
         // Distribution des gains TODO gérer multipots
         int potSplit = pot.getAmount() / winners.size();
@@ -405,7 +413,7 @@ public class Play {
      * @return le prochain joueur
      */
     private Optional<Player> findNextPlayer() {
-        int nextSeatPlayer = 1 + seatCurrentPlayer % tournament.getPlayers().size();
+        int nextSeatPlayer = 1 + seatCurrentPlayer % tournament.getPlayers().size(); // FIXME KO en multitables - joueurs à affecter à la table
         return players.keySet().stream()
                 .filter(p -> (p.getSeat().getNumber() == nextSeatPlayer
                         && !p.isFolded()))
@@ -438,4 +446,30 @@ public class Play {
         timerPlayer.schedule(timerTask, delaySec * 1000);
     }
 
+    private List<Pot> splitPot() {
+
+        List<Pot> splittedPots = Lists.newArrayList();
+        boolean anyPlayerAllIn = players.keySet().stream().anyMatch(p -> p.isAllIn());
+
+        if (anyPlayerAllIn) {
+            players.entrySet().stream()
+                    .filter(p -> !p.getKey().isFolded())
+                    .mapToInt(p -> p.getValue().getPlay())
+                    .distinct()
+                    .sorted()
+                    .forEach(i -> {
+                        Pot pot = new Pot();
+                        splittedPots.add(pot);
+                        players.entrySet()
+                                .stream()
+                                .filter(p -> p.getValue().getPlay() >= i)
+                                .forEach(p -> {
+                                    pot.addPlayer(p.getKey(), p.getValue().getPlay());
+                                });
+                    });
+        }
+
+        splittedPots.forEach(pot -> System.out.println(pot));
+        return splittedPots;
+    }
 }

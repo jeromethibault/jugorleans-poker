@@ -31,7 +31,7 @@ public class BetAction extends CommonAction implements PlayerAction {
         int roundBet = pot.getRoundBet();
 
         // Récupération mises engagées par le joueur sur le round
-        Integer roundPlayerBet = play.getPlayers().get(player);
+        Integer roundPlayerBet = play.getPlayers().get(player).getCurrentRound();
 
         boolean validBet = (bet + roundPlayerBet == roundBet) ||
                 ((bet + roundPlayerBet > roundBet) && (bet >= 2 * lastRaise)) || player.isAllIn();
@@ -54,7 +54,7 @@ public class BetAction extends CommonAction implements PlayerAction {
 
         // MAJ lastRaise et RoundBet du pot
         pot.setLastRaise(Math.max(lastRaise, bet - roundBet));
-        pot.setRoundBet(Math.max(roundBet, play.getPlayers().get(player)));
+        pot.setRoundBet(Math.max(roundBet, play.getPlayers().get(player).getCurrentRound()));
 
         return this.play;
     }
