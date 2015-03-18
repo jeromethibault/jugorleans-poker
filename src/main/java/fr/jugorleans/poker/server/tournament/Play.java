@@ -298,30 +298,29 @@ public class Play {
         } else {
             // Passage au currentRound suivant
             currentRound = currentRound.next();
-            // Ajout d'éventuelles cartes sur le board
-            deck.deal(); // Carte brûlée
-            board.addCards(deck.deal(currentRound.nbCardsToAddOnBoard()));
-
-            // Remise à 0 des mises du Round
-            players.entrySet().stream().forEach(p -> p.getValue().newRound());
-
-            // Remise à NONE des dernières actions des joueurs encore en jeu
-            players.keySet()
-                    .stream()
-                    .filter(p -> p.canPlay())
-                    .forEach(p -> p.setLastAction(Action.NONE));
-
-            // Positionnement initial sur le dealer
-            seatCurrentPlayer = seatCurrentDealer;
-
-            // Prise en compte au niveau du pot
-            pot.newRound(0, currentBlind.getBigBlind());
-
             if (Round.SHOWDOWN.equals(currentRound)) {
                 showdown();
+            } else {
+                // Ajout d'éventuelles cartes sur le board
+                deck.deal(); // Carte brûlée
+                board.addCards(deck.deal(currentRound.nbCardsToAddOnBoard()));
+
+                // Remise à 0 des mises du Round
+                players.entrySet().stream().forEach(p -> p.getValue().newRound());
+
+                // Remise à NONE des dernières actions des joueurs encore en jeu
+                players.keySet()
+                        .stream()
+                        .filter(p -> p.canPlay())
+                        .forEach(p -> p.setLastAction(Action.NONE));
+
+                // Positionnement initial sur le dealer
+                seatCurrentPlayer = seatCurrentDealer;
+
+                // Prise en compte au niveau du pot
+                pot.newRound(0, currentBlind.getBigBlind());
             }
         }
-
     }
 
     /**
@@ -449,27 +448,36 @@ public class Play {
     private List<Pot> splitPot() {
 
         List<Pot> splittedPots = Lists.newArrayList();
-        boolean anyPlayerAllIn = players.keySet().stream().anyMatch(p -> p.isAllIn());
+//        boolean anyPlayerAllIn = players.keySet().stream().anyMatch(p -> p.isAllIn());
 
-        if (anyPlayerAllIn) {
-            players.entrySet().stream()
-                    .filter(p -> !p.getKey().isFolded())
-                    .mapToInt(p -> p.getValue().getPlay())
-                    .distinct()
-                    .sorted()
-                    .forEach(i -> {
-                        Pot pot = new Pot();
-                        splittedPots.add(pot);
-                        players.entrySet()
-                                .stream()
-                                .filter(p -> p.getValue().getPlay() >= i)
-                                .forEach(p -> {
-                                    pot.addPlayer(p.getKey(), p.getValue().getPlay());
-                                });
-                    });
+//        if (anyPlayerAllIn) {
+        players.entrySet().stream()
+                .filter(p -> !p.getKey().isFolded())
+                .mapToInt(p -> p.getValue().getPlay())
+                .distinct()
+                .sorted()
+                .limit(players.keySet().stream().filter(p -> !p.isFolded()).count() - 1)
+                .forEach(i -> {
+                    Pot sidePot = new Pot();
+                    splittedPots.add(sidePot);
+                    players.entrySet()
+                            .stream()
+                            .filter(p -> p.getValue().getPlay() >= i)
+                            .forEach(p -> {
+                                sidePot.addPlayer(p.getKey(), i);
+                                p.getValue().update(-i);
+                            });
+                });
+
+        int blinds = pot.getAmount() - splittedPots.stream().mapToInt(p -> p.getAmount()).sum();
+        if (blinds > 0) {
+            splittedPots.stream().sorted((p1, p2) -> p2.getAmount() - p1.getAmount()).findFirst().get().addToPot(blinds);
         }
 
-        splittedPots.forEach(pot -> System.out.println(pot));
+
+        splittedPots.forEach(pot -> System.out.println(pot.getAmount() + " " + pot.getPlayers().size()));
+//        }
+
         return splittedPots;
     }
 }
