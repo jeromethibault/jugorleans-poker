@@ -2,6 +2,7 @@ package integration;
 
 import fr.jugorleans.poker.server.conf.test.ConfigurationTest;
 import fr.jugorleans.poker.server.core.play.Action;
+import fr.jugorleans.poker.server.core.play.Pot;
 import fr.jugorleans.poker.server.core.play.Round;
 import fr.jugorleans.poker.server.tournament.Play;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
 
 /**
  * Test d'intégration
@@ -52,10 +55,9 @@ public class SidePotsTest extends AbstractInitTournament {
         play.action(nicolas, Action.ALL_IN, 0);
         play.action(julien, Action.CALL, 0);
 
-/*
-        Assert.assertTrue("Side pots manquants", pot.getSidePots().isPresent());
-
+        List<Pot> sidePots = play.splitPot();
+        Assert.assertEquals("Nb Side pots", 4, sidePots.size());
+        // TODO compléter le test
         checkPlayOver(play);
-*/
     }
 }

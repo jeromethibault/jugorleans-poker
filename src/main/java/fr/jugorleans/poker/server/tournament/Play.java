@@ -14,6 +14,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -445,38 +446,43 @@ public class Play {
         timerPlayer.schedule(timerTask, delaySec * 1000);
     }
 
-    private List<Pot> splitPot() {
+    /**
+     * Séparation des mises engagées par chacun des joueurs en différents pots (side pots éventuels dans le cas de allin)
+     *
+     * @return la liste des side pots
+     */
+    public List<Pot> splitPot() {
 
         List<Pot> splittedPots = Lists.newArrayList();
-//        boolean anyPlayerAllIn = players.keySet().stream().anyMatch(p -> p.isAllIn());
+        AtomicInteger lastSidePotLevel = new AtomicInteger(0);
 
-//        if (anyPlayerAllIn) {
+        // Parcours des différentes valeurs de mises investies (paliers) par les joueurs (=> permet de définir le nombre de pots différents)
         players.entrySet().stream()
                 .filter(p -> !p.getKey().isFolded())
                 .mapToInt(p -> p.getValue().getPlay())
                 .distinct()
                 .sorted()
-                .limit(players.keySet().stream().filter(p -> !p.isFolded()).count() - 1)
+                .sequential()
+                // Pour chacun des paliers différents
                 .forEach(i -> {
+                    // Création d'un side pot
                     Pot sidePot = new Pot();
                     splittedPots.add(sidePot);
+                    // On alimente le pot avec les joueurs concernés (ceux qui ont investi autant ou plus que le palier)
                     players.entrySet()
                             .stream()
                             .filter(p -> p.getValue().getPlay() >= i)
                             .forEach(p -> {
-                                sidePot.addPlayer(p.getKey(), i);
-                                p.getValue().update(-i);
+                                sidePot.addPlayer(p.getKey(), i - lastSidePotLevel.get());
                             });
+                    lastSidePotLevel.set(i);
                 });
 
+        // Prise en compte des blinds si elles concernent des joueurs foldés
         int blinds = pot.getAmount() - splittedPots.stream().mapToInt(p -> p.getAmount()).sum();
         if (blinds > 0) {
             splittedPots.stream().sorted((p1, p2) -> p2.getAmount() - p1.getAmount()).findFirst().get().addToPot(blinds);
         }
-
-
-        splittedPots.forEach(pot -> System.out.println(pot.getAmount() + " " + pot.getPlayers().size()));
-//        }
 
         return splittedPots;
     }
