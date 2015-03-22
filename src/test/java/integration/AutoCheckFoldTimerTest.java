@@ -40,7 +40,7 @@ public class AutoCheckFoldTimerTest extends AbstractInitTournament {
         }
 
         checkPlayOver(play);
-        Assert.assertEquals("Vainqueur erroné", julien, play.getWinners().stream().findFirst().get());
+        Assert.assertEquals("Vainqueur erroné", julien, play.getPots().stream().findFirst().get().getPlayers().stream().findFirst().get());
         checkPlayerState(julien, 10030, Action.ALL_IN, 10030);
     }
 

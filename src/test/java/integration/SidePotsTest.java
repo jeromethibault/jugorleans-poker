@@ -55,9 +55,9 @@ public class SidePotsTest extends AbstractInitTournament {
         play.action(nicolas, Action.ALL_IN, 0);
         play.action(julien, Action.CALL, 0);
 
-        List<Pot> sidePots = play.splitPot();
-        Assert.assertEquals("Nb Side pots", 4, sidePots.size());
-        // TODO compléter le test
+        List<Pot> pots = play.getPots();
+        Assert.assertEquals("Nb Side pots", 4, pots.size());
+        Assert.assertEquals("Somme des pots", pot.getAmount(), pots.stream().mapToInt(p -> p.getAmount()).sum());
         checkPlayOver(play);
     }
 }

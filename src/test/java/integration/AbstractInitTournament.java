@@ -93,6 +93,6 @@ public abstract class AbstractInitTournament {
 
     protected void checkPlayOver(Play play) {
         Assert.assertEquals("Round courant KO", Round.SHOWDOWN, play.getCurrentRound());
-        Assert.assertNotNull("Main terminée", play.getWinners());
+        Assert.assertNotNull("Main terminée", play.getPots());
     }
 }

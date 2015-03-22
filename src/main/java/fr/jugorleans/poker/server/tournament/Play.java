@@ -1,7 +1,6 @@
 package fr.jugorleans.poker.server.tournament;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.core.play.*;
@@ -14,7 +13,6 @@ import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -37,9 +35,9 @@ public class Play {
     private Pot pot;
 
     /**
-     * Liste des éventuels side pots
+     * Liste des pots
      */
-    private Optional<List<Pot>> sidePots = Optional.empty();
+    private List<Pot> pots;
 
     /**
      * Paquet de cartes
@@ -80,11 +78,6 @@ public class Play {
      * Tournoi
      */
     private Tournament tournament;
-
-    /**
-     * Vainqueur(s) de la main
-     */
-    private List<Player> winners;
 
     /**
      * Timer de gestion automatiquement de fold si délai max atteint pour l'action d'un joueur
@@ -218,6 +211,15 @@ public class Play {
         players.get(player).update(value);
     }
 
+    /**
+     * Séparation des mises engagées par chacun des joueurs en différents pots (side pots éventuels dans le cas de allin)
+     *
+     * @return la liste des pots
+     */
+    public List<Pot> splitPot() {
+        pots = pot.splitPot(players);
+        return pots;
+    }
 
     /**
      * Collecte des blinds
@@ -329,7 +331,7 @@ public class Play {
      *
      * @return le nombre de joueurs non foldés
      */
-    private int countNbPlayersNotFolded() {
+    protected int countNbPlayersNotFolded() {
         return (int) players.keySet().stream().filter(p -> !p.isFolded()).count();
     }
 
@@ -349,35 +351,14 @@ public class Play {
         // Stop timer autocheck/fold car fin de la main
         timerPlayer.cancel();
 
-        if (countNbPlayersNotFolded() == 1) {
-            // Cas d'une fin de partie sans réel showdown (1 seul joueur restant)
-            winners = players.keySet().stream().filter(p -> !p.isFolded()).collect(Collectors.toList());
-        } else {
-            // Réel showdown
-            splitPot();
-
-            // Cas board non complet --> on complète les cartes
-            while (!board.isFull()) {
-                // Passage au currentRound suivant
-                deck.deal(); // Carte brûlée
-                currentRound = currentRound.next();
-                board.addCards(deck.deal(currentRound.nbCardsToAddOnBoard()));
-            }
-
-            // Récupération des mains des joueurs en jeu
-            List<Hand> hands = players.keySet().stream().filter(p -> !p.isFolded()).map(p -> p.getCurrentHand()).collect(Collectors.toList());
-
-            // Récupération des mains gagnantes
-            List<Hand> winningHands = defaultStrongestHandResolver.getWinningHand(board, hands);
-
-            // Récupération des joueurs gagnants
-            winners = players.keySet().stream().filter(p -> winningHands.contains(p.getCurrentHand())).collect(Collectors.toList());
-        }
-
-
-        // Distribution des gains TODO gérer multipots
-        int potSplit = pot.getAmount() / winners.size();
-        winners.forEach(p -> p.win(potSplit));
+//        if (countNbPlayersNotFolded() == 1) {
+//            // Cas d'une fin de partie sans réel showdown (1 seul joueur restant)
+//        } else {
+        // Réel showdown
+        Showdown showdown = new Showdown(this);
+        showdown.setDefaultStrongestHandResolver(defaultStrongestHandResolver);
+        showdown.show();
+//        }
 
         // Vérification que chaque joueur n'est pas éliminé
         players.entrySet().forEach(p -> {
@@ -446,44 +427,4 @@ public class Play {
         timerPlayer.schedule(timerTask, delaySec * 1000);
     }
 
-    /**
-     * Séparation des mises engagées par chacun des joueurs en différents pots (side pots éventuels dans le cas de allin)
-     *
-     * @return la liste des side pots
-     */
-    public List<Pot> splitPot() {
-
-        List<Pot> splittedPots = Lists.newArrayList();
-        AtomicInteger lastSidePotLevel = new AtomicInteger(0);
-
-        // Parcours des différentes valeurs de mises investies (paliers) par les joueurs (=> permet de définir le nombre de pots différents)
-        players.entrySet().stream()
-                .filter(p -> !p.getKey().isFolded())
-                .mapToInt(p -> p.getValue().getPlay())
-                .distinct()
-                .sorted()
-                .sequential()
-                // Pour chacun des paliers différents
-                .forEach(i -> {
-                    // Création d'un side pot
-                    Pot sidePot = new Pot();
-                    splittedPots.add(sidePot);
-                    // On alimente le pot avec les joueurs concernés (ceux qui ont investi autant ou plus que le palier)
-                    players.entrySet()
-                            .stream()
-                            .filter(p -> p.getValue().getPlay() >= i)
-                            .forEach(p -> {
-                                sidePot.addPlayer(p.getKey(), i - lastSidePotLevel.get());
-                            });
-                    lastSidePotLevel.set(i);
-                });
-
-        // Prise en compte des blinds si elles concernent des joueurs foldés
-        int blinds = pot.getAmount() - splittedPots.stream().mapToInt(p -> p.getAmount()).sum();
-        if (blinds > 0) {
-            splittedPots.stream().sorted((p1, p2) -> p2.getAmount() - p1.getAmount()).findFirst().get().addToPot(blinds);
-        }
-
-        return splittedPots;
-    }
 }

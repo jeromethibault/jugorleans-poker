@@ -175,7 +175,7 @@ public class NewTournamentTest extends AbstractInitTournament {
         play.action(nicolas, Action.CALL, 66);
         checkPlayerState(nicolas, Action.ALL_IN, 20010);
 
-        Assert.assertNotNull("Main terminée", play.getWinners());
+        Assert.assertEquals("Round courant KO", Round.SHOWDOWN, play.getCurrentRound());
         Assert.assertEquals("Nombre de joueurs restants", 3, wsop.nbRemainingPlayers());
 
         play = newPlay();
