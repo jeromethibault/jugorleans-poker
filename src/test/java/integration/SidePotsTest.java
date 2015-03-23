@@ -12,7 +12,9 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Test d'intégration
@@ -42,9 +44,15 @@ public class SidePotsTest extends AbstractInitTournament {
         play.action(francois, Action.FOLD, 0);
         checkPlayerState(nicolas, 13010, Action.BET, 5030);
 
-        // Stack Nicolas 13K, Julien 9.5K, Jerome 9K, François 8.5K
         play = newPlay();
+
         // Jérôme UTG doit commencer, Nicolas SB, Julien BB
+        // Stack Nicolas 13010, Julien 9500, Jerome 9000, François 8490
+        checkPlayerState(nicolas, 13000, Action.NONE, 30);
+        checkPlayerState(julien, 9480, Action.NONE, 30);
+        checkPlayerState(jerome, 9000, Action.NONE, 30);
+        checkPlayerState(francois, 8490, Action.NONE, 30);
+
         play.action(jerome, Action.ALL_IN, 0);
         play.action(francois, Action.ALL_IN, 0);
         play.action(nicolas, Action.CALL, 0);
@@ -58,6 +66,15 @@ public class SidePotsTest extends AbstractInitTournament {
         List<Pot> pots = play.getPots();
         Assert.assertEquals("Nb Side pots", 4, pots.size());
         Assert.assertEquals("Somme des pots", pot.getAmount(), pots.stream().mapToInt(p -> p.getAmount()).sum());
+        Assert.assertEquals("Même nombre de joueurs entre deux pots impossible", 4, pots.stream().mapToInt(p -> p.getPlayers().size()).count());
+
+        int[] potsValues = pots.stream().mapToInt(p -> p.getAmount()).sorted().toArray();
+        int[] potsValuesExpected = new int[]{1000, 1530, 3510, 33960};
+        AtomicInteger i = new AtomicInteger(0);
+        Arrays.stream(potsValuesExpected).forEach(v -> {
+            Assert.assertEquals("Montant du pot", v, potsValues[i.getAndIncrement()]);
+        });
+
         checkPlayOver(play);
     }
 }
