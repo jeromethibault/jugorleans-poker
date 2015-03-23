@@ -23,7 +23,7 @@ public class Structure {
     private Map<Integer, Blind> rounds;
 
     /**
-     * Durée d'un round en minutes (TODO plus tard gérer duration par round ?)
+     * Durée d'un round en minutes
      */
     private int duration;
 
