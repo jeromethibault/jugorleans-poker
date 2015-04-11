@@ -74,6 +74,10 @@ public class TournamentService {
         Preconditions.checkState(Objects.nonNull(tournament), "Tournoi inconnu : " + id);
         Preconditions.checkState(!tournament.isStarted(), "Tournoi démarré : " + id);
 
+        // Todo Assigner une place au joueur
+        // Todo assigner un stack
+        // Todo notifier les autres joueurs de l'arrivé d'un nouveau joueur (de manière générale les notifications peuvent être gérées par AOP)
+
         tournament.addPlayers(player);
         if (tournament.nbPlayersIn() == tournament.getNbMaxPlayers()) {
             tournament.start();
