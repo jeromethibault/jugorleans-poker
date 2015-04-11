@@ -9,6 +9,8 @@ import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.core.play.Structure;
 import fr.jugorleans.poker.server.tournament.Play;
 import fr.jugorleans.poker.server.tournament.Tournament;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -19,6 +21,7 @@ import java.util.Objects;
  * TODO ajouter persistence vers un spring data repository (H2 pour démarrer)
  */
 @Component
+@Log
 public class TournamentService {
 
     private Map<String, Tournament> tempTournamentDAO = Maps.newHashMap(); // TODO remplacer par appel DAO
@@ -42,8 +45,21 @@ public class TournamentService {
                 .lastPlays(Lists.newArrayList())
                 .build().init();
 
+        tournament.setId(String.valueOf(tempTournamentDAO.size()));
         tempTournamentDAO.put(tournament.getId(), tournament); // TODO remplacer par appel DAO
+        log.info(tournament.getId().toString());
         return tournament;
+    }
+
+    /**
+     * Restituer un tournoi selon son id
+     *
+     * @param id id du tournoi
+     * @return le tournoi
+     */
+    public Tournament getTournamentById(String id){
+        log.info(id);
+        return tempTournamentDAO.get(id);
     }
 
     /**
