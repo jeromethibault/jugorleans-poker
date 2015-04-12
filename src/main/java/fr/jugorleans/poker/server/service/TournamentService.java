@@ -1,14 +1,15 @@
 package fr.jugorleans.poker.server.service;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fr.jugorleans.poker.server.core.play.Action;
 import fr.jugorleans.poker.server.core.play.Blind;
 import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.core.play.Structure;
+import fr.jugorleans.poker.server.repository.TournamentRepository;
 import fr.jugorleans.poker.server.tournament.Play;
 import fr.jugorleans.poker.server.tournament.Tournament;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -21,7 +22,9 @@ import java.util.Objects;
 @Component
 public class TournamentService {
 
-    private Map<String, Tournament> tempTournamentDAO = Maps.newHashMap(); // TODO remplacer par appel DAO
+    @Autowired
+    private TournamentRepository tournamentRepository;
+
     private Map<String, Play> tempPlayDAO = Maps.newHashMap(); // TODO remplacer par appel DAO
 
     /**
@@ -35,14 +38,13 @@ public class TournamentService {
         Blind blind = Blind.builder().smallBlind(10).bigBlind(20).build();
         structure.initializeRounds(blind, blind, blind, blind);
 
-        Tournament tournament = Tournament.builder()
-                .structure(structure)
-                .initialStack(10000) // TODO gérer class constantes default_value ou examiner pourquoi builder initialise à null
-                .nbMaxPlayers(4)
-                .lastPlays(Lists.newArrayList())
-                .build().init();
+        Tournament tournament = new Tournament();
+        tournament.setStructure(structure);
+        tournament.setInitialStack(10000);
+        tournament.setNbMaxPlayers(4);
+        tournament.init();
+        tournamentRepository.save(tournament);
 
-        tempTournamentDAO.put(tournament.getId(), tournament); // TODO remplacer par appel DAO
         return tournament;
     }
 
@@ -54,7 +56,7 @@ public class TournamentService {
      * @return le tournoi
      */
     public synchronized Tournament addPlayer(String id, Player player) { // TODO gérer la synchro plus proprement
-        Tournament tournament = tempTournamentDAO.get(id);
+        Tournament tournament = tournamentRepository.findOne(id);
         Preconditions.checkState(Objects.nonNull(tournament), "Tournoi inconnu : " + id);
         Preconditions.checkState(!tournament.isStarted(), "Tournoi démarré : " + id);
 

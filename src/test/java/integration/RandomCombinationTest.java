@@ -1,7 +1,7 @@
 package integration;
 
 import com.google.common.collect.Lists;
-import fr.jugorleans.poker.server.conf.test.ConfigurationTest;
+import fr.jugorleans.poker.server.ConfigurationTest;
 import fr.jugorleans.poker.server.core.hand.Hand;
 import fr.jugorleans.poker.server.core.play.Board;
 import fr.jugorleans.poker.server.core.play.Deck;

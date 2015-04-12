@@ -109,7 +109,7 @@ public class Play {
     /**
      * Démarrage de la main
      *
-     * @param tournament tournoi courant
+     * @param table table courante
      */
     public void start(Table table) {
 

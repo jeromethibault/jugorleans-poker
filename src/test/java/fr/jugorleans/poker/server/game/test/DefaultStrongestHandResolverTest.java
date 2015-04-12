@@ -1,7 +1,8 @@
 package fr.jugorleans.poker.server.game.test;
 
 import com.google.common.collect.Lists;
-import fr.jugorleans.poker.server.conf.test.ConfigurationTest;
+import fr.jugorleans.poker.server.Application;
+import fr.jugorleans.poker.server.ConfigurationTest;
 import fr.jugorleans.poker.server.core.hand.Card;
 import fr.jugorleans.poker.server.core.hand.CardSuit;
 import fr.jugorleans.poker.server.core.hand.CardValue;
@@ -12,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -21,7 +23,8 @@ import java.util.List;
  * Classe de test de {@link fr.jugorleans.poker.server.game.StrongestHandResolver}
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ConfigurationTest.class)
+@ContextConfiguration(classes = Application.class,
+        initializers = ConfigFileApplicationContextInitializer.class)
 public class DefaultStrongestHandResolverTest {
 
     @Autowired

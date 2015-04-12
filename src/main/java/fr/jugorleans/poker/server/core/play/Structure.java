@@ -2,9 +2,12 @@ package fr.jugorleans.poker.server.core.play;
 
 import com.google.common.collect.Maps;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,6 +18,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Getter
 @Builder
 @ToString
+@EqualsAndHashCode
+@Entity
+@Table(name = "T_STRUCTURE")
 public class Structure {
 
     /**

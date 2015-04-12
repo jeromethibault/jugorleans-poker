@@ -1,6 +1,6 @@
 package integration;
 
-import fr.jugorleans.poker.server.conf.test.ConfigurationTest;
+import fr.jugorleans.poker.server.ConfigurationTest;
 import fr.jugorleans.poker.server.core.play.Action;
 import fr.jugorleans.poker.server.core.play.Pot;
 import fr.jugorleans.poker.server.core.play.Round;

@@ -5,41 +5,51 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.core.play.Structure;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Getter
-@Setter
-@Builder
-@ToString
-@Slf4j
 /**
  * Tournoi
  */
+@Getter
+@Setter
+@ToString
+@Slf4j
+@Entity
+@javax.persistence.Table(name = "T_TOURNAMENT")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Tournament {
 
     /**
      * Id
      */
+    @Id
     private String id;
 
     /**
      * Joueurs inscrits
      */
+    @Transient
     private List<Player> players;
 
     /**
      * Montant du stack initial de chaque joueur
      */
+    @Column(length = 5, nullable = false)
     private int initialStack = 1000;
 
     /**
@@ -50,12 +60,14 @@ public class Tournament {
     /**
      * Vainqueur
      */
+    @Transient
     private Player winner;
 
     /**
      * Liste des mains jouées
      */
-    private List<Play> lastPlays;
+    @Transient
+    private List<Play> lastPlays = Lists.newArrayList();
 
     /**
      * Flag de lancement du tournoi
@@ -65,11 +77,13 @@ public class Tournament {
     /**
      * Table se déroule le tournoi
      */
+    @Transient
     private Map<String, Table> tables;
 
     /**
      * Structure du tournoi
      */
+    @Transient
     private Structure structure;
 
     /**
@@ -80,11 +94,13 @@ public class Tournament {
     /**
      * Horloge du tournoi
      */
+    @Transient
     private GameClock clock;
 
     /**
      * Timer de gestion automatiquement de changement de rounds
      */
+    @Transient
     private Timer timer;
 
     /**
@@ -92,6 +108,9 @@ public class Tournament {
      *//*
     private Clock round; //voir si pertinent
     */
+
+    public Tournament() {
+    }
 
     /**
      * Initialisation du tournoi

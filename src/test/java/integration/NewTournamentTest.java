@@ -1,6 +1,6 @@
 package integration;
 
-import fr.jugorleans.poker.server.conf.test.ConfigurationTest;
+import fr.jugorleans.poker.server.Application;
 import fr.jugorleans.poker.server.core.play.Action;
 import fr.jugorleans.poker.server.core.play.Player;
 import fr.jugorleans.poker.server.core.play.Round;
@@ -9,16 +9,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Test d'intégration
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ConfigurationTest.class)
+@ContextConfiguration(classes = Application.class, initializers = ConfigFileApplicationContextInitializer.class)
 @Slf4j
+@Transactional()
 public class NewTournamentTest extends AbstractInitTournament {
 
     @Test

@@ -2,10 +2,16 @@ package fr.jugorleans.poker.server.core.play;
 
 import com.google.common.collect.Lists;
 import fr.jugorleans.poker.server.tournament.BetPlay;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,7 +22,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Getter
 @Setter
 @ToString
-public class Pot {
+@EqualsAndHashCode
+@Entity
+@Table(name = "T_POT")
+public class Pot implements Serializable {
+
+    @Id
+    private Long id;
 
     /**
      * Montant du pot
@@ -36,12 +48,17 @@ public class Pot {
     /**
      * Joueurs pouvant se partager le pot
      */
+    @Transient
     private List<Player> players = Lists.newArrayList();
 
     /**
      * Joueurs vainqueurs du pot
      */
+    @Transient
     private List<Player> winners = Lists.newArrayList();
+
+    public Pot() {
+    }
 
     /**
      * Ajout d'une mise dans le pot principal
