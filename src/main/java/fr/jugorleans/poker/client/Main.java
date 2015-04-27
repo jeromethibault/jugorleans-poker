@@ -12,8 +12,19 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("PokerClient.fxml"));
         primaryStage.setTitle("JUG'Orléans Poker App");
-        primaryStage.setScene(new Scene(root, 500, 475));
+
+        Scene scene = new Scene(root, 1024, 1024);
+        scene.getStylesheets().add("PokerClient.css");
+
+        primaryStage.setScene(scene);
         primaryStage.show();
+
+//        List<Transport> transports = new ArrayList<>(2);
+//        transports.add(new WebSocketTransport(new StandardWebSocketClient()));
+//        transports.add(new RestTemplateXhrTransport());
+//
+//        SockJsClient sockJsClient = new SockJsClient(transports);
+//        sockJsClient.doHandshake(new MyWebSocketHandler(), "ws://localhost:8080/game");
     }
 
 

@@ -87,10 +87,14 @@
 
     <build>
         <plugins>
-            <!--<plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>-->
+                <configuration>
+                    <mainClass>fr.jugorleans.poker.server.PokerServer</mainClass>
+
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

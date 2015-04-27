@@ -1,0 +1,15 @@
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      spacing="10" alignment="CENTER"
+      fx:controller="fr.jugorleans.poker.client.TableController">
+    <TableView fx:id="leaders" prefHeight="1000" prefWidth="500" visible="false">
+        <columns>
+            <TableColumn text="Player" prefWidth="300">
+            </TableColumn>
+            <TableColumn text="Seat" prefWidth="190">
+            </TableColumn>
+        </columns>
+    </TableView>
+</VBox>

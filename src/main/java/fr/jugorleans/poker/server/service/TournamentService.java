@@ -10,7 +10,6 @@ import fr.jugorleans.poker.server.core.play.Structure;
 import fr.jugorleans.poker.server.tournament.Play;
 import fr.jugorleans.poker.server.tournament.Tournament;
 import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -57,7 +56,7 @@ public class TournamentService {
      * @param id id du tournoi
      * @return le tournoi
      */
-    public Tournament getTournamentById(String id){
+    public Tournament getTournamentById(String id) {
         log.info(id);
         return tempTournamentDAO.get(id);
     }
