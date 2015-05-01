@@ -53,10 +53,16 @@ public class TournamentController {
         return tournamentService.addPlayer(id, Player.builder().nickName(nickname).build());
     }
 
-    @MessageMapping("/game")
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
     @SendTo("/websocket/test")
-    public String test(String in) {
-        return "test" + in;
+    public String test() {
+        System.out.println("Connexion d'un joueur");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "message via web socket";
     }
 
 
