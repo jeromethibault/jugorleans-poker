@@ -99,7 +99,7 @@ public class Tournament {
      */
     public Tournament init() {
         LocalDateTime start = LocalDateTime.now();
-        //id = start.format(DateTimeFormatter.ISO_DATE_TIME); // TODO gérer clé unique
+        id = start.format(DateTimeFormatter.ISO_DATE_TIME); // TODO gérer clé unique
         clock = new GameClock();
         clock.start(start);
 

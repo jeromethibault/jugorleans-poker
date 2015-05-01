@@ -9,6 +9,8 @@ public class TournamentController {
     @FXML
     private TableController tableController;
 
+    private MyWebSocketHandler socketHandler;
+
 
     public void handleSubmitButtonAction(ActionEvent actionEvent) {
         System.out.println(actionEvent.getSource());
@@ -17,4 +19,7 @@ public class TournamentController {
         tableController.showTable();
     }
 
+    public void setSocketHandler(MyWebSocketHandler socketHandler) {
+        this.socketHandler = socketHandler;
+    }
 }

@@ -44,7 +44,6 @@ public class TournamentService {
                 .lastPlays(Lists.newArrayList())
                 .build().init();
 
-        tournament.setId(String.valueOf(tempTournamentDAO.size()));
         tempTournamentDAO.put(tournament.getId(), tournament); // TODO remplacer par appel DAO
         log.info(tournament.getId().toString());
         return tournament;
