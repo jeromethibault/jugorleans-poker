@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 import fr.jugorleans.poker.client.event.AddPlayerEvent;
 import fr.jugorleans.poker.client.event.TournamentCreatedEvent;
+import fr.jugorleans.poker.client.model.Player;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,36 +24,8 @@ import java.util.List;
 public class TableController {
 
     /**
-     * TODO classe à externaliser dans un package model
+     * Handler de l'évènement {@link fr.jugorleans.poker.client.event.TournamentCreatedEvent}
      */
-    public class Player {
-
-        private SimpleStringProperty seat = new SimpleStringProperty();
-
-        private SimpleStringProperty nickname = new SimpleStringProperty();
-
-        public String getSeat() {
-            return seat.get();
-        }
-
-
-        public void setSeat(String seat) {
-            this.seat.set(seat);
-        }
-
-        public String getNickname() {
-            return nickname.get();
-        }
-
-        public SimpleStringProperty nicknameProperty() {
-            return nickname;
-        }
-
-        public void setNickname(String nickname) {
-            this.nickname.set(nickname);
-        }
-    }
-
     public class TournamentCreatedSubscriber{
 
         @Subscribe
@@ -62,6 +35,9 @@ public class TableController {
         }
     }
 
+    /**
+     * handler de l'évènement {@link fr.jugorleans.poker.client.event.AddPlayerEvent}
+     */
     public class AddPlayerSubscriber{
 
         @Subscribe
@@ -73,12 +49,18 @@ public class TableController {
         }
     }
 
+    /**
+     * Enregister les event handler dans le bus d'évènement
+     */
     private void handleTransaction(){
         Controller.eventBus().register(new AddPlayerSubscriber());
         Controller.eventBus().register(new TournamentCreatedSubscriber());
 
     }
 
+    /**
+     * Constructeur par défaut
+     */
     public TableController(){
         handleTransaction();
     }
@@ -92,8 +74,14 @@ public class TableController {
     @FXML
     private HBox rootLayer;
 
+    /**
+     * L'identifiant du tournoi
+     */
     private String tournamentId;
 
+    /**
+     * La liste des joueurs inscrit au tournoi
+     */
     private ObservableList<Player> listPlayer = FXCollections.observableArrayList();
 
     public void showTable() {

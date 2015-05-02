@@ -1,7 +1,6 @@
 package fr.jugorleans.poker.server.service;
 
-import fr.jugorleans.poker.server.core.Message;
-import lombok.Builder;
+import fr.jugorleans.poker.server.message.AddPlayerMessage;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -9,6 +8,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 /**
+ * Service en charge de l'envoie des notification vers les joueurs
+ *
  * @author THIBAULT Jérôme
  */
 @Component
@@ -25,6 +26,8 @@ public class MessageService implements InitializingBean{
     }
 
     public void addPlayerEvent(String player){
-        template.convertAndSend(destination, player);
+        AddPlayerMessage addPlayerMessage = new AddPlayerMessage();
+        addPlayerMessage.setNickname(player);
+        template.convertAndSend(destination, addPlayerMessage);
     }
 }

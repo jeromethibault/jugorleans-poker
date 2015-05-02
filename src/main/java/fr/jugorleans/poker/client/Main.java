@@ -1,6 +1,7 @@
 package fr.jugorleans.poker.client;
 
 import fr.jugorleans.poker.client.event.AddPlayerEvent;
+import fr.jugorleans.poker.client.message.MessageHandler;
 import fr.jugorleans.poker.client.stomp.StompMessageHandler;
 import fr.jugorleans.poker.client.stomp.StompSession;
 import fr.jugorleans.poker.client.stomp.WebSocketStompClient;
@@ -66,9 +67,9 @@ public class Main extends Application {
 
             @Override
             public void handleMessage(Message<byte[]> message) {
-                System.out.println("message");
-                System.out.println(new String((byte[]) message.getPayload()));
-                Controller.eventBus().post(new AddPlayerEvent(new String((byte[]) message.getPayload())));
+                System.out.println("Réception d'un smessage");
+                String json = new String((byte[]) message.getPayload());
+                MessageHandler.handleMessage(json);
             }
 
             @Override

@@ -7,6 +7,8 @@ import fr.jugorleans.poker.api.TournamentApi;
 
 /**
  * Controller parent
+ *
+ * TODO Le nom de la classe est mal choisi
  */
 public class Controller {
 
