@@ -20,11 +20,8 @@ public class Controller {
     /**
      * Le bus d'évènement
      */
-    private static EventBus eventBus = new EventBus(new SubscriberExceptionHandler(){
-        @Override
-        public void handleException(Throwable exception, SubscriberExceptionContext context) {
-            exception.printStackTrace();
-        }
+    private static EventBus eventBus = new EventBus((exception, context) -> {
+        exception.printStackTrace();
     });
 
     /**
