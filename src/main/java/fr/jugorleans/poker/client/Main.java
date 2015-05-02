@@ -27,6 +27,8 @@ import java.util.List;
 
 public class Main extends Application {
 
+    private final static WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("PokerClient.fxml"));
@@ -42,15 +44,14 @@ public class Main extends Application {
         TournamentController tournamentController = loader.getController();
         WebSocketHandler socketHandler= new MyWebSocketHandler(tournamentController);
 
-        List<Transport> transports = new ArrayList<>(2);
+        List<Transport> transports = new ArrayList<>();
         transports.add(new WebSocketTransport(new StandardWebSocketClient()));
-        transports.add(new RestTemplateXhrTransport());
+        RestTemplateXhrTransport xhrTransport = new RestTemplateXhrTransport(new RestTemplate());
+        xhrTransport.setRequestHeaders(headers);
+        transports.add(xhrTransport);
 
         SockJsClient sockJsClient = new SockJsClient(transports);
-        //sockJsClient.doHandshake(socketHandler, "ws://localhost:8080/game");
-        //sockJsClient.start();
-        //System.out.println("sockJs running : " + sockJsClient.isRunning());
-        URI uri = new URI("ws://localhost:8080/game");
+        URI uri = new URI("ws://localhost:8080/pokerjug");
         WebSocketStompClient stompClient = new WebSocketStompClient(uri, new WebSocketHttpHeaders(), sockJsClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
@@ -63,12 +64,13 @@ public class Main extends Application {
                 System.out.println("Connexion à la websocket établie");
                 session.subscribe("/websocket/test", null);
                 this.stompSession = session;
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.execute("http://localhost:8080/game/test", HttpMethod.GET,null,null);
+                session.send("/pokerserver/pokerjug","toto");
+                //session.disconnect();
             }
 
             @Override
             public void handleMessage(Message<byte[]> message) {
+                System.out.println("message");
                 System.out.println(new String((byte[]) message.getPayload()));
             }
 

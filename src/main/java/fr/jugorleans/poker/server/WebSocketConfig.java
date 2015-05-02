@@ -11,7 +11,6 @@ import org.springframework.web.socket.config.annotation.*;
  */
 @Configuration
 @EnableWebSocketMessageBroker
-@EnableWebSocket
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {//implements WebSocketConfigurer {
 
     @Autowired
@@ -25,13 +24,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {/
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/game").withSockJS();
+        registry.addEndpoint("/pokerjug").withSockJS();
     }
-
-//    @Override
-//    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-//        registry.addHandler(socketHandler, "/game").withSockJS();
-//    }
-
 
 }

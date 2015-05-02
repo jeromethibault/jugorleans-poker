@@ -54,7 +54,6 @@ public class TournamentController {
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    @SendTo("/websocket/test")
     public String test() {
         System.out.println("Connexion d'un joueur");
         try {
