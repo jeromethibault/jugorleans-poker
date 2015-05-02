@@ -1,5 +1,6 @@
 package fr.jugorleans.poker.client;
 
+import fr.jugorleans.poker.client.event.AddPlayerEvent;
 import fr.jugorleans.poker.client.event.TournamentCreatedEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

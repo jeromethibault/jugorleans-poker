@@ -1,5 +1,6 @@
 package fr.jugorleans.poker.client;
 
+import fr.jugorleans.poker.client.event.AddPlayerEvent;
 import fr.jugorleans.poker.client.stomp.StompMessageHandler;
 import fr.jugorleans.poker.client.stomp.StompSession;
 import fr.jugorleans.poker.client.stomp.WebSocketStompClient;
@@ -7,13 +8,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.springframework.http.HttpMethod;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
-import org.springframework.messaging.simp.config.StompBrokerRelayRegistration;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport;
@@ -63,7 +61,6 @@ public class Main extends Application {
                 System.out.println("Connexion à la websocket établie");
                 session.subscribe("/websocket/test", null);
                 this.stompSession = session;
-                session.send("/pokerserver/pokerjug","toto");
                 //session.disconnect();
             }
 
@@ -71,6 +68,7 @@ public class Main extends Application {
             public void handleMessage(Message<byte[]> message) {
                 System.out.println("message");
                 System.out.println(new String((byte[]) message.getPayload()));
+                Controller.eventBus().post(new AddPlayerEvent(new String((byte[]) message.getPayload())));
             }
 
             @Override

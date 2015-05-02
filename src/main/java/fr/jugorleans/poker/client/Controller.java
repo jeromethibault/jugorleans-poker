@@ -1,6 +1,8 @@
 package fr.jugorleans.poker.client;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.SubscriberExceptionContext;
+import com.google.common.eventbus.SubscriberExceptionHandler;
 import fr.jugorleans.poker.api.TournamentApi;
 
 /**
@@ -16,7 +18,12 @@ public class Controller {
     /**
      * Le bus d'évènement
      */
-    private static EventBus eventBus = new EventBus();
+    private static EventBus eventBus = new EventBus(new SubscriberExceptionHandler(){
+        @Override
+        public void handleException(Throwable exception, SubscriberExceptionContext context) {
+            exception.printStackTrace();
+        }
+    });
 
     /**
      * @return l'api tournoi

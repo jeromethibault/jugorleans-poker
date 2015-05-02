@@ -1,23 +1,19 @@
-<?import javafx.scene.control.TableColumn?>
+
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
 
 <HBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="fr.jugorleans.poker.client.TableController">
+      fx:controller="fr.jugorleans.poker.client.TableController" fx:id="rootLayer" visible="false">
     <VBox xmlns:fx="http://javafx.com/fxml"
           spacing="10" alignment="CENTER">
-        <TableView fx:id="leaders" prefHeight="1000" prefWidth="500" visible="false">
-            <columns>
-                <TableColumn text="Player" prefWidth="300">
-                </TableColumn>
-                <TableColumn text="Seat" prefWidth="190">
-                </TableColumn>
-            </columns>
+        <TableView fx:id="leaders" prefHeight="1000" prefWidth="500">
         </TableView>
     </VBox>
     <VBox>
+        <TextField fx:id="playerName"/>
         <Button id="addPlayer" text="Add player" onAction="#addPlayer"/>
     </VBox>
 </HBox>
