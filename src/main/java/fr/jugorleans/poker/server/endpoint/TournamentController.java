@@ -27,9 +27,9 @@ public class TournamentController {
     /**
      * @return le nouveau tournois
      */
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Tournament createNewTournament() {
-        return tournamentService.createNewTournament();
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String createNewTournament() {
+        return tournamentService.createNewTournament().getId();
     }
 
     /**
@@ -50,19 +50,13 @@ public class TournamentController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Tournament register(@PathVariable String id, @RequestBody String nickname) {
+        log.info("Enregistrement d'un joueur => ");
+        log.info("----Tournament id : "+id);
+        log.info("----Palyer : "+nickname);
         return tournamentService.addPlayer(id, Player.builder().nickName(nickname).build());
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public String test() {
-        System.out.println("Connexion d'un joueur");
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return "message via web socket";
-    }
+
 
 
 }

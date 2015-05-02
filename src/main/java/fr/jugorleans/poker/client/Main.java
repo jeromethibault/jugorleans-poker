@@ -41,8 +41,7 @@ public class Main extends Application {
         primaryStage.show();
 
 
-        TournamentController tournamentController = loader.getController();
-        WebSocketHandler socketHandler= new MyWebSocketHandler(tournamentController);
+        //TournamentController tournamentController = loader.getController();
 
         List<Transport> transports = new ArrayList<>();
         transports.add(new WebSocketTransport(new StandardWebSocketClient()));
