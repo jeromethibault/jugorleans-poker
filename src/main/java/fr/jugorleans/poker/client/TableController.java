@@ -1,12 +1,10 @@
 package fr.jugorleans.poker.client;
 
 
-import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
-import fr.jugorleans.poker.client.event.AddPlayerEvent;
+import fr.jugorleans.poker.client.event.AddPlayerInTournamentEvent;
 import fr.jugorleans.poker.client.event.TournamentCreatedEvent;
 import fr.jugorleans.poker.client.model.Player;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,7 +14,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 
-import java.util.List;
 
 /**
  * Created by francoispenaud on 27/04/15.
@@ -36,12 +33,12 @@ public class TableController {
     }
 
     /**
-     * handler de l'évènement {@link fr.jugorleans.poker.client.event.AddPlayerEvent}
+     * handler de l'évènement {@link fr.jugorleans.poker.client.event.AddPlayerInTournamentEvent}
      */
     public class AddPlayerSubscriber{
 
         @Subscribe
-        public void handleAddPlayerEvent(AddPlayerEvent event){
+        public void handleAddPlayerEvent(AddPlayerInTournamentEvent event){
             System.out.println("Gestion de l'évènement addplayer");
             Player player = new Player();
             player.setNickname(event.getLogin());

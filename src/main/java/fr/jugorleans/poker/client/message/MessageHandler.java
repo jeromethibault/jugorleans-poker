@@ -3,7 +3,7 @@ package fr.jugorleans.poker.client.message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Throwables;
 import fr.jugorleans.poker.client.Controller;
-import fr.jugorleans.poker.client.event.AddPlayerEvent;
+import fr.jugorleans.poker.client.event.AddPlayerInTournamentEvent;
 import fr.jugorleans.poker.server.message.AddPlayerMessage;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class MessageHandler {
             String type = MessageTypeHandler.typeOf(message);
             if("addPlayer".equals(type)){
                 AddPlayerMessage addPlayerMessage = objectMapper.readValue(message,AddPlayerMessage.class);
-                Controller.eventBus().post(new AddPlayerEvent(addPlayerMessage.getNickname()));
+                Controller.eventBus().post(new AddPlayerInTournamentEvent(addPlayerMessage.getNickname()));
             }
         }catch (IOException e){
             Throwables.propagate(e);
