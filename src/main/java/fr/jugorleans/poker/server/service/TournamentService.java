@@ -10,6 +10,8 @@ import fr.jugorleans.poker.server.core.play.Structure;
 import fr.jugorleans.poker.server.tournament.Play;
 import fr.jugorleans.poker.server.tournament.Tournament;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -25,6 +27,9 @@ public class TournamentService {
 
     private Map<String, Tournament> tempTournamentDAO = Maps.newHashMap(); // TODO remplacer par appel DAO
     private Map<String, Play> tempPlayDAO = Maps.newHashMap(); // TODO remplacer par appel DAO
+
+    @Autowired
+    private MessageService messageService;
 
     /**
      * Création d'un nouveau tournoi
@@ -78,6 +83,7 @@ public class TournamentService {
         // Todo notifier les autres joueurs de l'arrivé d'un nouveau joueur (de manière générale les notifications peuvent être gérées par AOP)
 
         tournament.addPlayers(player);
+        messageService.addPlayerEvent(player.getNickName());
         if (tournament.nbPlayersIn() == tournament.getNbMaxPlayers()) {
             tournament.start();
         }
