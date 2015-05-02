@@ -1,6 +1,5 @@
 package fr.jugorleans.poker.client;
 
-import fr.jugorleans.poker.client.event.AddPlayerEvent;
 import fr.jugorleans.poker.client.message.MessageHandler;
 import fr.jugorleans.poker.client.stomp.StompMessageHandler;
 import fr.jugorleans.poker.client.stomp.StompSession;
