@@ -1,13 +1,13 @@
 package fr.jugorleans.poker.api;
 
 import com.google.common.collect.Maps;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import fr.jugorleans.poker.api.ressource.Tournament;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,5 +52,11 @@ public class TournamentApi {
         pathVariable.put("tournamentId",tournamentId);
         HttpEntity<String> entity = new HttpEntity<String>(nickname, getHeaders());
         restTemplate.exchange(this.baseUrl + "/game/{tournamentId}", HttpMethod.PUT, entity,Void.class, pathVariable);
+    }
+
+    public List<Tournament> list(){
+        ResponseEntity<Tournament[]> responseEntity = restTemplate.getForEntity(this.baseUrl + "/game",Tournament[].class);
+        return Arrays.asList(responseEntity.getBody());
+
     }
 }

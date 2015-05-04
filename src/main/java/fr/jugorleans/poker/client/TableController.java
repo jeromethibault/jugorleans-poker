@@ -3,27 +3,32 @@ package fr.jugorleans.poker.client;
 
 import com.google.common.eventbus.Subscribe;
 import fr.jugorleans.poker.client.event.AddPlayerInTournamentEvent;
+import fr.jugorleans.poker.client.event.ShowTableEvent;
 import fr.jugorleans.poker.client.event.TournamentCreatedEvent;
-import fr.jugorleans.poker.client.model.Player;
+import fr.jugorleans.poker.client.model.PlayerModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 
 /**
  * Created by francoispenaud on 27/04/15.
  */
-public class TableController {
+public class TableController implements Initializable {
 
     /**
      * Handler de l'évènement {@link fr.jugorleans.poker.client.event.TournamentCreatedEvent}
      */
-    public class TournamentCreatedSubscriber{
+    public class TournamentCreatedSubscriber {
 
         @Subscribe
         public void handleTournamentCreatedEvent(TournamentCreatedEvent event){
@@ -40,16 +45,29 @@ public class TableController {
         @Subscribe
         public void handleAddPlayerEvent(AddPlayerInTournamentEvent event){
             System.out.println("Gestion de l'évènement addplayer");
-            Player player = new Player();
-            player.setNickname(event.getLogin());
-            listPlayer.add(player);
+            PlayerModel playerModel = new PlayerModel();
+            playerModel.setNickname(event.getLogin());
+            listPlayerModel.add(playerModel);
         }
+    }
+
+    /**
+     * handler de l'évènement {@link fr.jugorleans.poker.client.event.ShowTableEvent}
+     */
+    public class ShowTableEventSubscriber{
+
+        @Subscribe
+        public void handleShowTableEvent(ShowTableEvent event){
+            showTable();
+        }
+
     }
 
     /**
      * Enregister les event handler dans le bus d'évènement
      */
     private void handleTransaction(){
+        Controller.eventBus().register(new ShowTableEventSubscriber());
         Controller.eventBus().register(new AddPlayerSubscriber());
         Controller.eventBus().register(new TournamentCreatedSubscriber());
 
@@ -79,17 +97,21 @@ public class TableController {
     /**
      * La liste des joueurs inscrit au tournoi
      */
-    private ObservableList<Player> listPlayer = FXCollections.observableArrayList();
+    private ObservableList<PlayerModel> listPlayerModel = FXCollections.observableArrayList();
 
-    public void showTable() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         TableColumn seatColumn = new TableColumn("Seat");
-        seatColumn.setCellValueFactory(new PropertyValueFactory<Player, String>("seat"));
+        seatColumn.setCellValueFactory(new PropertyValueFactory<PlayerModel, String>("seat"));
 
         TableColumn nickNameColumn = new TableColumn("Player");
-        nickNameColumn.setCellValueFactory(new PropertyValueFactory<Player, String>("nickname"));
+        nickNameColumn.setCellValueFactory(new PropertyValueFactory<PlayerModel, String>("nickname"));
 
         leaders.getColumns().addAll(nickNameColumn,seatColumn);
-        leaders.setItems(listPlayer);
+        leaders.setItems(listPlayerModel);
+    }
+
+    private void showTable() {
         rootLayer.setVisible(true);
     }
 

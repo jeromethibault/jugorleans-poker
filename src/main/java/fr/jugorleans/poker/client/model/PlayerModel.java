@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
  *
  * @author THIBAULT Jérôme
  */
-public class Player {
+public class PlayerModel {
 
     private SimpleStringProperty seat = new SimpleStringProperty();
 

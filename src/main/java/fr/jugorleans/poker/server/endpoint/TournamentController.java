@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Controller exposant les méthodes pour administrer les tournois
  */
@@ -21,6 +24,14 @@ public class TournamentController {
      */
     @Autowired
     private TournamentService tournamentService;
+
+    /**
+     * @return la liste des tournois
+     */
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Collection<Tournament> list(){
+        return tournamentService.findAll();
+    }
 
     /**
      * @return le nouveau tournois

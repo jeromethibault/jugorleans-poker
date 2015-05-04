@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -28,6 +30,9 @@ public class TournamentService {
     private Map<String, Tournament> tempTournamentDAO = Maps.newHashMap(); // TODO remplacer par appel DAO
     private Map<String, Play> tempPlayDAO = Maps.newHashMap(); // TODO remplacer par appel DAO
 
+    /**
+     * Service gérant l'envoie des notification
+     */
     @Autowired
     private MessageService messageService;
 
@@ -52,7 +57,15 @@ public class TournamentService {
         tournament.setId(tournament.getId().split("\\.")[0]);
         tempTournamentDAO.put(tournament.getId(), tournament); // TODO remplacer par appel DAO
         log.info(tournament.getId().toString());
+        messageService.tournamentCreatedEvent(tournament.getId());
         return tournament;
+    }
+
+    /**
+     * @return la liste des tournois
+     */
+    public Collection<Tournament> findAll(){
+        return tempTournamentDAO.values();
     }
 
     /**

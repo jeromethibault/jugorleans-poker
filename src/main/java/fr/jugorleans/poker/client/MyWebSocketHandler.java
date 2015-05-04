@@ -12,7 +12,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
     private TournamentController tournamentController;
 
     public MyWebSocketHandler(TournamentController tournamentController) {
-        tournamentController.setSocketHandler(this);
+        //tournamentController.setSocketHandler(this);
     }
 
 

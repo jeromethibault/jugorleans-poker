@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @author THIBAULT Jérôme
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class addPlayerMessage {
+public class AddPlayerInTounamentMessage {
 
     /**
      * Le pseudo du joueur
