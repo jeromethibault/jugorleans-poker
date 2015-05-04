@@ -31,9 +31,10 @@ public class MessageService implements InitializingBean{
      *
      * @param player pseudo du joueur inscrit au tournoi
      */
-    public void addPlayerEvent(String player){
+    public void addPlayerEvent(String player,String tournamentId){
         AddPlayerMessage addPlayerMessage = new AddPlayerMessage();
         addPlayerMessage.setNickname(player);
+        addPlayerMessage.setIdTournament(tournamentId);
         template.convertAndSend(destination, addPlayerMessage);
     }
 

@@ -45,7 +45,7 @@ public class TournamentController {
      * @param id identifiant du tournoi
      * @return le tournoi correspondant
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    //@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Tournament getTournamentById(@PathVariable String id) {
         return tournamentService.getTournamentById(id);
     }
@@ -63,6 +63,11 @@ public class TournamentController {
         log.info("----Tournament id : "+id);
         log.info("----Palyer : "+nickname);
         return tournamentService.addPlayer(id, Player.builder().nickName(nickname).build());
+    }
+
+    @RequestMapping(value = "/{id}/_players", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Player> findPlayers(@PathVariable String id){
+        return tournamentService.findPlayers(id);
     }
 
 

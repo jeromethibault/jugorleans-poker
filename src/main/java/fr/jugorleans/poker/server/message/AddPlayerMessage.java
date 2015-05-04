@@ -12,6 +12,11 @@ public class AddPlayerMessage extends AbstractMessage {
      */
     private String nickname;
 
+    /**
+     * Identifiant du tournoi
+     */
+    private String idTournament;
+
     public AddPlayerMessage(){
         setType("addPlayer");
     }
@@ -22,5 +27,13 @@ public class AddPlayerMessage extends AbstractMessage {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getIdTournament() {
+        return idTournament;
+    }
+
+    public void setIdTournament(String idTournament) {
+        this.idTournament = idTournament;
     }
 }

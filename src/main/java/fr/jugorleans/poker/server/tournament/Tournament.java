@@ -55,7 +55,7 @@ public class Tournament {
     /**
      * Liste des mains jouées
      */
-    private List<Play> lastPlays;
+    private List<Play> lastPlays = Lists.newArrayList();
 
     /**
      * Flag de lancement du tournoi

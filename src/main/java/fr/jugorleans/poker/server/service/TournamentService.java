@@ -69,6 +69,17 @@ public class TournamentService {
     }
 
     /**
+     * Obtenir la liste des joueurs d'un tournoi
+     *
+     * @param tournamentId l'identifiant du tournoi
+     * @return la liste des joueurs
+     */
+    public List<Player> findPlayers(String tournamentId){
+        List<Player> list = tempTournamentDAO.get(tournamentId).getPlayers();
+        return list!=null?list:Lists.newArrayList();
+    }
+
+    /**
      * Restituer un tournoi selon son id
      *
      * @param id id du tournoi
@@ -96,7 +107,7 @@ public class TournamentService {
         // Todo notifier les autres joueurs de l'arrivé d'un nouveau joueur (de manière générale les notifications peuvent être gérées par AOP)
 
         tournament.addPlayers(player);
-        messageService.addPlayerEvent(player.getNickName());
+        messageService.addPlayerEvent(player.getNickName(),id);
         if (tournament.nbPlayersIn() == tournament.getNbMaxPlayers()) {
             tournament.start();
         }

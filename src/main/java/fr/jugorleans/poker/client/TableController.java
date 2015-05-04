@@ -2,10 +2,10 @@ package fr.jugorleans.poker.client;
 
 
 import com.google.common.eventbus.Subscribe;
-import fr.jugorleans.poker.client.event.AddPlayerInTournamentEvent;
 import fr.jugorleans.poker.client.event.ShowTableEvent;
 import fr.jugorleans.poker.client.event.TournamentCreatedEvent;
 import fr.jugorleans.poker.client.model.PlayerModel;
+import fr.jugorleans.poker.server.message.AddPlayerMessage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -38,16 +38,17 @@ public class TableController implements Initializable {
     }
 
     /**
-     * handler de l'évènement {@link fr.jugorleans.poker.client.event.AddPlayerInTournamentEvent}
+     * handler de l'évènement {@link AddPlayerMessage}
      */
     public class AddPlayerSubscriber{
 
         @Subscribe
-        public void handleAddPlayerEvent(AddPlayerInTournamentEvent event){
-            System.out.println("Gestion de l'évènement addplayer");
-            PlayerModel playerModel = new PlayerModel();
-            playerModel.setNickname(event.getLogin());
-            listPlayerModel.add(playerModel);
+        public void handleAddPlayerEvent(AddPlayerMessage message){
+            if(tournamentId.equals(message.getIdTournament())){
+                PlayerModel playerModel = new PlayerModel();
+                playerModel.setNickname(message.getNickname());
+                listPlayerModel.add(playerModel);
+            }
         }
     }
 
@@ -58,6 +59,7 @@ public class TableController implements Initializable {
 
         @Subscribe
         public void handleShowTableEvent(ShowTableEvent event){
+            tournamentId = event.getId();
             showTable();
         }
 
@@ -109,9 +111,15 @@ public class TableController implements Initializable {
 
         leaders.getColumns().addAll(nickNameColumn,seatColumn);
         leaders.setItems(listPlayerModel);
+
     }
 
     private void showTable() {
+        Controller.tournamentApi().findPlayers(this.tournamentId).stream().forEach(player -> {
+            PlayerModel model = new PlayerModel();
+            model.setNickname(player.getNickName());
+            listPlayerModel.add(model);
+        });
         rootLayer.setVisible(true);
     }
 
