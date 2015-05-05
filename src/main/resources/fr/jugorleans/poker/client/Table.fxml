@@ -15,5 +15,6 @@
     <VBox>
         <TextField fx:id="playerName"/>
         <Button id="addPlayer" text="Add player" onAction="#addPlayer"/>
+        <Button id="back" text="Back" onAction="#back"/>
     </VBox>
 </HBox>

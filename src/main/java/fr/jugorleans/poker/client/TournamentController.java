@@ -1,6 +1,7 @@
 package fr.jugorleans.poker.client;
 
 import com.google.common.eventbus.Subscribe;
+import fr.jugorleans.poker.client.event.ShowHomeEvent;
 import fr.jugorleans.poker.client.event.ShowTableEvent;
 import fr.jugorleans.poker.client.event.TournamentCreatedEvent;
 import fr.jugorleans.poker.client.message.TournamentCreatedMessage;
@@ -11,7 +12,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -36,6 +36,14 @@ public class TournamentController implements Initializable{
             TournamentModel model = new TournamentModel();
             model.setId(message.getId());
             listTournamentModel.addAll(model);
+        }
+    }
+
+    public class ShowHomeEventSubscriber {
+
+        @Subscribe
+        public void handleShowHomeEvent(ShowHomeEvent event) {
+            tournamentPane.setVisible(true);
         }
     }
 
@@ -79,6 +87,7 @@ public class TournamentController implements Initializable{
      */
     private void handleTransaction(){
         Controller.eventBus().register(new TournamentCreatedMessageSubscriber());
+        Controller.eventBus().register(new ShowHomeEventSubscriber());
     }
 
 

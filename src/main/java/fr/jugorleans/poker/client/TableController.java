@@ -2,6 +2,7 @@ package fr.jugorleans.poker.client;
 
 
 import com.google.common.eventbus.Subscribe;
+import fr.jugorleans.poker.client.event.ShowHomeEvent;
 import fr.jugorleans.poker.client.event.ShowTableEvent;
 import fr.jugorleans.poker.client.event.TournamentCreatedEvent;
 import fr.jugorleans.poker.client.model.PlayerModel;
@@ -115,6 +116,8 @@ public class TableController implements Initializable {
     }
 
     private void showTable() {
+        playerName.clear();
+        listPlayerModel.clear();
         Controller.tournamentApi().findPlayers(this.tournamentId).stream().forEach(player -> {
             PlayerModel model = new PlayerModel();
             model.setNickname(player.getNickName());
@@ -123,7 +126,20 @@ public class TableController implements Initializable {
         rootLayer.setVisible(true);
     }
 
+    /**
+     * Action déclenchée lors du clique sur le bouton
+     * "addPlayer
+     */
     public void addPlayer(){
         Controller.tournamentApi().register(this.tournamentId, playerName.getText());
+    }
+
+    /**
+     * Action declenchée lors du clique sur le bouton
+     * "back"
+     */
+    public void back(){
+        rootLayer.setVisible(false);
+        Controller.eventBus().post(new ShowHomeEvent());
     }
 }

@@ -1,16 +1,16 @@
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.TableView?>
-<GridPane fx:controller="fr.jugorleans.poker.client.TournamentController"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+<StackPane fx:controller="fr.jugorleans.poker.client.TournamentController"
+          xmlns:fx="http://javafx.com/fxml" alignment="center">
 
-    <fx:include source="Table.fxml" fx:id="table" GridPane.rowIndex="0"/>
+    <fx:include source="Table.fxml" fx:id="table" />
 
-    <VBox GridPane.rowIndex="1" alignment="CENTER" fx:id="tournamentPane">
+    <VBox  alignment="CENTER" fx:id="tournamentPane">
         <TableView fx:id="tounamentList" prefHeight="1000" prefWidth="1000"/>
         <Button id="creerTournoi" text="New Tournament" onAction="#handleSubmitButtonAction"/>
     </VBox>
 
-</GridPane>
+</StackPane>
 
