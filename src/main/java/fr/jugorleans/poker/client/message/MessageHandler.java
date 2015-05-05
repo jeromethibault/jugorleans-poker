@@ -29,12 +29,17 @@ public class MessageHandler {
         try{
             String type = MessageTypeHandler.typeOf(message);
             if("addPlayer".equals(type)){
+                // TODO Ne plus utiliser le message du serveur
                 AddPlayerMessage addPlayerMessage = objectMapper.readValue(message,AddPlayerMessage.class);
                 Controller.eventBus().post(addPlayerMessage);
                 return;
             }
             if("tournamentCreated".equals(type)){
                 Controller.eventBus().post(objectMapper.readValue(message, TournamentCreatedMessage.class));
+                return;
+            }
+            if("tournamentStarted".equals(type)){
+                Controller.eventBus().post(objectMapper.readValue(message, TournamentStartedMessage.class));
                 return;
             }
         }catch (IOException e){

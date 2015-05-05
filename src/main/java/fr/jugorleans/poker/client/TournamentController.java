@@ -5,6 +5,7 @@ import fr.jugorleans.poker.client.event.ShowHomeEvent;
 import fr.jugorleans.poker.client.event.ShowTableEvent;
 import fr.jugorleans.poker.client.event.TournamentCreatedEvent;
 import fr.jugorleans.poker.client.message.TournamentCreatedMessage;
+import fr.jugorleans.poker.client.message.TournamentStartedMessage;
 import fr.jugorleans.poker.client.model.PlayerModel;
 import fr.jugorleans.poker.client.model.TournamentModel;
 import javafx.collections.FXCollections;
@@ -47,6 +48,18 @@ public class TournamentController implements Initializable{
         }
     }
 
+    public class TournamentStartedMessageSubscriber {
+
+        @Subscribe
+        public void handleTournamentStartedMessage(TournamentStartedMessage tournamentStartedMessage){
+            listTournamentModel.stream().forEach(tournament -> {
+                if(tournament.getId().equals(tournamentStartedMessage.getId())){
+                    tournament.setStarted(true);
+                }
+            });
+        }
+    }
+
     /**
      * La liste des joueurs inscrit au tournoi
      */
@@ -57,7 +70,10 @@ public class TournamentController implements Initializable{
         TableColumn idColumn = new TableColumn("Tournament id");
         idColumn.setCellValueFactory(new PropertyValueFactory<PlayerModel, String>("id"));
 
-        tounamentList.getColumns().addAll(idColumn);
+        TableColumn statusColumn = new TableColumn("Started");
+        statusColumn.setCellValueFactory(new PropertyValueFactory<PlayerModel, Boolean>("started"));
+
+        tounamentList.getColumns().addAll(idColumn,statusColumn);
         tounamentList.setItems(listTournamentModel);
         handleTransaction();
 
@@ -78,6 +94,7 @@ public class TournamentController implements Initializable{
         Controller.tournamentApi().list().stream().forEach(tournament -> {
             TournamentModel model = new TournamentModel();
             model.setId(tournament.getId());
+            model.setStarted(tournament.isStarted());
             listTournamentModel.addAll(model);
         });
     }
@@ -88,6 +105,7 @@ public class TournamentController implements Initializable{
     private void handleTransaction(){
         Controller.eventBus().register(new TournamentCreatedMessageSubscriber());
         Controller.eventBus().register(new ShowHomeEventSubscriber());
+        Controller.eventBus().register(new TournamentStartedMessageSubscriber());
     }
 
 

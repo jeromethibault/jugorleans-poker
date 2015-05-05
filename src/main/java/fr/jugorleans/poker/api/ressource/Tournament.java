@@ -13,11 +13,24 @@ public class Tournament {
      */
     private String id;
 
+    /**
+     * Status du tournoi
+     */
+    private boolean started;
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isStarted() {
+        return started;
+    }
+
+    public void setStarted(boolean started) {
+        this.started = started;
     }
 }

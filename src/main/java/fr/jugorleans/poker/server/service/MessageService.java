@@ -2,6 +2,7 @@ package fr.jugorleans.poker.server.service;
 
 import fr.jugorleans.poker.server.message.AddPlayerMessage;
 import fr.jugorleans.poker.server.message.TournamentCreatedMessage;
+import fr.jugorleans.poker.server.message.TournamentStartedMessage;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -47,6 +48,16 @@ public class MessageService implements InitializingBean{
         TournamentCreatedMessage tournamentCreatedMessage = new TournamentCreatedMessage();
         tournamentCreatedMessage.setId(id);
         template.convertAndSend(destination,tournamentCreatedMessage);
+    }
 
+    /**
+     * Envoyer une notification de type "tournamentStarted
+     *
+     * @param id identifiant du tournoi
+     */
+    public void tournamentStartedEvent(String id) {
+        TournamentStartedMessage tournamentStartedMessage = new TournamentStartedMessage();
+        tournamentStartedMessage.setId(id);
+        template.convertAndSend(destination,tournamentStartedMessage);
     }
 }

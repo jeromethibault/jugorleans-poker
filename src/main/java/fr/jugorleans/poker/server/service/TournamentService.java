@@ -104,12 +104,12 @@ public class TournamentService {
 
         // Todo Assigner une place au joueur
         // Todo assigner un stack
-        // Todo notifier les autres joueurs de l'arrivé d'un nouveau joueur (de manière générale les notifications peuvent être gérées par AOP)
 
         tournament.addPlayers(player);
         messageService.addPlayerEvent(player.getNickName(),id);
         if (tournament.nbPlayersIn() == tournament.getNbMaxPlayers()) {
             tournament.start();
+            messageService.tournamentStartedEvent(id);
         }
         return tournament;
     }
