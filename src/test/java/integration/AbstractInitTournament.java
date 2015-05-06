@@ -49,6 +49,7 @@ public abstract class AbstractInitTournament {
         tournamentService.addPlayer(wsop.getId(), julien);
 
         Assert.assertEquals("Nombre de joueurs inscrits KO", 4, wsop.nbPlayersIn());
+        Assert.assertNotNull(wsop.getTable1());
         Assert.assertNull("Aucune main jouée", wsop.getTable1().getCurrentPlay());
 
         // Check init des stacks + sieges
