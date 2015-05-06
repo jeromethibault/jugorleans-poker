@@ -27,7 +27,10 @@ public class TournamentApi {
      * L'url de base
      */
     private String baseUrl = "http://localhost:8080/";
-
+    
+    /**
+     * Gestion des headers http
+     */
     private HttpHeaders getHeaders(){
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
