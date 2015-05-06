@@ -1,5 +1,7 @@
 # jugorleans-poker
 
+## Build status
+[![Build Status](https://travis-ci.org/jeromethibault/jugorleans-poker.svg?branch=master)](https://travis-ci.org/jeromethibault/jugorleans-poker)
+
 ## API
-* GET /tournament => Création d'un nouveau tournoi
-* GET /tournament/{id} => Obtenir l'état d'un tournoi identifié par son identifiant
+TODO
